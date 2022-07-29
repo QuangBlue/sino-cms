@@ -39,7 +39,7 @@ const columns = [
     minWidth: 90,
     headerName: '# ID',
     renderCell: ({ row }: CellType) => (
-      <Link href={`/apps/invoice/preview/${row.id}`} passHref>
+      <Link href={`/company/view/${row.id}`} passHref>
         <StyledLink>{`#${row.id}`}</StyledLink>
       </Link>
     )
@@ -66,14 +66,14 @@ const columns = [
     headerName: 'Actions',
     renderCell: ({ row }: CellType) => (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Tooltip title='Delete Invoice'>
+        <Tooltip title='Delete Company'>
           <IconButton size='small'>
             <DeleteOutline />
           </IconButton>
         </Tooltip>
         <Tooltip title='View'>
           <Box>
-            <Link href={`/apps/invoice/preview/${row.id}`} passHref>
+            <Link href={`/company/view/${row.id}`} passHref>
               <IconButton size='small' component='a' sx={{ textDecoration: 'none' }}>
                 <EyeOutline />
               </IconButton>

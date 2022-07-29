@@ -18,9 +18,6 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 import UserViewOverview from 'src/views/agent/view/UserViewOverview'
 import UserViewSecurity from 'src/views/agent/view/UserViewSecurity'
 
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,

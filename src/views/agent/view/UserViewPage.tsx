@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 import Grid from '@mui/material/Grid'
 
 // ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
 import { UserLayoutType } from 'src/types/apps/userTypes'
 
 // ** Demo Components Imports
