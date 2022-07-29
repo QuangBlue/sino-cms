@@ -58,8 +58,8 @@ interface FormData {
 }
 
 const defaultValues = {
-  password: 'admin',
-  email: 'admin@mlpert.com'
+  password: '',
+  email: ''
 }
 
 // ** Styled Components
