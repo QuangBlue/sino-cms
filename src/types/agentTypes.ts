@@ -25,10 +25,3 @@ export interface AgentTypes {
   totalCompany: number
   totalEvent: number
 }
-
-export interface EventTypes {
-  id: number
-  name: string
-  baseName: string
-  status: boolean
-}

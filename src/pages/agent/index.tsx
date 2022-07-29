@@ -40,8 +40,9 @@ import TableHeaderAgent from 'src/views/agent/TableHeaderAgent'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
-import { deleteAgent, fetchAgent } from 'src/store/agent'
+import { deleteAgent, fetchAgent, resumeAgent } from 'src/store/agent'
 import DialogAlertDelete from 'src/views/agent/DialogAlertDeleteAgent'
+import BackupRestore from 'mdi-material-ui/BackupRestore'
 
 interface CustomInputProps {
   dates: Date[]
@@ -189,7 +190,12 @@ const AgentList = () => {
     dispatch(deleteAgent(rowId)).then(() => {
       handleCloseAlert()
     })
-    console.log('Delete Agent')
+  }
+
+  const handleSubmitResumeAgent = (rowId: number, handleCloseAlert: () => void) => {
+    dispatch(resumeAgent(rowId)).then(() => {
+      handleCloseAlert()
+    })
   }
 
   // dispatch(deleteAgent(row.id))
@@ -210,9 +216,9 @@ const AgentList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Delete Agent'>
+            <Tooltip title={row.status ? 'Delete Agent' : 'Resume Agent'}>
               <IconButton size='small' sx={{ mr: 0.5 }} onClick={handleClickOpenAlert}>
-                <DeleteOutline />
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
               </IconButton>
             </Tooltip>
             <Tooltip title='View'>
@@ -229,7 +235,11 @@ const AgentList = () => {
               open={open}
               dataAgent={row}
               handleCloseAlert={handleCloseAlert}
-              handleSubmit={() => handleSubmitDeleteAgent(row.id, handleCloseAlert)}
+              handleSubmit={() =>
+                row.status
+                  ? handleSubmitDeleteAgent(row.id, handleCloseAlert)
+                  : handleSubmitResumeAgent(row.id, handleCloseAlert)
+              }
             />
           </Box>
         )

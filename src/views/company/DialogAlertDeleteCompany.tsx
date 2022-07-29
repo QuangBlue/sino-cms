@@ -23,17 +23,21 @@ const DialogAlertDelete = (props: DialogAlertDeleteProps) => {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title'>{`Are you sure you want to delete company ${dataCompany.name}?`}</DialogTitle>
+      <DialogTitle id='alert-dialog-title'>
+        {dataCompany.status ? `Are you sure you want to delete company` : 'Are you sure you want to resume company'}{' '}
+        <b>{dataCompany.name}?</b>
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
-          All events managed by this company will be subject to immediate shutdown and affecting members of that event.
-          Make sure you understand what you're doing.
+          {dataCompany.status
+            ? `All events managed by this company will be shutdown and affecting members of that event. Make sure you understand what you're doing.`
+            : `All events managed by this company will be resume. Make sure you understand what you're doing.`}
         </DialogContentText>
       </DialogContent>
       <DialogActions className='dialog-actions-dense'>
         <Button onClick={handleCloseAlert}>Cancel</Button>
         <Button onClick={handleSubmit} color='secondary'>
-          Delete
+          {dataCompany.status ? 'Delete' : 'Resume'}
         </Button>
       </DialogActions>
     </Dialog>

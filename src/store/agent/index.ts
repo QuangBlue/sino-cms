@@ -18,11 +18,14 @@ interface CreateAgentProps {
 }
 
 // ** Fetch Agent
-export const fetchAgent = createAsyncThunk('agent/fetchData', async () => {
-  const response = await axiosClient.get('/agent?status=true')
+export const fetchAgent = createAsyncThunk(
+  'agent/fetchData',
+  async (status: boolean | undefined, { getState }: Redux) => {
+    const response = await axiosClient.get(`/agent?status=${getState().agent.status}`)
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 // ** Add Agent
 export const createAgent = createAsyncThunk(
@@ -57,6 +60,19 @@ export const deleteAgent = createAsyncThunk('agent/deleteAgent', async (id: numb
   })
 })
 
+// ** Resume Agent
+export const resumeAgent = createAsyncThunk('agent/resumeAgent', async (id: number, { dispatch }: Redux) => {
+  const promise = axiosClient.put(`/agent/${id}`, { status: true }).then(() => {
+    dispatch(fetchAgent())
+  })
+
+  toast.promise(promise, {
+    loading: 'Request Resume Agent',
+    success: 'Resume Agent Successfully',
+    error: 'Error when Resume Agent'
+  })
+})
+
 export const agentSlice = createSlice({
   name: 'agent',
   initialState: {
@@ -65,11 +81,16 @@ export const agentSlice = createSlice({
     page: 0,
     pageSize: 10,
     total: 0,
+    status: true,
     isLoading: false,
     isCreating: false,
     isDeleting: false
   },
-  reducers: {},
+  reducers: {
+    handleChangeStatus: (state, { payload }) => {
+      state.status = payload
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchAgent.pending, state => {

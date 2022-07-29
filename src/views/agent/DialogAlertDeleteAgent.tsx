@@ -23,19 +23,21 @@ const DialogAlertDelete = (props: DialogAlertDeleteProps) => {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title'>{`Are you sure you want to delete agent "${
-        dataAgent.firstName + ' ' + dataAgent.lastName
-      }" ?`}</DialogTitle>
+      <DialogTitle id='alert-dialog-title'>
+        {dataAgent.status ? `Are you sure you want to delete agent ` : `Are you sure you want to resume agent `}
+        <b>{dataAgent.firstName + ' ' + dataAgent.lastName}</b> ?
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
-          All events managed by this agent will be subject to immediate shutdown affecting members of that event. Make
-          sure you understand what you're doing.
+          {dataAgent.status
+            ? `All events managed by this agent will shutdown. Make sure you understand what you're doing.`
+            : `All events managed by this agent will resume. Make sure you understand what you're doing.`}
         </DialogContentText>
       </DialogContent>
       <DialogActions className='dialog-actions-dense'>
         <Button onClick={handleCloseAlert}>Cancel</Button>
         <Button onClick={handleSubmit} color='secondary'>
-          Delete
+          {dataAgent.status ? 'Delete' : 'Resume'}
         </Button>
       </DialogActions>
     </Dialog>

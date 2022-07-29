@@ -30,8 +30,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
 import { CompanyTypes } from 'src/types/companyTypes'
-import { deleteCompany, fetchCompany } from 'src/store/company'
+import { deleteCompany, fetchCompany, resumeCompany } from 'src/store/company'
 import DialogAlertDeleteCompany from 'src/views/company/DialogAlertDeleteCompany'
+import { BackupRestore } from 'mdi-material-ui'
 
 interface CellType {
   row: CompanyTypes
@@ -113,7 +114,12 @@ const CompanyList = () => {
     dispatch(deleteCompany(rowId)).then(() => {
       handleCloseAlert()
     })
-    console.log('Delete Company')
+  }
+
+  const handleSubmitResumeCompany = (rowId: number, handleCloseAlert: () => void) => {
+    dispatch(resumeCompany(rowId)).then(() => {
+      handleCloseAlert()
+    })
   }
 
   // dispatch(deleteAgent(row.id))
@@ -134,9 +140,9 @@ const CompanyList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Delete Company'>
+            <Tooltip title={row.status ? 'Delete Company' : 'Resume Company'}>
               <IconButton size='small' sx={{ mr: 0.5 }} onClick={handleClickOpenAlert}>
-                <DeleteOutline />
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
               </IconButton>
             </Tooltip>
             <Tooltip title='View'>
@@ -153,7 +159,11 @@ const CompanyList = () => {
               open={open}
               dataCompany={row}
               handleCloseAlert={handleCloseAlert}
-              handleSubmit={() => handleSubmitDeleteCompany(row.id, handleCloseAlert)}
+              handleSubmit={() =>
+                row.status
+                  ? handleSubmitDeleteCompany(row.id, handleCloseAlert)
+                  : handleSubmitResumeCompany(row.id, handleCloseAlert)
+              }
             />
           </Box>
         )

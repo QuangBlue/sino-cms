@@ -17,21 +17,18 @@ import FormControl from '@mui/material/FormControl'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import FormHelperText from '@mui/material/FormHelperText'
-import LinearProgress from '@mui/material/LinearProgress'
-import DialogContentText from '@mui/material/DialogContentText'
 
 // ** Icons Imports
-import Domain from 'mdi-material-ui/Domain'
 import StarOutline from 'mdi-material-ui/StarOutline'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import DialogAlertDelete from '../DialogAlertDeleteAgent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogAlertDeleteCompany from '../DialogAlertDeleteCompany'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
-import { AgentTypes } from 'src/types/agentTypes'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -42,23 +39,19 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
 import { Controller, useForm } from 'react-hook-form'
 
 // ** Redux
-import { editAgentDetail, fetchAgentDetail } from 'src/store/agent/view'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'src/store'
-import { deleteAgent } from 'src/store/agent'
 import { useRouter } from 'next/router'
+import { CompanyTypes } from 'src/types/companyTypes'
+import { deleteCompany } from 'src/store/company'
+import { editCompanyDetail, fetchCompanyDetail } from 'src/store/company/view'
 
 interface Props {
-  data: AgentTypes
+  data: CompanyTypes
 }
 
 interface ColorsType {
   [key: string]: ThemeColor
-}
-
-const roleColors: ColorsType = {
-  admin: 'error',
-  agent: 'warning'
 }
 
 const statusColors: ColorsType = {
@@ -81,7 +74,7 @@ const showErrors = (field: string, valueLen: number, min: number) => {
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
-const UserViewLeft = ({ data }: Props) => {
+const CompanyViewLeft = ({ data }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
@@ -91,35 +84,24 @@ const UserViewLeft = ({ data }: Props) => {
   // ** Hook
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
+
   const defaultValues = {
-    lastName: data.lastName,
-    firstName: data.firstName,
+    name: data.name,
+    email: data.email,
     phone: data.phone,
-    eventLimit: data.eventLimit
+    website: data.website
   }
 
   const schema = yup.object().shape({
-    lastName: yup
-      .string()
-      .min(3, obj => showErrors('Last Name', obj.value.length, obj.min))
-      .required(),
-    firstName: yup
-      .string()
-      .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
-      .required(),
+    name: yup.string().required(),
+    email: yup.string().email(),
     phone: yup
       .string()
       .typeError('Phone field is required')
       .min(8, obj => showErrors('Phone', obj.value.length, obj.min))
       .max(15, obj => showErrors('Phone', obj.value.length, obj.max))
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .required(),
-    eventLimit: yup
-      .number()
-      .typeError('Event Limit field must a number')
-      .min(data.totalEvent, obj => `Event Limit cannot be less than ${obj.min}`)
-      .max(9999, obj => `Event Limit cannot be greater than ${obj.max}`)
-      .required('Event Limit field is required')
+      .matches(phoneRegExp, 'Phone number is not valid'),
+    website: yup.string()
   })
 
   const {
@@ -135,9 +117,9 @@ const UserViewLeft = ({ data }: Props) => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
-  const onSubmit = (params: AgentTypes) => {
+  const onSubmit = (params: CompanyTypes) => {
     dispatch(
-      editAgentDetail({
+      editCompanyDetail({
         params,
         id: data.id
       })
@@ -146,29 +128,29 @@ const UserViewLeft = ({ data }: Props) => {
     })
   }
 
-  // Handle Detele Agent
-  const handleSubmitDeleteAgent = () => {
-    dispatch(deleteAgent(data.id)).then(() => {
-      router.replace('/agent')
+  // Handle Detele Company
+  const handleSubmitDeleteCompany = () => {
+    dispatch(deleteCompany(data.id)).then(() => {
+      router.replace('/company')
     })
   }
 
-  const handleSubmitResumeAgent = () => {
-    dispatch(editAgentDetail({ params: { status: true }, id: data.id })).then(() => {
-      dispatch(fetchAgentDetail(data.id))
+  const handleSubmitResumeCompany = () => {
+    dispatch(editCompanyDetail({ params: { status: true }, id: data.id })).then(() => {
+      dispatch(fetchCompanyDetail(data.id))
     })
   }
 
-  const renderUserAvatar = () => {
-    if (data) {
+  const renderCompanyAvatar = () => {
+    if (data.name) {
       return (
         <CustomAvatar
           skin='light'
           variant='rounded'
-          color={data.role === 'admin' ? 'primary' : 'error'}
+          color={'primary'}
           sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
         >
-          {getInitials(data.firstName + ' ' + data.lastName)}
+          {getInitials(data.name)}
         </CustomAvatar>
       )
     } else {
@@ -182,62 +164,26 @@ const UserViewLeft = ({ data }: Props) => {
         <Grid item xs={12}>
           <Card>
             <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              {renderUserAvatar()}
+              {renderCompanyAvatar()}
               <Typography variant='h6' sx={{ mb: 4 }}>
-                {data.firstName + ' ' + data.lastName}
+                {data.name}
               </Typography>
-              <CustomChip
-                skin='light'
-                size='small'
-                label={data.role}
-                color={roleColors[data.role]}
-                sx={{
-                  borderRadius: '4px',
-                  fontSize: '0.875rem',
-                  textTransform: 'capitalize',
-                  '& .MuiChip-label': { mt: -0.25 }
-                }}
-              />
             </CardContent>
 
             <CardContent sx={{ my: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Box sx={{ mr: 6, display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 4, width: 44, height: 44 }}>
-                    <Domain />
-                  </CustomAvatar>
-                  <Box>
-                    <Typography variant='h5' sx={{ lineHeight: 1.3 }}>
-                      {data.totalCompany}
-                    </Typography>
-                    <Typography variant='body2'>Company</Typography>
-                  </Box>
-                </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CustomAvatar skin='light' variant='rounded' sx={{ mr: 4, width: 44, height: 44 }}>
                     <StarOutline />
                   </CustomAvatar>
                   <Box>
                     <Typography variant='h5' sx={{ lineHeight: 1.3 }}>
-                      {data.totalEvent}
+                      {data.events && data.events.length}
                     </Typography>
                     <Typography variant='body2'>Event</Typography>
                   </Box>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', mb: 1.5, mt: 6, justifyContent: 'space-between' }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                  Events
-                </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                  {`${data.totalEvent} of ${data.eventLimit} Events`}
-                </Typography>
-              </Box>
-              <LinearProgress
-                value={(data.totalEvent / data.eventLimit) * 100}
-                variant='determinate'
-                sx={{ height: 8, borderRadius: '5px' }}
-              />
             </CardContent>
 
             <CardContent>
@@ -246,17 +192,21 @@ const UserViewLeft = ({ data }: Props) => {
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                    Username:
+                    Slug:
                   </Typography>
-                  <Typography variant='body2'>
-                    @{(data.firstName + ' ' + data.lastName).toLowerCase().replace(/\s/g, '')}
-                  </Typography>
+                  <Typography variant='body2'>@{data.baseName}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                     Email:
                   </Typography>
-                  <Typography variant='body2'>{data.email}</Typography>
+                  <Typography variant='body2'>{data.email || ''}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', mb: 2.7 }}>
+                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                    Website:
+                  </Typography>
+                  <Typography variant='body2'>{data.website || ''}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
@@ -277,19 +227,15 @@ const UserViewLeft = ({ data }: Props) => {
                   />
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Role:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Manager:</Typography>
                   <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
-                    {data.role}
+                    {data.agent && data.agent.firstName + ' ' + data.agent.lastName}
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
                   <Typography variant='body2'>{data.phone}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Language:</Typography>
-                  <Typography variant='body2'>English</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -311,18 +257,18 @@ const UserViewLeft = ({ data }: Props) => {
               aria-describedby='user-view-edit-description'
             >
               <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                Edit Agent Information
+                Edit Company Information
               </DialogTitle>
               <DialogContent>
                 <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
-                  Updating agent details will receive a privacy audit.
+                  Updating company details will receive a privacy audit.
                 </DialogContentText>
-                <form id='edit-agent-form' onSubmit={handleSubmit(onSubmit)}>
+                <form id='edit-company-form' onSubmit={handleSubmit(onSubmit)}>
                   <Grid container spacing={6}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                       <FormControl fullWidth>
                         <Controller
-                          name='firstName'
+                          name='name'
                           control={control}
                           rules={{ required: true }}
                           render={({ field: { value, onChange } }) => (
@@ -331,78 +277,22 @@ const UserViewLeft = ({ data }: Props) => {
                                 autoComplete: 'new-password'
                               }}
                               value={value}
-                              label='First Name'
+                              label='Company Name'
                               onChange={onChange}
-                              placeholder='First Name'
-                              error={Boolean(errors.firstName)}
-                              aria-describedby='validation-schema-first-name'
+                              placeholder='Company Name'
+                              error={Boolean(errors.name)}
+                              aria-describedby='validation-schema-company-name'
                             />
                           )}
                         />
-                        {errors.firstName && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
-                            {errors.firstName.message}
+                        {errors.name && (
+                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
+                            {errors.name.message}
                           </FormHelperText>
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <Controller
-                          name='lastName'
-                          control={control}
-                          rules={{ required: true }}
-                          render={({ field: { value, onChange } }) => (
-                            <TextField
-                              value={value}
-                              label='Last Name'
-                              inputProps={{
-                                autoComplete: 'new-password'
-                              }}
-                              onChange={onChange}
-                              placeholder='Carter'
-                              error={Boolean(errors.lastName)}
-                              aria-describedby='validation-schema-last-name'
-                            />
-                          )}
-                        />
-                        {errors.lastName && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
-                            {errors.lastName.message}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <Controller
-                          name='eventLimit'
-                          control={control}
-                          rules={{ required: true }}
-                          render={({ field: { value, onChange } }) => (
-                            <TextField
-                              type='number'
-                              inputProps={{
-                                autoComplete: 'new-password'
-                              }}
-                              value={value}
-                              label='Event Limit'
-                              onChange={onChange}
-                              error={Boolean(errors.eventLimit)}
-                              placeholder='0'
-                              aria-describedby='validation-schema-eventLimit'
-                            />
-                          )}
-                        />
-                        {errors.eventLimit && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-eventLimit'>
-                            {errors.eventLimit.message}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                       <FormControl fullWidth>
                         <Controller
                           name='phone'
@@ -410,22 +300,50 @@ const UserViewLeft = ({ data }: Props) => {
                           rules={{ required: true }}
                           render={({ field: { value, onChange } }) => (
                             <TextField
+                              value={value}
                               type='phone'
+                              label='Phone'
                               inputProps={{
                                 autoComplete: 'new-password'
                               }}
-                              value={value}
-                              label='Phone'
                               onChange={onChange}
-                              error={Boolean(errors.phone)}
                               placeholder='+65 0000 0000'
-                              aria-describedby='validation-schema-email'
+                              error={Boolean(errors.phone)}
+                              aria-describedby='validation-schema-phone'
                             />
                           )}
                         />
                         {errors.phone && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-email'>
+                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-phone'>
                             {errors.phone.message}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <Controller
+                          name='website'
+                          control={control}
+                          rules={{ required: true }}
+                          render={({ field: { value, onChange } }) => (
+                            <TextField
+                              inputProps={{
+                                autoComplete: 'new-password'
+                              }}
+                              value={value}
+                              label='Website'
+                              onChange={onChange}
+                              error={Boolean(errors.website)}
+                              placeholder='www.example.com'
+                              aria-describedby='validation-schema-website'
+                            />
+                          )}
+                        />
+                        {errors.website && (
+                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-website'>
+                            {errors.website.message}
                           </FormHelperText>
                         )}
                       </FormControl>
@@ -434,7 +352,7 @@ const UserViewLeft = ({ data }: Props) => {
                 </form>
               </DialogContent>
               <DialogActions sx={{ justifyContent: 'center' }}>
-                <Button variant='contained' sx={{ mr: 1 }} type='submit' form='edit-agent-form'>
+                <Button variant='contained' sx={{ mr: 1 }} type='submit' form='edit-company-form'>
                   Submit
                 </Button>
                 <Button variant='outlined' color='secondary' onClick={handleEditClose}>
@@ -444,11 +362,11 @@ const UserViewLeft = ({ data }: Props) => {
             </Dialog>
           </Card>
         </Grid>
-        <DialogAlertDelete
+        <DialogAlertDeleteCompany
           open={open}
-          dataAgent={data}
+          dataCompany={data}
           handleCloseAlert={handleCloseAlert}
-          handleSubmit={data.status ? handleSubmitDeleteAgent : handleSubmitResumeAgent}
+          handleSubmit={data.status ? handleSubmitDeleteCompany : handleSubmitResumeCompany}
         />
       </Grid>
     )
@@ -457,4 +375,4 @@ const UserViewLeft = ({ data }: Props) => {
   }
 }
 
-export default UserViewLeft
+export default CompanyViewLeft

@@ -18,11 +18,14 @@ interface CreateCompanyProps {
 }
 
 // ** Fetch Company
-export const fetchCompany = createAsyncThunk('company/fetchData', async () => {
-  const response = await axiosClient.get('/company?status=true')
+export const fetchCompany = createAsyncThunk(
+  'company/fetchData',
+  async (status: boolean | undefined, { getState }: Redux) => {
+    const response = await axiosClient.get(`/company?status=${getState().company.status}`)
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 // ** Add Company
 export const createCompany = createAsyncThunk(
@@ -44,7 +47,7 @@ export const createCompany = createAsyncThunk(
   }
 )
 
-// ** Delete Agent
+// ** Delete Company
 export const deleteCompany = createAsyncThunk('company/deleteCompany', async (id: number, { dispatch }: Redux) => {
   const promise = axiosClient.delete('/company/' + id).then(() => {
     dispatch(fetchCompany())
@@ -57,6 +60,19 @@ export const deleteCompany = createAsyncThunk('company/deleteCompany', async (id
   })
 })
 
+// ** Resume Company
+export const resumeCompany = createAsyncThunk('company/resumeCompany', async (id: number, { dispatch }: Redux) => {
+  const promise = axiosClient.put(`/company/${id}`, { status: true }).then(() => {
+    dispatch(fetchCompany())
+  })
+
+  toast.promise(promise, {
+    loading: 'Request Resume Company',
+    success: 'Resume Company Successfully',
+    error: 'Error when Resume Company'
+  })
+})
+
 export const companySlice = createSlice({
   name: 'company',
   initialState: {
@@ -64,11 +80,16 @@ export const companySlice = createSlice({
     page: 0,
     pageSize: 10,
     total: 0,
+    status: true,
     isLoading: false,
     isCreating: false,
     isDeleting: false
   },
-  reducers: {},
+  reducers: {
+    handleChangeStatus: (state, { payload }) => {
+      state.status = payload
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchCompany.pending, state => {

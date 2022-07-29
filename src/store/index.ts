@@ -5,12 +5,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import agent from 'src/store/agent'
 import company from 'src/store/company'
 import agentDetail from 'src/store/agent/view'
+import companyDetail from 'src/store/company/view'
 
 export const store = configureStore({
   reducer: {
     agent,
     company,
-    agentDetail
+    agentDetail,
+    companyDetail
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 
 interface EditAgentDetail {
   id: number
-  params: AgentTypes
+  params: AgentTypes | { status: boolean }
   isChangePassword?: boolean
 }
 

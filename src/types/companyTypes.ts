@@ -1,4 +1,5 @@
-import { AgentTypes, EventTypes } from './agentTypes'
+import { AgentTypes } from './agentTypes'
+import { EventTypes } from './eventTypes'
 
 export interface CreateCompanyParams {
   name: string
@@ -9,6 +10,9 @@ export interface CompanyTypes {
   id: number
   baseName: string
   name: string
+  email: string
+  website: string
+  phone: string
   status: boolean
   createdAt: Date
   updatedAt: Date

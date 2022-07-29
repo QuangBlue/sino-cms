@@ -15,10 +15,17 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 
 // import DialogActions from '@mui/material/DialogActions'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Grid from '@mui/material/Grid'
 import FormValidationSchema from './FormValidationSchema'
 import CardHeader from '@mui/material/CardHeader'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
+import { agentSlice, fetchAgent } from 'src/store/agent'
 
 interface TableHeaderProps {
   value: string
@@ -31,11 +38,24 @@ const TableHeaderAgent = (props: TableHeaderProps) => {
   // ** Props
   const { value, /* selectedRows */ handleFilter } = props
 
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.agent)
+
   const [open, setOpen] = useState<boolean>(false)
 
   const handleClickOpen = () => setOpen(true)
 
   const handleClose = () => setOpen(false)
+
+  const handleStatusChange = useCallback(
+    async (e: SelectChangeEvent) => {
+      const status = e.target.value == 'active' ? true : false
+      await dispatch(agentSlice.actions.handleChangeStatus(status))
+      await dispatch(fetchAgent())
+    },
+    [dispatch]
+  )
 
   return (
     <Box
@@ -58,6 +78,21 @@ const TableHeaderAgent = (props: TableHeaderProps) => {
         }}
       />
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <FormControl size='small' sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}>
+          <InputLabel id='status-select'>Status</InputLabel>
+          <Select
+            fullWidth
+            value={store.status ? 'active' : 'inactive'}
+            id='select-status'
+            label='Status'
+            labelId='status-select'
+            onChange={handleStatusChange}
+            inputProps={{ placeholder: 'Select Role' }}
+          >
+            <MenuItem value='active'>Active</MenuItem>
+            <MenuItem value='inactive'>Inactive</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           size='small'
           value={value}
