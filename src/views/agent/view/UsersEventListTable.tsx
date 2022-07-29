@@ -20,9 +20,9 @@ import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 
 // ** Custom Component Imports
 import { useSelector } from 'react-redux'
-import { EventTypes } from 'src/types/agentTypes'
 import { RootState } from 'src/store'
 import { CompanyTypes } from 'src/types/companyTypes'
+import { EventTypes } from 'src/types/eventTypes'
 
 interface CellType {
   row: EventTypes
