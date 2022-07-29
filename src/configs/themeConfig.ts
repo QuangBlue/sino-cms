@@ -50,7 +50,7 @@ const themeConfig: ThemeConfig = {
   layout: 'vertical' /* vertical | horizontal */,
   mode: 'light' /* light | dark */,
   direction: 'ltr' /* ltr | rtl */,
-  skin: 'semi-dark' /* default | bordered | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
+  skin: 'default' /* default | bordered | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   contentWidth: 'full' /* full | boxed */,
   footer: 'static' /* fixed | static | hidden */,
 

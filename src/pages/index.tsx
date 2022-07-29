@@ -14,8 +14,8 @@ import { useAuth } from 'src/hooks/useAuth'
  *  Set Home URL based on User Roles
  */
 export const getHomeRoute = (role: string) => {
-  if (role === 'client') return '/acl'
-  else return '/home'
+  if (role === 'client') return '/company'
+  else return '/company'
 }
 
 const Home = () => {
