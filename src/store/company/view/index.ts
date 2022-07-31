@@ -1,3 +1,4 @@
+import { CreateEventPayload } from 'src/types/eventTypes'
 import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit'
 import axiosClient from 'src/configs/axiosClient'
 
@@ -36,6 +37,29 @@ export const editCompanyDetail = createAsyncThunk(
       loading: 'Request Update Company',
       success: 'Update Company Successfully',
       error: 'Error when Update Company'
+    })
+  }
+)
+
+// ** Create Event
+export const createEvent = createAsyncThunk(
+  'company/createEvent',
+  async (data: CreateEventPayload, { getState, dispatch }: Redux) => {
+    const { payload, handleClickCloseModal } = data
+
+    const promise = axiosClient
+      .post(`/event?companyName=${getState().companyDetail.companyData.baseName}`, payload)
+      .then(async () => {
+        await dispatch(fetchCompanyDetail(getState().companyDetail.companyData.id))
+      })
+      .then(() => {
+        handleClickCloseModal()
+      })
+
+    toast.promise(promise, {
+      loading: 'Request Create Event',
+      success: 'Create Event Successfully',
+      error: 'Error when Create Event'
     })
   }
 )

@@ -4,6 +4,16 @@ export interface EventTypes {
   baseName: string
   status: boolean
   address: string
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateEventPayload {
+  payload: {
+    name: string
+    baseName: string
+    address: string
+    status: boolean
+  }
+  handleClickCloseModal: () => void
 }

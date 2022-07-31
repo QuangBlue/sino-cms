@@ -107,6 +107,7 @@ const CompanyList = () => {
 
   const handleFilter = (val: string) => {
     setValue(val)
+    dispatch(fetchCompany(val))
   }
 
   // Handle Detele Company
@@ -175,7 +176,7 @@ const CompanyList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <TableHeaderCompany value={value} /* selectedRows={selectedRows} */ handleFilter={handleFilter} />
+          <TableHeaderCompany value={value} handleFilter={handleFilter} />
           <DataGrid
             autoHeight
             pagination

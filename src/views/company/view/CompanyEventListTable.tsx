@@ -22,6 +22,13 @@ import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 import { useSelector } from 'react-redux'
 import { RootState } from 'src/store'
 import { EventTypes } from 'src/types/eventTypes'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import Grid from '@mui/material/Grid'
+import FormCreateEventSchema from './FormCreateEventSchema'
 
 interface CellType {
   row: EventTypes
@@ -97,6 +104,12 @@ const CompanyEventListTable = () => {
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
 
+  const [open, setOpen] = useState<boolean>(false)
+
+  const handleClickOpen = () => setOpen(true)
+
+  const handleClose = () => setOpen(false)
+
   // ** Redux
   const store = useSelector((state: RootState) => state.companyDetail)
 
@@ -110,6 +123,13 @@ const CompanyEventListTable = () => {
             variant: 'h6',
             sx: { lineHeight: '32px !important', letterSpacing: '0.15px !important' }
           }}
+          action={
+            <Box>
+              <Button size='small' variant='contained' onClick={handleClickOpen}>
+                Create Event
+              </Button>
+            </Box>
+          }
         />
         <DataGrid
           autoHeight
@@ -121,6 +141,15 @@ const CompanyEventListTable = () => {
           onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
         />
+        <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+          <DialogTitle id='form-dialog-title'>Create Event</DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ mb: 3 }}>Please fill in the information to create an Event.</DialogContentText>
+            <Grid item xs={12}>
+              <FormCreateEventSchema handleClickCloseModal={handleClose} />
+            </Grid>
+          </DialogContent>
+        </Dialog>
       </Card>
     )
   } else {

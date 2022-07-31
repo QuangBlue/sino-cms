@@ -260,6 +260,12 @@ const UserViewLeft = ({ data }: Props) => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                    ID:
+                  </Typography>
+                  <Typography variant='body2'>{data.id}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', mb: 2.7 }}>
+                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                     Status:
                   </Typography>
                   <CustomChip

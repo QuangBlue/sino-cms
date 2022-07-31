@@ -21,29 +21,32 @@ import Button from '@mui/material/Button'
 // ** Redux Inports
 import { AppDispatch, RootState } from 'src/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { createCompany } from 'src/store/company'
-import { CreateCompanyParams } from 'src/types/companyTypes'
 import { convertToSlug } from 'src/@core/utils/convert-to-slug'
+import { CreateEventPayload } from 'src/types/eventTypes'
+import { createEvent } from 'src/store/company/view'
 
 interface FormValidationSchemaProps {
   handleClickCloseModal: () => void
 }
 
 const defaultValues = {
-  name: ''
+  name: '',
+  address: ''
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required('Company Name field is required')
+  name: yup.string().required('Company Name field is required'),
+  address: yup.string().required('Address field is required')
 })
 
-const FormValidationSchema = (props: FormValidationSchemaProps) => {
+const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
   // ** Props
   const { handleClickCloseModal } = props
 
   // ** Hook
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.agent)
+
   const {
     control,
     handleSubmit,
@@ -54,16 +57,21 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = async (payload: { name: string }) => {
-    const { name } = payload
+  const onSubmit = async (data: { name: string; address: string }) => {
+    const { name, address } = data
     const baseName = convertToSlug(name)
 
-    const params: CreateCompanyParams = {
-      name,
-      baseName
+    const params: CreateEventPayload = {
+      payload: {
+        name,
+        baseName,
+        address,
+        status: true
+      },
+      handleClickCloseModal
     }
 
-    dispatch(createCompany({ params, handleClickCloseModal }))
+    dispatch(createEvent(params))
   }
 
   return (
@@ -83,17 +91,45 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Company Name'
+                      label='Event Name'
                       onChange={onChange}
                       placeholder='Company Name'
                       error={Boolean(errors.name)}
-                      aria-describedby='validation-schema-company-name'
+                      aria-describedby='validation-schema-event-name'
                     />
                   )}
                 />
                 {errors.name && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
                     {errors.name.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Controller
+                  name='address'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      inputProps={{
+                        autoComplete: 'new-password'
+                      }}
+                      value={value}
+                      label='Address'
+                      onChange={onChange}
+                      placeholder='Address Event'
+                      error={Boolean(errors.address)}
+                      aria-describedby='validation-schema-event-address'
+                    />
+                  )}
+                />
+                {errors.address && (
+                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-event-address'>
+                    {errors.address.message}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -114,4 +150,4 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
   )
 }
 
-export default FormValidationSchema
+export default FormCreateEventSchema

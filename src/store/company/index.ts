@@ -20,8 +20,8 @@ interface CreateCompanyProps {
 // ** Fetch Company
 export const fetchCompany = createAsyncThunk(
   'company/fetchData',
-  async (status: boolean | undefined, { getState }: Redux) => {
-    const response = await axiosClient.get(`/company?status=${getState().company.status}`)
+  async (query: string | undefined, { getState }: Redux) => {
+    const response = await axiosClient.get(`/company?status=${getState().company.status}&keyword=${query ? query : ''}`)
 
     return response.data
   }

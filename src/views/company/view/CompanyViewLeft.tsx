@@ -198,6 +198,12 @@ const CompanyViewLeft = ({ data }: Props) => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                    ID Event:
+                  </Typography>
+                  <Typography variant='body2'>{data.id || ''}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', mb: 2.7 }}>
+                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                     Email:
                   </Typography>
                   <Typography variant='body2'>{data.email || ''}</Typography>

@@ -36,7 +36,7 @@ interface TableHeaderProps {
 
 const TableHeaderCompany = (props: TableHeaderProps) => {
   // ** Props
-  const { value, /* selectedRows */ handleFilter } = props
+  const { value, handleFilter } = props
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -114,12 +114,6 @@ const TableHeaderCompany = (props: TableHeaderProps) => {
             <FormValidationSchema handleClickCloseModal={handleClose} />
           </Grid>
         </DialogContent>
-        {/* <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button size='large' type='submit' variant='contained'>
-            Create
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </Box>
   )
