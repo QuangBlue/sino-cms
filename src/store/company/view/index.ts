@@ -1,4 +1,4 @@
-import { CreateEventPayload } from 'src/types/eventTypes'
+import { CreateEventPayload, EventTypes } from 'src/types/eventTypes'
 import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit'
 import axiosClient from 'src/configs/axiosClient'
 
@@ -17,11 +17,15 @@ interface Redux {
 }
 
 // ** Fetch Company Detail
-export const fetchCompanyDetail = createAsyncThunk('companyDetail/fetchData', async (id: number) => {
-  const response = await axiosClient.get(`/company/${id}`)
+export const fetchCompanyDetail = createAsyncThunk(
+  'companyDetail/fetchData',
+  async (id: number, { dispatch }: Redux) => {
+    const response = await axiosClient.get(`/company/${id}`)
+    dispatch(getEvent(response.data.baseName))
 
-  return response
-})
+    return response
+  }
+)
 
 // ** Edit Company Detail
 export const editCompanyDetail = createAsyncThunk(
@@ -41,16 +45,33 @@ export const editCompanyDetail = createAsyncThunk(
   }
 )
 
+// ** Get All Event
+export const getEvent = createAsyncThunk(
+  'companyDetail/getEvent',
+  async (companyNumber: string | undefined, { getState }: Redux) => {
+    const response = await axiosClient.get(
+      `/event?companyName=${companyNumber ? companyNumber : getState().companyDetail.companyData.baseName}&status=${
+        getState().companyDetail.status
+      }`
+    )
+
+    return response.data
+  }
+)
+
 // ** Create Event
 export const createEvent = createAsyncThunk(
-  'company/createEvent',
+  'companyDetail/createEvent',
   async (data: CreateEventPayload, { getState, dispatch }: Redux) => {
     const { payload, handleClickCloseModal } = data
 
     const promise = axiosClient
       .post(`/event?companyName=${getState().companyDetail.companyData.baseName}`, payload)
+      .then(() => {
+        dispatch(fetchCompanyDetail(getState().companyDetail.companyData.id))
+      })
       .then(async () => {
-        await dispatch(fetchCompanyDetail(getState().companyDetail.companyData.id))
+        dispatch(getEvent())
       })
       .then(() => {
         handleClickCloseModal()
@@ -64,16 +85,55 @@ export const createEvent = createAsyncThunk(
   }
 )
 
+// ** Delete Event
+
+export const deleteEvent = createAsyncThunk(
+  'companyDetail/deleteEvent',
+  async (eventID: number, { dispatch }: Redux) => {
+    const promise = axiosClient.delete(`/event/${eventID}`).then(() => {
+      dispatch(getEvent())
+    })
+
+    toast.promise(promise, {
+      loading: 'Request Delete Event',
+      success: 'Delete Event Successfully',
+      error: 'Error when Delete Event'
+    })
+  }
+)
+
+// ** Resume Event
+export const resumeEvent = createAsyncThunk(
+  'companyDetail/resumeEvent',
+  async (eventID: number, { dispatch }: Redux) => {
+    const params = { status: true }
+    const promise = axiosClient.put(`/event/${eventID}`, params).then(() => {
+      dispatch(getEvent())
+    })
+
+    toast.promise(promise, {
+      loading: 'Request Resume Event',
+      success: 'Resume Event Successfully',
+      error: 'Error when Resume Event'
+    })
+  }
+)
+
 export const companyDetailSlice = createSlice({
   name: 'companyDetail',
   initialState: {
     companyData: {} as CompanyTypes,
+    listEvent: [] as EventTypes[],
+    status: true,
     isLoading: false
   },
   reducers: {
     handlePageChange: state => {
       state.companyData = {} as CompanyTypes
-      state.isLoading = false
+      ;(state.listEvent = [] as EventTypes[]), (state.status = true), (state.isLoading = false)
+    },
+    handleChangeStatus: (state, { payload }) => {
+      state.status = payload
     }
   },
 
@@ -85,6 +145,9 @@ export const companyDetailSlice = createSlice({
       .addCase(fetchCompanyDetail.fulfilled, (state, action) => {
         state.isLoading = false
         state.companyData = action.payload.data
+      })
+      .addCase(getEvent.fulfilled, (state, action) => {
+        state.listEvent = action.payload.data
       })
   }
 })

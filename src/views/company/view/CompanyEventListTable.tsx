@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -19,8 +19,8 @@ import EyeOutline from 'mdi-material-ui/EyeOutline'
 import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 
 // ** Custom Component Imports
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 import { EventTypes } from 'src/types/eventTypes'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -29,6 +29,13 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import Grid from '@mui/material/Grid'
 import FormCreateEventSchema from './FormCreateEventSchema'
+import DialogAlertDeleteEvent from './DialogAlertDeleteEvent'
+import { companyDetailSlice, deleteEvent, getEvent, resumeEvent } from 'src/store/company/view'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import BackupRestore from 'mdi-material-ui/BackupRestore'
 
 interface CellType {
   row: EventTypes
@@ -39,7 +46,7 @@ const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const columns = [
+const defaultColumns = [
   {
     flex: 0.2,
     field: 'id',
@@ -72,31 +79,6 @@ const columns = [
     field: 'address',
     headerName: 'Address',
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.address || ''}</Typography>
-  },
-  {
-    flex: 0.1,
-    minWidth: 130,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }: CellType) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Tooltip title='Delete Event'>
-          <IconButton size='small'>
-            <DeleteOutline />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title='View'>
-          <Box>
-            <Link href={`/event/view/${row.id}`} passHref>
-              <IconButton size='small' component='a' sx={{ textDecoration: 'none' }}>
-                <EyeOutline />
-              </IconButton>
-            </Link>
-          </Box>
-        </Tooltip>
-      </Box>
-    )
   }
 ]
 
@@ -111,7 +93,76 @@ const CompanyEventListTable = () => {
   const handleClose = () => setOpen(false)
 
   // ** Redux
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.companyDetail)
+
+  const handleSubmitDeleteEvent = (rowId: number, handleCloseAlert: () => void) => {
+    dispatch(deleteEvent(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const handleSubmitResumeEvent = (rowId: number, handleCloseAlert: () => void) => {
+    dispatch(resumeEvent(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const handleStatusChange = useCallback(
+    async (e: SelectChangeEvent) => {
+      const status = e.target.value == 'active' ? true : false
+      await dispatch(companyDetailSlice.actions.handleChangeStatus(status))
+      await dispatch(getEvent())
+    },
+    [dispatch]
+  )
+
+  const columns = [
+    ...defaultColumns,
+    {
+      flex: 0.1,
+      minWidth: 130,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: CellType) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [open, setOpen] = useState<boolean>(false)
+        const handleClickOpenAlert = () => setOpen(true)
+        const handleCloseAlert = () => setOpen(false)
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title='Delete Event'>
+              <IconButton size='small' onClick={handleClickOpenAlert}>
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='View'>
+              <Box>
+                <Link href={`/event/view/${row.id}`} passHref>
+                  <IconButton size='small' component='a' sx={{ textDecoration: 'none' }}>
+                    <EyeOutline />
+                  </IconButton>
+                </Link>
+              </Box>
+            </Tooltip>
+            <DialogAlertDeleteEvent
+              open={open}
+              eventData={row}
+              handleCloseAlert={handleCloseAlert}
+              handleSubmit={() =>
+                row.status
+                  ? handleSubmitDeleteEvent(row.id, handleCloseAlert)
+                  : handleSubmitResumeEvent(row.id, handleCloseAlert)
+              }
+            />
+          </Box>
+        )
+      }
+    }
+  ]
 
   if (store.companyData.events) {
     return (
@@ -125,7 +176,22 @@ const CompanyEventListTable = () => {
           }}
           action={
             <Box>
-              <Button size='small' variant='contained' onClick={handleClickOpen}>
+              <FormControl size='small' sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}>
+                <InputLabel id='status-select'>Status</InputLabel>
+                <Select
+                  fullWidth
+                  value={store.status ? 'active' : 'inactive'}
+                  id='select-status'
+                  label='Status'
+                  labelId='status-select'
+                  onChange={handleStatusChange}
+                  inputProps={{ placeholder: 'Select Role' }}
+                >
+                  <MenuItem value='active'>Active</MenuItem>
+                  <MenuItem value='inactive'>Inactive</MenuItem>
+                </Select>
+              </FormControl>
+              <Button variant='contained' onClick={handleClickOpen}>
                 Create Event
               </Button>
             </Box>
@@ -134,7 +200,7 @@ const CompanyEventListTable = () => {
         <DataGrid
           autoHeight
           columns={columns}
-          rows={store.companyData.events}
+          rows={store.listEvent}
           pageSize={pageSize}
           disableSelectionOnClick
           rowsPerPageOptions={[7, 10, 25, 50]}
