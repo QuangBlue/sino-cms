@@ -93,7 +93,7 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                       value={value}
                       label='Event Name'
                       onChange={onChange}
-                      placeholder='Company Name'
+                      placeholder='Event Name'
                       error={Boolean(errors.name)}
                       aria-describedby='validation-schema-event-name'
                     />
