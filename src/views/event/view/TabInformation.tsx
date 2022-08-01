@@ -21,6 +21,7 @@ import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
 import { deleteEvent, editEventDetail, resumeEvent, uploadEventMap } from 'src/store/event/view'
 import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
+import { formatDate } from 'src/@core/utils/format'
 
 interface TabInformationProps {
   eventData: EventTypes
@@ -55,7 +56,8 @@ const TabInformation = (data: TabInformationProps) => {
 
   // ** State
   const [mapImg, setMapImg] = useState<string>('/images/misc/upload.png')
-  const [logoImg, setLogoImg] = useState<string>('/images/misc/upload.png')
+
+  // const [logoImg, setLogoImg] = useState<string>('/images/misc/upload.png')
   const [open, setOpen] = useState<boolean>(false)
   const handleClickOpenAlert = () => setOpen(true)
   const handleCloseAlert = () => setOpen(false)
@@ -97,15 +99,15 @@ const TabInformation = (data: TabInformationProps) => {
     }
   }
 
-  const onChangeLogo = (file: ChangeEvent) => {
-    const reader = new FileReader()
-    const { files } = file.target as HTMLInputElement
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoImg(reader.result as string)
+  // const onChangeLogo = (file: ChangeEvent) => {
+  //   const reader = new FileReader()
+  //   const { files } = file.target as HTMLInputElement
+  //   if (files && files.length !== 0) {
+  //     reader.onload = () => setLogoImg(reader.result as string)
 
-      reader.readAsDataURL(files[0])
-    }
-  }
+  //     reader.readAsDataURL(files[0])
+  //   }
+  // }
 
   const onSubmit = async (payload: EventTypes) => {
     dispatch(editEventDetail({ payload }))
@@ -309,7 +311,7 @@ const TabInformation = (data: TabInformationProps) => {
                     inputProps={{
                       autoComplete: 'new-password'
                     }}
-                    value={value}
+                    value={formatDate(value || '')}
                     label='Created At'
                     onChange={onChange}
                     placeholder='Created At'

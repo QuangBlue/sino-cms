@@ -72,7 +72,7 @@ export const resumeEvent = createAsyncThunk('eventDetail/resumeEvent', async (ev
 // ** Upload Event Map
 export const uploadEventMap = createAsyncThunk(
   'eventDetail/uploadEventMap',
-  async (file: File, { getState }: Redux) => {
+  async (file: File, { getState, dispatch }: Redux) => {
     const formData = new FormData()
     formData.append('files', file)
     try {
@@ -86,10 +86,11 @@ export const uploadEventMap = createAsyncThunk(
         name: `map-${getState().eventDetail.eventData.baseName}`,
         imgUrl: promise.data.data[0]
       }
-      const createEventMap = axiosClient.post(
-        `/event-map?eventName=${getState().eventDetail.eventData.baseName}`,
-        payload
-      )
+      const createEventMap = axiosClient
+        .post(`/event-map?eventName=${getState().eventDetail.eventData.baseName}`, payload)
+        .then(() => {
+          dispatch(getEventMap(getState().eventDetail.eventData.baseName))
+        })
 
       toast.promise(createEventMap, {
         loading: 'Request Upload Event Map',

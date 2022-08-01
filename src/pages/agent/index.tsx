@@ -43,6 +43,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { agentSlice, deleteAgent, fetchAgent, resumeAgent } from 'src/store/agent'
 import DialogAlertDelete from 'src/views/agent/DialogAlertDeleteAgent'
 import BackupRestore from 'mdi-material-ui/BackupRestore'
+import { formatDate } from 'src/@core/utils/format'
 
 interface CustomInputProps {
   dates: Date[]
@@ -148,7 +149,7 @@ const defaultColumns = [
     minWidth: 120,
     field: 'createdAt',
     headerName: 'Created At',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.createdAt.toString()}</Typography>
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{formatDate(row.createdAt.toString())}</Typography>
   }
 ]
 

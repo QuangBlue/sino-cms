@@ -40,6 +40,10 @@ const SpeakerContent = () => {
     }
   }, [store.listSpeaker.length])
 
+  const addSpeakerFiled = () => {
+    setCount(count + 1)
+  }
+
   return (
     <Box>
       <RepeaterWrapper>
@@ -54,7 +58,7 @@ const SpeakerContent = () => {
 
             return (
               <Tag key={i} className='repeater-wrapper' {...(i !== 0 ? { in: true } : {})}>
-                <SpeakerAdd />
+                <SpeakerAdd index={i} />
               </Tag>
             )
           }}
@@ -63,10 +67,11 @@ const SpeakerContent = () => {
         <Grid container sx={{ mt: 4.75 }}>
           <Grid item xs={12} sx={{ px: 0 }}>
             <Button
+              form='add-speaker-form'
               size='small'
               variant='contained'
               startIcon={<Plus fontSize='small' />}
-              onClick={() => setCount(count + 1)}
+              onClick={addSpeakerFiled}
             >
               Add Item
             </Button>
