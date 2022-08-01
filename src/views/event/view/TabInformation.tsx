@@ -159,7 +159,7 @@ const TabInformation = (data: TabInformationProps) => {
               <ImgStyled src={mapImg} alt='Profile Pic' />
 
               <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-map'>
-                Upload Map Event
+                Upload Event Map
                 <input
                   hidden
                   type='file'
@@ -170,7 +170,7 @@ const TabInformation = (data: TabInformationProps) => {
               </ButtonStyled>
 
               <Typography sx={{ mt: 4 }} component='p' variant='caption'>
-                Allowed PNG or JPEG. Max size of 800K.
+                Files must be PNG or JPEG. Max size of 800K.
               </Typography>
             </Box>
           </Grid>
