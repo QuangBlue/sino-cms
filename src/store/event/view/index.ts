@@ -134,7 +134,8 @@ export const eventDetailSlice = createSlice({
         state.eventData = action.payload.data
       })
       .addCase(getEventMap.fulfilled, (state, action) => {
-        state.eventMap = action.payload.data
+        console.log('payload', action.payload)
+        state.eventMap = action.payload?.data
       })
   }
 })

@@ -98,7 +98,7 @@ const EventDetail = () => {
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='information'>
-          <TabInformation eventData={store.eventData} eventMap={store.eventMap.at(-1)} />
+          <TabInformation eventData={store.eventData} eventMap={store.eventMap?.at(-1)} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='website'>
           <TabWebsite />
