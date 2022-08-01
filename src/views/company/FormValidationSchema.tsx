@@ -101,7 +101,7 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
 
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button size='large' variant='text' style={{ minWidth: 120 }} onClick={handleClickCloseModal}>
-                Disagree
+                Cancel
               </Button>
               <Button size='large' type='submit' variant='contained' style={{ minWidth: 120 }}>
                 {store.isCreating ? <CircularProgress size='1.6rem' color='inherit' /> : 'Create'}
