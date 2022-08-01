@@ -127,7 +127,7 @@ const FormCreateEventSchema = (props: FormCreateEventSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Event Addresse'
+                      label='Event Address'
                       onChange={onChange}
                       placeholder='Event Address'
                       error={Boolean(errors.address)}
