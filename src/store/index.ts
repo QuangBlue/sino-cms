@@ -3,15 +3,21 @@ import { configureStore } from '@reduxjs/toolkit'
 
 // ** Reducers
 import agent from 'src/store/agent'
+import event from 'src/store/event'
 import company from 'src/store/company'
+import eventDetail from 'src/store/event/view'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
+import eventWebsite from 'src/store/event/view/website'
 
 export const store = configureStore({
   reducer: {
     agent,
+    event,
     company,
+    eventDetail,
     agentDetail,
+    eventWebsite,
     companyDetail
   },
   middleware: getDefaultMiddleware =>

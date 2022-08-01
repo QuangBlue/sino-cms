@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit'
 
 // ** Axios
 import axiosClient from 'src/configs/axiosClient'
-import { CreateAgentParams } from 'src/types/agentTypes'
+import { AgentTypes, CreateAgentParams } from 'src/types/agentTypes'
 
 // ** Third Party Imports
 import toast from 'react-hot-toast'
@@ -20,8 +20,8 @@ interface CreateAgentProps {
 // ** Fetch Agent
 export const fetchAgent = createAsyncThunk(
   'agent/fetchData',
-  async (status: boolean | undefined, { getState }: Redux) => {
-    const response = await axiosClient.get(`/agent?status=${getState().agent.status}`)
+  async (query: string | undefined | undefined, { getState }: Redux) => {
+    const response = await axiosClient.get(`/agent?status=${getState().agent.status}&keyword=${query ? query : ''}`)
 
     return response.data
   }
@@ -76,7 +76,7 @@ export const resumeAgent = createAsyncThunk('agent/resumeAgent', async (id: numb
 export const agentSlice = createSlice({
   name: 'agent',
   initialState: {
-    listAgent: [],
+    listAgent: [] as AgentTypes[],
     statusAgent: true,
     page: 0,
     pageSize: 10,

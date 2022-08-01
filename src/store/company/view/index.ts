@@ -86,7 +86,6 @@ export const createEvent = createAsyncThunk(
 )
 
 // ** Delete Event
-
 export const deleteEvent = createAsyncThunk(
   'companyDetail/deleteEvent',
   async (eventID: number, { dispatch }: Redux) => {

@@ -183,6 +183,7 @@ const AgentList = () => {
 
   const handleFilter = (val: string) => {
     setValue(val)
+    dispatch(fetchAgent(val))
   }
 
   // Handle Detele Agent

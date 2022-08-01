@@ -9,14 +9,21 @@ const navigation = (): HorizontalNavItemsType => [
   {
     title: 'Company',
     icon: EmailOutline,
-    path: '/company'
+    path: '/company',
+    action: 'read',
+    subject: 'agent-view'
+  },
+  {
+    title: 'Event',
+    icon: EmailOutline,
+    path: '/event',
+    action: 'read',
+    subject: 'agent-view'
   },
   {
     title: 'Agent',
     icon: EmailOutline,
-    path: '/agent',
-    action: 'read',
-    subject: 'agent-view'
+    path: '/agent'
   }
 ]
 

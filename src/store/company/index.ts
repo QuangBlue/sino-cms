@@ -5,7 +5,7 @@ import axiosClient from 'src/configs/axiosClient'
 
 // ** Third Party Imports
 import toast from 'react-hot-toast'
-import { CreateCompanyParams } from 'src/types/companyTypes'
+import { CompanyTypes, CreateCompanyParams } from 'src/types/companyTypes'
 
 interface Redux {
   getState: any
@@ -76,7 +76,7 @@ export const resumeCompany = createAsyncThunk('company/resumeCompany', async (id
 export const companySlice = createSlice({
   name: 'company',
   initialState: {
-    listCompany: [],
+    listCompany: [] as CompanyTypes[],
     page: 0,
     pageSize: 10,
     total: 0,

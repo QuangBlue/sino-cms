@@ -9,14 +9,21 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Company',
       icon: EmailOutline,
-      path: '/company'
+      path: '/company',
+      action: 'read',
+      subject: 'agent-view'
+    },
+    {
+      title: 'Event',
+      icon: EmailOutline,
+      path: '/event',
+      action: 'read',
+      subject: 'agent-view'
     },
     {
       title: 'Agent',
       icon: EmailOutline,
-      path: '/agent',
-      action: 'read',
-      subject: 'admin-view'
+      path: '/agent'
     }
   ]
 }

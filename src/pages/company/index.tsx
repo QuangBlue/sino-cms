@@ -195,4 +195,9 @@ const CompanyList = () => {
   )
 }
 
+CompanyList.acl = {
+  action: 'read',
+  subject: 'agent-view'
+}
+
 export default CompanyList
