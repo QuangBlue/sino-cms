@@ -106,6 +106,7 @@ export const uploadEventMap = createAsyncThunk(
 
 export const getEventMap = createAsyncThunk('eventDetail/uploadEventMap', async (eventName: string) => {
   const response = await axiosClient.get(`event-map?eventName=${eventName}`)
+  console.log(response.data)
 
   return response.data
 })

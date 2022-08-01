@@ -126,21 +126,21 @@ const TabInformation = (data: TabInformationProps) => {
     <CardContent>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={6}>
-          <Grid item xs={12} sm={6} sx={{ my: 5 }}>
+          {/* <Grid item xs={12} sm={6} sx={{ my: 5 }}>
             <Typography variant='h6' sx={{ mb: 5 }}>
               Logo Event
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
               <ImgStyled src={logoImg} alt='Profile Pic' />
 
-              <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+              <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-logo'>
                 Upload Logo
                 <input
                   hidden
                   type='file'
                   onChange={onChangeLogo}
                   accept='image/png, image/jpeg'
-                  id='account-settings-upload-image'
+                  id='account-settings-upload-logo'
                 />
               </ButtonStyled>
 
@@ -148,22 +148,22 @@ const TabInformation = (data: TabInformationProps) => {
                 Allowed PNG or JPEG. Max size of 800K.
               </Typography>
             </Box>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ my: 5 }}>
+          </Grid> */}
+          <Grid item xs={12} sm={12} sx={{ my: 5 }}>
             <Typography variant='h6' sx={{ mb: 5 }}>
               Event Map
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
               <ImgStyled src={mapImg} alt='Profile Pic' />
 
-              <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+              <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-map'>
                 Upload Map Event
                 <input
                   hidden
                   type='file'
                   onChange={onChangeMap}
                   accept='image/png, image/jpeg'
-                  id='account-settings-upload-image'
+                  id='account-settings-upload-map'
                 />
               </ButtonStyled>
 
