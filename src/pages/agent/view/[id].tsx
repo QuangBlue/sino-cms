@@ -12,4 +12,9 @@ const UserView = () => {
   return <UserViewPage id={id} />
 }
 
+UserView.acl = {
+  action: 'read',
+  subject: 'agent-view'
+}
+
 export default UserView

@@ -108,4 +108,9 @@ const EventDetail = () => {
   )
 }
 
+EventDetail.acl = {
+  action: 'read',
+  subject: 'agent-view'
+}
+
 export default EventDetail

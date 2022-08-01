@@ -12,4 +12,9 @@ const CompanyView = () => {
   return <CompanyViewPage id={id} />
 }
 
+CompanyView.acl = {
+  action: 'read',
+  subject: 'agent-view'
+}
+
 export default CompanyView

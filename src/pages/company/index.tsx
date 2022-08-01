@@ -33,6 +33,7 @@ import { CompanyTypes } from 'src/types/companyTypes'
 import { companySlice, deleteCompany, fetchCompany, resumeCompany } from 'src/store/company'
 import DialogAlertDeleteCompany from 'src/views/company/DialogAlertDeleteCompany'
 import { BackupRestore } from 'mdi-material-ui'
+import { formatDate } from 'src/@core/utils/format'
 
 interface CellType {
   row: CompanyTypes
@@ -86,7 +87,7 @@ const defaultColumns = [
     minWidth: 120,
     field: 'createdAt',
     headerName: 'Created At',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.createdAt.toString()}</Typography>
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{formatDate(row.createdAt.toString())}</Typography>
   }
 ]
 
