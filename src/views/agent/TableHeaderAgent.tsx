@@ -114,7 +114,7 @@ const TableHeaderAgent = (props: TableHeaderProps) => {
           </Grid>
         </DialogContent>
         {/* <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Cancel</Button>
           <Button size='large' type='submit' variant='contained'>
             Create
           </Button>
