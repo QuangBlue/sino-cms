@@ -312,9 +312,9 @@ const TabInformation = (data: TabInformationProps) => {
                       autoComplete: 'new-password'
                     }}
                     value={formatDate(value || '')}
-                    label='Created At'
+                    label='Created On'
                     onChange={onChange}
-                    placeholder='Created At'
+                    placeholder='Created On'
                     error={Boolean(errors.createdAt)}
                     aria-describedby='validation-schema-createdAt-event'
                   />

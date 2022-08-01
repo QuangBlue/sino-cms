@@ -148,7 +148,7 @@ const defaultColumns = [
     flex: 1,
     minWidth: 120,
     field: 'createdAt',
-    headerName: 'Created At',
+    headerName: 'Created On',
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{formatDate(row.createdAt.toString())}</Typography>
   }
 ]
