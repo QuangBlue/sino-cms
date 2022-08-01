@@ -119,9 +119,9 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Address'
+                      label='Event Address'
                       onChange={onChange}
-                      placeholder='Address Event'
+                      placeholder='Event Address'
                       error={Boolean(errors.address)}
                       aria-describedby='validation-schema-event-address'
                     />

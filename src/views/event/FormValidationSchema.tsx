@@ -41,7 +41,7 @@ const defaultValues = {
 
 const schema = yup.object().shape({
   name: yup.string().required('Event Name field is required'),
-  address: yup.string().required('Address Event field is required'),
+  address: yup.string().required('Event Address field is required'),
   companyName: yup.string().required('Company Name field is required')
 })
 
@@ -127,9 +127,9 @@ const FormCreateEventSchema = (props: FormCreateEventSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Address Name'
+                      label='Event Addresse'
                       onChange={onChange}
-                      placeholder='Addresst Name'
+                      placeholder='Event Address'
                       error={Boolean(errors.address)}
                       aria-describedby='validation-schema-address-event'
                     />
