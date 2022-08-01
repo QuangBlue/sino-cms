@@ -26,7 +26,7 @@ import { AppDispatch, RootState } from 'src/store'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
-import { deleteEvent, fetchEvent, resumeEvent } from 'src/store/event'
+import { deleteEvent, eventSlice, fetchEvent, resumeEvent } from 'src/store/event'
 import { useAuth } from 'src/hooks/useAuth'
 import TableHeaderEvent from 'src/views/event/TableHeaderEvent'
 import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
@@ -128,6 +128,10 @@ const EventList = () => {
     if (auth.user) {
       console.log(auth.user.id)
       dispatch(fetchEvent(auth.user.id))
+    }
+
+    return () => {
+      eventSlice.actions.handlePageChange()
     }
   }, [auth.user, dispatch])
 

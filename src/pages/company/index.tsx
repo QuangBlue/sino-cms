@@ -30,7 +30,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
 import { CompanyTypes } from 'src/types/companyTypes'
-import { deleteCompany, fetchCompany, resumeCompany } from 'src/store/company'
+import { companySlice, deleteCompany, fetchCompany, resumeCompany } from 'src/store/company'
 import DialogAlertDeleteCompany from 'src/views/company/DialogAlertDeleteCompany'
 import { BackupRestore } from 'mdi-material-ui'
 
@@ -103,6 +103,10 @@ const CompanyList = () => {
 
   useEffect(() => {
     dispatch(fetchCompany())
+
+    return () => {
+      companySlice.actions.handlePageChange()
+    }
   }, [dispatch])
 
   const handleFilter = (val: string) => {

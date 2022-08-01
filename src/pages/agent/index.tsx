@@ -40,7 +40,7 @@ import TableHeaderAgent from 'src/views/agent/TableHeaderAgent'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
-import { deleteAgent, fetchAgent, resumeAgent } from 'src/store/agent'
+import { agentSlice, deleteAgent, fetchAgent, resumeAgent } from 'src/store/agent'
 import DialogAlertDelete from 'src/views/agent/DialogAlertDeleteAgent'
 import BackupRestore from 'mdi-material-ui/BackupRestore'
 
@@ -179,6 +179,10 @@ const AgentList = () => {
 
   useEffect(() => {
     dispatch(fetchAgent())
+
+    return () => {
+      agentSlice.actions.handlePageChange()
+    }
   }, [dispatch])
 
   const handleFilter = (val: string) => {

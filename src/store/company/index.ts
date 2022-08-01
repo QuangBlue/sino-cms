@@ -88,6 +88,9 @@ export const companySlice = createSlice({
   reducers: {
     handleChangeStatus: (state, { payload }) => {
       state.status = payload
+    },
+    handlePageChange: state => {
+      state.listCompany = [] as CompanyTypes[]
     }
   },
   extraReducers: builder => {

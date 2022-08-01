@@ -111,6 +111,9 @@ export const eventSlice = createSlice({
   reducers: {
     handleChangeStatus: (state, { payload }) => {
       state.status = payload
+    },
+    handlePageChange: state => {
+      ;(state.listEvent = [] as EventTypes[]), (state.listCompany = [] as CompanyTypes[])
     }
   },
   extraReducers: builder => {

@@ -89,6 +89,9 @@ export const agentSlice = createSlice({
   reducers: {
     handleChangeStatus: (state, { payload }) => {
       state.status = payload
+    },
+    handlePageChange: state => {
+      state.listAgent = [] as AgentTypes[]
     }
   },
   extraReducers: builder => {
