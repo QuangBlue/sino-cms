@@ -117,7 +117,7 @@ const CompanyViewLeft = ({ data }: Props) => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
-  const onSubmit = (params: CompanyTypes) => {
+  const onSubmit = (params: any) => {
     dispatch(
       editCompanyDetail({
         params,
