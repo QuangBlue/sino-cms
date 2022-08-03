@@ -135,7 +135,7 @@ const UserViewLeft = ({ data }: Props) => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
-  const onSubmit = (params: AgentTypes) => {
+  const onSubmit = (params: any) => {
     dispatch(
       editAgentDetail({
         params,
