@@ -54,8 +54,6 @@ export const deleteSpeaker = async (id: number) => {
 
     return true
   } catch (err) {
-    console.log(err)
-
     return false
   }
 }

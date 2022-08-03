@@ -191,7 +191,6 @@ const CompanyList = () => {
             pageSize={Number(pageSize)}
             rowsPerPageOptions={[10, 25, 50]}
             sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onSelectionModelChange={() => console.log('onSelectionMode') /*setSelectedRows(rows)*/}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
         </Card>

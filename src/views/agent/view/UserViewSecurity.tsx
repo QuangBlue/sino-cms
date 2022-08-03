@@ -94,8 +94,7 @@ const UserViewSecurity = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: State) => {
-    console.log(data)
+  const onSubmit = (data: any) => {
     dispatch(
       editAgentDetail({
         params: { password: data.newPassword } as AgentTypes,
