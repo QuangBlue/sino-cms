@@ -4,7 +4,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
 import { SyntheticEvent, useState } from 'react'
 import SpeakerTabView from './WebsiteSpeakerTabView'
 
@@ -34,7 +34,7 @@ const TabWebsite = () => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='speaker' label='speaker' icon={<AccountOutline sx={{ fontSize: '18px' }} />} />
+        <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
         {/* <Tab value='security' label='Security' icon={<LockOutline sx={{ fontSize: '18px' }} />} /> */}
         {/* <Tab value='billing-plan' label='Billing & Plan' icon={<BookmarkOutline sx={{ fontSize: '18px' }} />} />
         <Tab value='notification' label='Notification' icon={<BellOutline sx={{ fontSize: '18px' }} />} /> */}

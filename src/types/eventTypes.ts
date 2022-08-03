@@ -1,14 +1,17 @@
+import { AgentTypes } from './agentTypes'
 import { CompanyTypes } from './companyTypes'
 
 export interface EventTypes {
   id: number
+  address: string
   name: string
+  logo: any
   baseName: string
   status: boolean
-  address: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
   company: CompanyTypes
+  host: AgentTypes
 }
 
 export interface CreateEventPayload {

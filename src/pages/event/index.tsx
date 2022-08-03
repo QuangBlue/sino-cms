@@ -211,7 +211,7 @@ const EventList = () => {
 
 EventList.acl = {
   action: 'read',
-  subject: 'agent-view'
+  subject: 'host-view'
 }
 
 export default EventList

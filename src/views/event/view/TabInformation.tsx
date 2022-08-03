@@ -45,7 +45,10 @@ const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htm
 
 const schema = yup.object().shape({
   name: yup.string().required('Event Name field is required'),
-  address: yup.string().required('Address field is required')
+  address: yup.string().required('Address field is required'),
+  host: yup.object().shape({
+    email: yup.string().email().required('Email field is required')
+  })
 })
 
 const TabInformation = (data: TabInformationProps) => {
@@ -74,7 +77,10 @@ const TabInformation = (data: TabInformationProps) => {
     status: eventData.status,
     address: eventData.address,
     companyName: eventData.company.name,
-    createdAt: eventData.createdAt
+    createdAt: eventData.createdAt,
+    host: {
+      email: eventData.host?.email
+    }
   }
 
   const {
@@ -109,7 +115,7 @@ const TabInformation = (data: TabInformationProps) => {
   //   }
   // }
 
-  const onSubmit = async (payload: EventTypes) => {
+  const onSubmit = async (payload: any) => {
     dispatch(editEventDetail({ payload }))
   }
 
@@ -323,6 +329,34 @@ const TabInformation = (data: TabInformationProps) => {
               {errors.createdAt && (
                 <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-createdAt-event'>
                   {errors.createdAt.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <Controller
+                name='host.email'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    inputProps={{
+                      autoComplete: 'new-password'
+                    }}
+                    disabled
+                    value={value}
+                    label='Host Email'
+                    onChange={onChange}
+                    placeholder='Host Email'
+                    error={Boolean(errors.host?.email)}
+                    aria-describedby='validation-schema-host-email-event'
+                  />
+                )}
+              />
+              {errors.host?.email && (
+                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-host-email-event'>
+                  {errors.host?.email.message}
                 </FormHelperText>
               )}
             </FormControl>

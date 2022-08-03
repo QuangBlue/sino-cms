@@ -15,7 +15,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 
 // import DialogActions from '@mui/material/DialogActions'
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import Grid from '@mui/material/Grid'
 import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
@@ -26,7 +26,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
 import { eventSlice, fetchEvent } from 'src/store/event'
 import { useAuth } from 'src/hooks/useAuth'
-import FormCreateEventSchema from './FormValidationSchema'
+import FormCreateEventSchema from './FormCreateEventSchema'
+import { AbilityContext } from 'src/layouts/components/acl/Can'
 
 interface TableHeaderProps {
   value: string
@@ -41,6 +42,7 @@ const TableHeaderEvent = (props: TableHeaderProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.event)
   const auth = useAuth()
+  const ability = useContext(AbilityContext)
 
   const [open, setOpen] = useState<boolean>(false)
 
@@ -77,24 +79,24 @@ const TableHeaderEvent = (props: TableHeaderProps) => {
           sx: { letterSpacing: '0.15px !important' }
         }}
       />
-
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <FormControl size='small' sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}>
-          <InputLabel id='status-select'>Status</InputLabel>
-          <Select
-            fullWidth
-            value={store.status ? 'active' : 'inactive'}
-            id='select-status'
-            label='Status'
-            labelId='status-select'
-            onChange={handleStatusChange}
-            inputProps={{ placeholder: 'Select Role' }}
-          >
-            <MenuItem value='active'>Active</MenuItem>
-            <MenuItem value='inactive'>Inactive</MenuItem>
-          </Select>
-        </FormControl>
-        {/* <TextField
+      {ability?.can('read', 'agent-view') ? (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+          <FormControl size='small' sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}>
+            <InputLabel id='status-select'>Status</InputLabel>
+            <Select
+              fullWidth
+              value={store.status ? 'active' : 'inactive'}
+              id='select-status'
+              label='Status'
+              labelId='status-select'
+              onChange={handleStatusChange}
+              inputProps={{ placeholder: 'Select Role' }}
+            >
+              <MenuItem value='active'>Active</MenuItem>
+              <MenuItem value='inactive'>Inactive</MenuItem>
+            </Select>
+          </FormControl>
+          {/* <TextField
           size='small'
           value={value}
           placeholder='Search Event'
@@ -102,10 +104,11 @@ const TableHeaderEvent = (props: TableHeaderProps) => {
           onChange={e => handleFilter(e.target.value)}
         /> */}
 
-        <Button sx={{ mb: 2 }} variant='contained' onClick={handleClickOpen}>
-          Create Event
-        </Button>
-      </Box>
+          <Button sx={{ mb: 2 }} variant='contained' onClick={handleClickOpen}>
+            Create Event
+          </Button>
+        </Box>
+      ) : null}
       <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>Create Event</DialogTitle>
         <DialogContent>

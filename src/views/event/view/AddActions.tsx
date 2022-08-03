@@ -20,6 +20,7 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
 
 const AddActions = () => {
   const store = useSelector((state: RootState) => state.speakerWebsite)
+  const storeEvent = useSelector((state: RootState) => state.eventDetail)
 
   return (
     <Box>
@@ -27,7 +28,7 @@ const AddActions = () => {
         <CardContent>
           <OptionsWrapper sx={{ mb: 4 }}>
             <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
-              Go Live
+              Hide / Show
             </InputLabel>
             <Switch id='go-live' />
           </OptionsWrapper>
@@ -42,10 +43,14 @@ const AddActions = () => {
           >
             Save
           </Button>
-          <Link href='#' passHref>
-            <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined'>
-              Preview
-            </Button>
+          <Link
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/speakers`}
+          >
+            <a target='_blank' rel='noopener noreferrer'>
+              <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined'>
+                Preview
+              </Button>
+            </a>
           </Link>
         </CardContent>
       </Card>

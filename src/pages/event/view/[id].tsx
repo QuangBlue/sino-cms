@@ -9,10 +9,6 @@ import TabContext from '@mui/lab/TabContext'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
-// ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-
 import TabInformation from 'src/views/event/view/TabInformation'
 import TabWebsite from 'src/views/event/view/TabWebsite'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +17,8 @@ import { eventDetailSlice, fetchEventDetail } from 'src/store/event/view'
 import { useRouter } from 'next/router'
 import TabPanel from '@mui/lab/TabPanel'
 import { speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
+import Web from 'mdi-material-ui/Web'
+import InformationVariant from 'mdi-material-ui/InformationVariant'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -79,7 +77,7 @@ const EventDetail = () => {
             value='information'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline sx={{ fontSize: '1.125rem' }} />
+                <InformationVariant sx={{ fontSize: '1.125rem' }} />
                 <TabName>Information</TabName>
               </Box>
             }
@@ -88,7 +86,7 @@ const EventDetail = () => {
             value='website'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline sx={{ fontSize: '1.125rem' }} />
+                <Web sx={{ fontSize: '1.125rem' }} />
                 <TabName>Website</TabName>
               </Box>
             }
@@ -108,7 +106,7 @@ const EventDetail = () => {
 
 EventDetail.acl = {
   action: 'read',
-  subject: 'agent-view'
+  subject: 'host-view'
 }
 
 export default EventDetail

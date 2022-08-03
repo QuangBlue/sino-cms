@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: '100%',
+  maxWidth: '240px',
   marginBottom: theme.spacing(4),
   borderRadius: theme.shape.borderRadius
 }))
@@ -173,7 +174,7 @@ export const SpeakerAdd = ({ index, control, id, errors, remove }: any) => {
               sx={{
                 mb: {
                   md: 2,
-                  xs: 0
+                  xs: 4
                 },
                 color: 'text.primary'
               }}

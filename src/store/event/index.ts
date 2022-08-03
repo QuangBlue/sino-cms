@@ -26,7 +26,7 @@ export interface CreateEventPayload {
 
 // ** Fetch Event
 export const fetchEvent = createAsyncThunk('event/fetchData', async (agentId: number, { getState }: Redux) => {
-  const response = await axiosClient.get(`/event?status=${getState().event.status}&agentId=${agentId}`)
+  const response = await axiosClient.get(`/event?status=${getState().event.status}`)
 
   return response.data
 })
@@ -89,7 +89,7 @@ export const createEvent = createAsyncThunk(
     toast.promise(promise, {
       loading: 'Request Create Event',
       success: 'Create Event Successfully',
-      error: 'Error when Create Event'
+      error: err => `Error: ${err.response.data.message}`
     })
   }
 )

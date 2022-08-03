@@ -29,7 +29,11 @@ export const editEventDetail = createAsyncThunk(
     const { payload } = data
 
     const promise = axiosClient
-      .put(`/event/${getState().eventDetail.eventData.id}`, { name: payload.name, address: payload.address })
+      .put(`/event/${getState().eventDetail.eventData.id}`, {
+        name: payload.name,
+        address: payload.address,
+        host: { email: payload.host.email }
+      })
       .then(() => {
         dispatch(fetchEventDetail(getState().eventDetail.eventData.id))
       })

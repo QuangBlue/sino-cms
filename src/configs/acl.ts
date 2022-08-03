@@ -22,8 +22,10 @@ const defineRulesFor = (role: string, subject: string) => {
   if (role === 'admin') {
     can('manage', 'all')
   } else if (role === 'agent') {
-    console.log(role)
     can(['read'], 'agent-view')
+    can(['read'], 'host-view')
+  } else if (role === 'host') {
+    can(['read'], 'host-view')
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
   }

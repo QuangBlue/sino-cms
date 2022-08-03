@@ -146,7 +146,7 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
     event.preventDefault()
   }
 
-  const onSubmit = async (params: CreateAgentParams) => {
+  const onSubmit = async (params: any) => {
     dispatch(createAgent({ params, handleClickCloseModal }))
   }
 
