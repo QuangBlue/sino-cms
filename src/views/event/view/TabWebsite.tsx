@@ -5,7 +5,8 @@ import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
-import { SyntheticEvent, useState } from 'react'
+import { useRouter } from 'next/router'
+import { SyntheticEvent, useEffect, useState } from 'react'
 import SpeakerTabView from './WebsiteSpeakerTabView'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
@@ -24,6 +25,22 @@ const TabWebsite = () => {
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
+
+  // ** Get Id
+  const router = useRouter()
+  const { id, selected } = router.query
+
+  useEffect(() => {
+    if (selected) {
+      setValue(selected.toString() || '')
+    } else {
+      router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=website&selected=${value}`, undefined, {
+        shallow: true
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <TabContext value={value}>

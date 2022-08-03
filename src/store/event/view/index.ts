@@ -115,6 +115,38 @@ export const getEventMap = createAsyncThunk('eventDetail/uploadEventMap', async 
   return response.data
 })
 
+// ** Upload Logo
+export const uploadLogo = createAsyncThunk(
+  'eventDetail/uploadLogo',
+  async (file: File, { getState, dispatch }: Redux) => {
+    const formData = new FormData()
+    formData.append('files', file)
+    try {
+      const resUpload = await axiosClient.post(`upload/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      const promise = axiosClient
+        .put(`/event/${getState().eventDetail.eventData.id}`, {
+          logo: resUpload.data.data[0]
+        })
+        .then(() => {
+          dispatch(fetchEventDetail(getState().eventDetail.eventData.id))
+        })
+
+      toast.promise(promise, {
+        loading: 'Request Update Logo Event',
+        success: 'Update Logo Event Successfully',
+        error: 'Error when Update Logo Event'
+      })
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Unknow Error')
+    }
+  }
+)
+
 export const eventDetailSlice = createSlice({
   name: 'eventDetail',
   initialState: {

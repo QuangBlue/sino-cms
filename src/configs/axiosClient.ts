@@ -13,6 +13,8 @@ axiosClient.interceptors.request.use(
   function (config: any) {
     const accessToken = localStorage.getItem('accessToken') || ''
     config.headers['Authorization'] = accessToken
+    const lang = localStorage.getItem('i18nextLng') || 'en-US'
+    config.headers['lang'] = lang
 
     return config
   },

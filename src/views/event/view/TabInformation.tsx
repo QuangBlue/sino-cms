@@ -19,7 +19,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { EventMapTypes, EventTypes } from 'src/types/eventTypes'
 import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
-import { deleteEvent, editEventDetail, resumeEvent, uploadEventMap } from 'src/store/event/view'
+import { deleteEvent, editEventDetail, resumeEvent, uploadEventMap, uploadLogo } from 'src/store/event/view'
 import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
 import { formatDate } from 'src/@core/utils/format'
 
@@ -60,7 +60,7 @@ const TabInformation = (data: TabInformationProps) => {
   // ** State
   const [mapImg, setMapImg] = useState<string>('/images/misc/upload.png')
 
-  // const [logoImg, setLogoImg] = useState<string>('/images/misc/upload.png')
+  const [logoImg, setLogoImg] = useState<string>('/images/misc/upload.png')
   const [open, setOpen] = useState<boolean>(false)
   const handleClickOpenAlert = () => setOpen(true)
   const handleCloseAlert = () => setOpen(false)
@@ -68,8 +68,9 @@ const TabInformation = (data: TabInformationProps) => {
   useEffect(() => {
     if (eventMap) {
       setMapImg(eventMap.imgUrl)
+      setLogoImg(eventData.logo)
     }
-  }, [eventMap])
+  }, [eventData.logo, eventMap])
 
   const defaultValues = {
     name: eventData.name,
@@ -94,26 +95,28 @@ const TabInformation = (data: TabInformationProps) => {
   })
 
   const onChangeMap = (file: ChangeEvent) => {
-    const reader = new FileReader()
+    const readerMap = new FileReader()
     const { files } = file.target as HTMLInputElement
     if (files && files.length !== 0) {
-      reader.onload = () => setMapImg(reader.result as string)
+      readerMap.onload = () => setMapImg(readerMap.result as string)
 
-      reader.readAsDataURL(files[0])
+      readerMap.readAsDataURL(files[0])
 
       dispatch(uploadEventMap(files[0]))
     }
   }
 
-  // const onChangeLogo = (file: ChangeEvent) => {
-  //   const reader = new FileReader()
-  //   const { files } = file.target as HTMLInputElement
-  //   if (files && files.length !== 0) {
-  //     reader.onload = () => setLogoImg(reader.result as string)
+  const onChangeLogo = (file: ChangeEvent) => {
+    const readerLogo = new FileReader()
+    const { files } = file.target as HTMLInputElement
+    if (files && files.length !== 0) {
+      readerLogo.onload = () => setLogoImg(readerLogo.result as string)
 
-  //     reader.readAsDataURL(files[0])
-  //   }
-  // }
+      readerLogo.readAsDataURL(files[0])
+
+      dispatch(uploadLogo(files[0]))
+    }
+  }
 
   const onSubmit = async (payload: any) => {
     dispatch(editEventDetail({ payload }))
@@ -134,7 +137,7 @@ const TabInformation = (data: TabInformationProps) => {
     <CardContent>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={6}>
-          {/* <Grid item xs={12} sm={6} sx={{ my: 5 }}>
+          <Grid item xs={12} sm={6} sx={{ my: 5 }}>
             <Typography variant='h6' sx={{ mb: 5 }}>
               Logo Event
             </Typography>
@@ -156,8 +159,8 @@ const TabInformation = (data: TabInformationProps) => {
                 Allowed PNG or JPEG. Max size of 800K.
               </Typography>
             </Box>
-          </Grid> */}
-          <Grid item xs={12} sm={12} sx={{ my: 5 }}>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ my: 5 }}>
             <Typography variant='h6' sx={{ mb: 5 }}>
               Event Map
             </Typography>

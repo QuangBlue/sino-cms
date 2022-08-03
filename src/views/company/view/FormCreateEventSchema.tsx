@@ -206,7 +206,7 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Email Host Event'
+                      label='Host Event Email '
                       onChange={onChange}
                       error={Boolean(errors.host?.email)}
                       placeholder='host.event@sinoelite.com'

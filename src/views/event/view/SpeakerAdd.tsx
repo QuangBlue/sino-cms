@@ -61,16 +61,15 @@ const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
   }
 }))
 
-export const SpeakerAdd = ({ index, control, errors, id }: any) => {
+export const SpeakerAdd = ({ index, control, errors, id, remove }: any) => {
   const dispatch = useDispatch<AppDispatch>()
 
   // ** Deletes form
   const deleteForm = async () => {
+    remove(index)
     if (id != 0) {
       await dispatch(deleteSpeaker(id))
     }
-
-    // remove(index)
   }
 
   const handleChange = async (file: ChangeEvent, onChange: any) => {

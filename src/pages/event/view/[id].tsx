@@ -43,7 +43,7 @@ const EventDetail = () => {
 
   // ** Get Id
   const router = useRouter()
-  const { id } = router.query
+  const { id, tab } = router.query
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -59,8 +59,20 @@ const EventDetail = () => {
     }
   }, [dispatch, id])
 
-  const handleChange = (event: SyntheticEvent, newValue: string) => {
+  useEffect(() => {
+    if (tab) {
+      setValue(tab.toString() || '')
+    } else {
+      router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=${value}`, undefined, { shallow: true })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleChange = async (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
+
+    await router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=${newValue}`, undefined, { shallow: true })
   }
 
   if (!id || Object.keys(store.eventData).length === 0) return null

@@ -15,7 +15,7 @@ interface Redux {
 
 // ** Fetch Speaker
 export const getSpeaker = createAsyncThunk('speakerWebsite/getSpeaker', async (baseName: string) => {
-  const response = axiosClient.get(`speaker?lang=en&eventName=${baseName}`)
+  const response = axiosClient.get(`speaker?eventName=${baseName}`)
 
   return response
 })
@@ -48,14 +48,11 @@ export const updateSpeaker = async (speaker: SpeakerTypes) => {
   return axiosClient.put(`speaker/${speaker.id}`, speaker)
 }
 
-export const deleteSpeaker = createAsyncThunk(
-  'speakerWebsite/deleteSpeaker',
-  async (id: number, { getState, dispatch }: Redux) => {
-    await axiosClient.delete(`speaker/${id}`)
+export const deleteSpeaker = createAsyncThunk('speakerWebsite/deleteSpeaker', async (id: number) => {
+  await axiosClient.delete(`speaker/${id}`)
 
-    dispatch(getSpeaker(getState().eventDetail.eventData.baseName))
-  }
-)
+  // dispatch(getSpeaker(getState().eventDetail.eventData.baseName))
+})
 
 // ** Save Speaker
 export const handleSaveSpeaker = createAsyncThunk(
@@ -66,7 +63,7 @@ export const handleSaveSpeaker = createAsyncThunk(
 
     console.log(ld)
 
-    for (const speaker of listSpeaker) {
+    for (const speaker of listSpeaker.reverse()) {
       const find: SpeakerTypes = lp.find((r: SpeakerTypes) => r.id === speaker.id)
 
       if (
@@ -112,11 +109,14 @@ export const speakerWebsiteSlice = createSlice({
         state.isLoading = true
       })
       .addCase(getSpeaker.fulfilled, (state, action) => {
-        state.listSpeaker = action.payload.data.data.sort((a: SpeakerTypes, b: SpeakerTypes) => b.id - a.id)
+        state.listSpeaker = action.payload.data.data
         state.isLoading = false
       })
       .addCase(getSpeaker.rejected, state => {
         state.isLoading = false
+      })
+      .addCase(deleteSpeaker.fulfilled, state => {
+        state.isChange = false
       })
   }
 })

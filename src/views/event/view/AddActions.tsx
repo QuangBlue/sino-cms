@@ -47,7 +47,14 @@ const AddActions = () => {
             href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/speakers`}
             passHref
           >
-            <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined' target='_blank'>
+            <Button
+              disabled={store.isChange}
+              fullWidth
+              component='a'
+              sx={{ mb: 3.5 }}
+              variant='outlined'
+              target='_blank'
+            >
               Preview
             </Button>
           </Link>

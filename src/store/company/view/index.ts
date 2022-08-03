@@ -63,25 +63,29 @@ export const getEvent = createAsyncThunk(
 export const createEvent = createAsyncThunk(
   'companyDetail/createEvent',
   async (data: any, { getState, dispatch }: Redux) => {
-    const { payload, handleClickCloseModal } = data
+    try {
+      const { payload, handleClickCloseModal } = data
 
-    const promise = axiosClient
-      .post(`/event?companyName=${getState().companyDetail.companyData.baseName}`, payload)
-      .then(() => {
-        dispatch(fetchCompanyDetail(getState().companyDetail.companyData.id))
-      })
-      .then(async () => {
-        dispatch(getEvent())
-      })
-      .then(() => {
-        handleClickCloseModal()
-      })
+      const promise = axiosClient
+        .post(`/event?companyName=${getState().companyDetail.companyData.baseName}`, payload)
+        .then(() => {
+          dispatch(fetchCompanyDetail(getState().companyDetail.companyData.id))
+        })
+        .then(async () => {
+          dispatch(getEvent())
+        })
+        .then(() => {
+          handleClickCloseModal()
+        })
 
-    toast.promise(promise, {
-      loading: 'Request Create Event',
-      success: 'Create Event Successfully',
-      error: 'Error when Create Event'
-    })
+      toast.promise(promise, {
+        loading: 'Request Create Event',
+        success: 'Create Event Successfully',
+        error: 'Error when Create Event'
+      })
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Unknow Error')
+    }
   }
 )
 
