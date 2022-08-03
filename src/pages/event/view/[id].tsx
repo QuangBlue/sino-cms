@@ -13,8 +13,6 @@ import MuiTab, { TabProps } from '@mui/material/Tab'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 
-// ** Demo Tabs Imports
-
 import TabInformation from 'src/views/event/view/TabInformation'
 import TabWebsite from 'src/views/event/view/TabWebsite'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +20,7 @@ import { AppDispatch, RootState } from 'src/store'
 import { eventDetailSlice, fetchEventDetail } from 'src/store/event/view'
 import { useRouter } from 'next/router'
 import TabPanel from '@mui/lab/TabPanel'
-import { eventWebsiteSlice } from 'src/store/event/view/website'
+import { speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -59,7 +57,7 @@ const EventDetail = () => {
     }
 
     return () => {
-      dispatch(eventDetailSlice.actions.handlePageChange()), dispatch(eventWebsiteSlice.actions.handlePageChange())
+      dispatch(eventDetailSlice.actions.handlePageChange()), dispatch(speakerWebsiteSlice.actions.handlePageChange())
     }
   }, [dispatch, id])
 

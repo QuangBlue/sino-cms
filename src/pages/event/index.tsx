@@ -126,7 +126,6 @@ const EventList = () => {
 
   useEffect(() => {
     if (auth.user) {
-      console.log(auth.user.id)
       dispatch(fetchEvent(auth.user.id))
     }
 

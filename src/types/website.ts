@@ -1,11 +1,13 @@
 export interface SpeakerTypes {
   id: number
   avatar: string
+  name: string
+  jobTitle: string
+  biography: string
   status: boolean
-  order: string
+  order: number
   createdAt: string
   updatedAt: string
-  languages: LanguageTypes[]
 }
 
 export interface LanguageTypes {

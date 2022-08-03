@@ -8,7 +8,7 @@ import company from 'src/store/company'
 import eventDetail from 'src/store/event/view'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
-import eventWebsite from 'src/store/event/view/website'
+import speakerWebsite from 'src/store/event/view/website/speakerStore'
 
 export const store = configureStore({
   reducer: {
@@ -17,8 +17,8 @@ export const store = configureStore({
     company,
     eventDetail,
     agentDetail,
-    eventWebsite,
-    companyDetail
+    companyDetail,
+    speakerWebsite
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

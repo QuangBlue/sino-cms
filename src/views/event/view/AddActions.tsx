@@ -9,6 +9,8 @@ import { styled } from '@mui/material/styles'
 import InputLabel from '@mui/material/InputLabel'
 import Box, { BoxProps } from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
+import { RootState } from 'src/store'
+import { useSelector } from 'react-redux'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -17,6 +19,8 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
 }))
 
 const AddActions = () => {
+  const store = useSelector((state: RootState) => state.speakerWebsite)
+
   return (
     <Box>
       <Card sx={{ mb: 4 }}>
@@ -25,10 +29,17 @@ const AddActions = () => {
             <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
               Go Live
             </InputLabel>
-            <Switch defaultChecked id='go-live' />
+            <Switch id='go-live' />
           </OptionsWrapper>
 
-          <Button fullWidth sx={{ mb: 3.5 }} variant='contained'>
+          <Button
+            disabled={!store.isChange}
+            type='submit'
+            form='speaker-form'
+            fullWidth
+            sx={{ mb: 3.5 }}
+            variant='contained'
+          >
             Save
           </Button>
           <Link href='#' passHref>

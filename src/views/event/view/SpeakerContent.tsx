@@ -1,83 +1,107 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
-
-// ** MUI Imports
-import Collapse from '@mui/material/Collapse'
+import { useEffect } from 'react'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
-
-import CardContent, { CardContentProps } from '@mui/material/CardContent'
 
 // ** Icon Imports
 import Plus from 'mdi-material-ui/Plus'
 
 // ** Custom Component Imports
-import Repeater from 'src/@core/components/repeater'
 import { SpeakerAdd } from './SpeakerAdd'
 import Button from '@mui/material/Button'
-import { RootState } from 'src/store'
-import { useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
 
-const RepeaterWrapper = styled(CardContent)<CardContentProps>(({ theme }) => ({
-  paddingTop: theme.spacing(12),
-  paddingBottom: theme.spacing(5.5),
-  '& .repeater-wrapper + .repeater-wrapper': {
-    marginTop: theme.spacing(12)
-  }
-}))
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
+import { useForm, useFieldArray } from 'react-hook-form'
+import Spinner from 'src/@core/components/spinner'
+
+import { array, object, string } from 'yup'
+import { handleSaveSpeaker, speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
 
 const SpeakerContent = () => {
-  // ** States
-  const [count, setCount] = useState<number>(0)
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.speakerWebsite)
 
-  const store = useSelector((state: RootState) => state.eventWebsite)
-
-  useEffect(() => {
-    if (store.listSpeaker.length === 0) {
-      setCount(1)
-    }
-  }, [store.listSpeaker.length])
-
-  const addSpeakerFiled = () => {
-    setCount(count + 1)
+  const defaultValues = {
+    createSpeaker: store.listSpeaker
   }
 
+  const validationSchema = object().shape({
+    createSpeaker: array()
+      .of(
+        object().shape({
+          avatar: string().required('Avarta field is required'),
+          name: string().required('Full Name field is required')
+        })
+      )
+      .required()
+  })
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty }
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema)
+  })
+
+  const { fields, prepend, remove } = useFieldArray({
+    control,
+    name: 'createSpeaker'
+  })
+
+  useEffect(() => {
+    dispatch(speakerWebsiteSlice.actions.handleSetIsChange({ isDirty }))
+  }, [dispatch, isDirty])
+
+  useEffect(() => {
+    if (store.listSpeaker.length > 0) {
+      reset({ createSpeaker: store.listSpeaker })
+    }
+  }, [reset, store.listSpeaker])
+
+  const addSpeakerFiled = () => {
+    prepend({
+      avatar: '',
+      name: '',
+      jobTitle: '',
+      biography: '',
+      id: 0
+    })
+  }
+
+  const onSubmit = (data: any) => {
+    dispatch(handleSaveSpeaker(data.createSpeaker))
+  }
+
+  if (store.isLoading) return <Spinner />
+
   return (
-    <Box>
-      <RepeaterWrapper>
-        {store.listSpeaker.map(speaker => (
-          <Box key={speaker.id} sx={{ mb: 12 }}>
-            <SpeakerAdd speaker={speaker} />
-          </Box>
-        ))}
-        <Repeater count={count}>
-          {(i: number) => {
-            const Tag = i === 0 ? Box : Collapse
-
-            return (
-              <Tag key={i} className='repeater-wrapper' {...(i !== 0 ? { in: true } : {})}>
-                <SpeakerAdd index={i} />
-              </Tag>
-            )
-          }}
-        </Repeater>
-
-        <Grid container sx={{ mt: 4.75 }}>
-          <Grid item xs={12} sx={{ px: 0 }}>
-            <Button
-              form='add-speaker-form'
-              size='small'
-              variant='contained'
-              startIcon={<Plus fontSize='small' />}
-              onClick={addSpeakerFiled}
-            >
-              Add Item
-            </Button>
-          </Grid>
-        </Grid>
-      </RepeaterWrapper>
+    <Box sx={{ my: 4, ml: 4 }}>
+      <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'flex-end' }}>
+        <Button size='small' variant='contained' startIcon={<Plus fontSize='small' />} onClick={addSpeakerFiled}>
+          Add Speaker
+        </Button>
+      </Grid>
+      <form onSubmit={handleSubmit(onSubmit)} id='speaker-form'>
+        {fields.map((item, index) => {
+          return (
+            <SpeakerAdd
+              key={item.id}
+              id={store.listSpeaker[index]?.id || 0}
+              index={index}
+              control={control}
+              errors={errors}
+              remove={remove}
+            />
+          )
+        })}
+      </form>
     </Box>
   )
 }

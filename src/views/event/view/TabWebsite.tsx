@@ -43,15 +43,6 @@ const TabWebsite = () => {
         <TabPanel sx={{ p: 0 }} value='speaker'>
           <SpeakerTabView />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          {/* <UserViewSecurity /> */}
-        </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='billing-plan'>
-          <UserViewBilling />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='notification'>
-          <UserViewNotification />
-        </TabPanel> */}
       </Box>
     </TabContext>
   )

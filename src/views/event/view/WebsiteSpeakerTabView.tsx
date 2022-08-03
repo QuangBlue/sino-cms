@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
-import { getSpeaker } from 'src/store/event/view/website'
+import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 
 import AddActions from './AddActions'
 import SpeakerContent from './SpeakerContent'

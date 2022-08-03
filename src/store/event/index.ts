@@ -27,7 +27,6 @@ export interface CreateEventPayload {
 // ** Fetch Event
 export const fetchEvent = createAsyncThunk('event/fetchData', async (agentId: number, { getState }: Redux) => {
   const response = await axiosClient.get(`/event?status=${getState().event.status}&agentId=${agentId}`)
-  console.log(response.data)
 
   return response.data
 })
