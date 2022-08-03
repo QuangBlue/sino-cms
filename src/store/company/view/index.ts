@@ -1,4 +1,4 @@
-import { CreateEventPayload, EventTypes } from 'src/types/eventTypes'
+import { EventTypes } from 'src/types/eventTypes'
 import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit'
 import axiosClient from 'src/configs/axiosClient'
 
@@ -62,7 +62,7 @@ export const getEvent = createAsyncThunk(
 // ** Create Event
 export const createEvent = createAsyncThunk(
   'companyDetail/createEvent',
-  async (data: CreateEventPayload, { getState, dispatch }: Redux) => {
+  async (data: any, { getState, dispatch }: Redux) => {
     const { payload, handleClickCloseModal } = data
 
     const promise = axiosClient

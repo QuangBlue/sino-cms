@@ -13,7 +13,7 @@ import { ChangeEvent, ElementType } from 'react'
 
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
-import { speakerWebsiteSlice, uploadAvarta } from 'src/store/event/view/website/speakerStore'
+import { deleteSpeaker, uploadAvarta } from 'src/store/event/view/website/speakerStore'
 
 import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
@@ -61,16 +61,16 @@ const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
   }
 }))
 
-export const SpeakerAdd = ({ index, control, id, errors, remove }: any) => {
+export const SpeakerAdd = ({ index, control, errors, id }: any) => {
   const dispatch = useDispatch<AppDispatch>()
 
   // ** Deletes form
   const deleteForm = async () => {
     if (id != 0) {
-      await dispatch(speakerWebsiteSlice.actions.handleAddDeleteSpeaker({ id }))
+      await dispatch(deleteSpeaker(id))
     }
 
-    remove(index)
+    // remove(index)
   }
 
   const handleChange = async (file: ChangeEvent, onChange: any) => {

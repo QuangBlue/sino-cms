@@ -48,15 +48,14 @@ export const updateSpeaker = async (speaker: SpeakerTypes) => {
   return axiosClient.put(`speaker/${speaker.id}`, speaker)
 }
 
-export const deleteSpeaker = async (id: number) => {
-  try {
+export const deleteSpeaker = createAsyncThunk(
+  'speakerWebsite/deleteSpeaker',
+  async (id: number, { getState, dispatch }: Redux) => {
     await axiosClient.delete(`speaker/${id}`)
 
-    return true
-  } catch (err) {
-    return false
+    dispatch(getSpeaker(getState().eventDetail.eventData.baseName))
   }
-}
+)
 
 // ** Save Speaker
 export const handleSaveSpeaker = createAsyncThunk(
@@ -65,7 +64,9 @@ export const handleSaveSpeaker = createAsyncThunk(
     const lp = getState().speakerWebsite.listSpeaker
     const ld = getState().speakerWebsite.listDeleteSpeaker
 
-    const promises = listSpeaker.map(async speaker => {
+    console.log(ld)
+
+    for (const speaker of listSpeaker) {
       const find: SpeakerTypes = lp.find((r: SpeakerTypes) => r.id === speaker.id)
 
       if (
@@ -79,27 +80,11 @@ export const handleSaveSpeaker = createAsyncThunk(
       } else if (speaker.id == 0) {
         await createSpeaker({ eventName: getState().eventDetail.eventData.baseName, params: speaker })
       }
-    })
-
-    if (ld.length > 0) {
-      await Promise.all(
-        ld.map(async (id: number) => {
-          await deleteSpeaker(id)
-        })
-      )
     }
 
-    const load = Promise.all(promises)
+    toast.success('Save Successfully')
 
-    toast
-      .promise(load, {
-        loading: 'Loading',
-        success: 'Save Successfully',
-        error: 'Error save'
-      })
-      .then(() => {
-        dispatch(getSpeaker(getState().eventDetail.eventData.baseName))
-      })
+    dispatch(getSpeaker(getState().eventDetail.eventData.baseName))
   }
 )
 
@@ -107,19 +92,14 @@ export const speakerWebsiteSlice = createSlice({
   name: 'speakerWebsite',
   initialState: {
     listSpeaker: [] as SpeakerTypes[],
-    listDeleteSpeaker: [] as number[],
     isLoading: true,
     isChange: false
   },
   reducers: {
     handlePageChange: state => {
       state.listSpeaker = [] as SpeakerTypes[]
-      state.listDeleteSpeaker = [] as number[]
+
       state.isLoading = true
-    },
-    handleAddDeleteSpeaker: (state, { payload }) => {
-      const r = state.listDeleteSpeaker.some(item => item === payload.id)
-      if (!r) state.listDeleteSpeaker.push(payload.id)
     },
     handleSetIsChange: (state, { payload }) => {
       state.isChange = payload.isDirty
