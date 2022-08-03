@@ -206,10 +206,10 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Email'
+                      label='Email Host Event'
                       onChange={onChange}
                       error={Boolean(errors.host?.email)}
-                      placeholder='carterleonard@gmail.com'
+                      placeholder='host.event@sinoelite.com'
                       aria-describedby='validation-schema-phone'
                     />
                   )}
