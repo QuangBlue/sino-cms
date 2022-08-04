@@ -5,8 +5,10 @@ import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
+import InformationOutline from 'mdi-material-ui/InformationOutline'
 import { useRouter } from 'next/router'
 import { SyntheticEvent, useEffect, useState } from 'react'
+import AboutUsTabView from './website/about-us/AboutUsTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
@@ -24,6 +26,10 @@ const TabWebsite = () => {
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
+
+    router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=website&selected=${newValue}`, undefined, {
+      shallow: true
+    })
   }
 
   // ** Get Id
@@ -51,12 +57,24 @@ const TabWebsite = () => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
+        <Tab value='about-us' label='about us' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
+        <Tab value='gallery' label='gallery' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
+        <Tab value='agenda' label='agenda' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
         <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
-        {/* <Tab value='security' label='Security' icon={<LockOutline sx={{ fontSize: '18px' }} />} /> */}
+        <Tab value='sponsors' label='sponsors' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
+        <Tab
+          value='organiser-partners'
+          label='organiser & partners'
+          icon={<InformationOutline sx={{ fontSize: '18px' }} />}
+        />
+        <Tab value='contact us' label='contact us' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
         {/* <Tab value='billing-plan' label='Billing & Plan' icon={<BookmarkOutline sx={{ fontSize: '18px' }} />} />
         <Tab value='notification' label='Notification' icon={<BellOutline sx={{ fontSize: '18px' }} />} /> */}
       </TabList>
       <Box sx={{ mt: 3 }}>
+        <TabPanel sx={{ p: 0 }} value='about-us'>
+          <AboutUsTabView />
+        </TabPanel>
         <TabPanel sx={{ p: 0 }} value='speaker'>
           <SpeakerTabView />
         </TabPanel>
@@ -64,4 +82,5 @@ const TabWebsite = () => {
     </TabContext>
   )
 }
+
 export default TabWebsite

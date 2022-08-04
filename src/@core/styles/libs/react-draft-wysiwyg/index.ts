@@ -116,7 +116,7 @@ export const EditorWrapper = styled('div')(({ theme }) => ({
     '& .rdw-editor-main': {
       cursor: 'text',
       padding: '0 1rem',
-      minHeight: '10rem',
+      minHeight: '24rem',
       color: theme.palette.text.primary,
 
       ...(theme.direction === 'rtl'

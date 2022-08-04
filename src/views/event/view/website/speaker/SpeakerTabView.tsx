@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
 import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 
-import AddActions from './AddActions'
+import AddActions from './SpeakerActions'
 import SpeakerContent from './SpeakerContent'
 
 const SpeakerTabView = () => {

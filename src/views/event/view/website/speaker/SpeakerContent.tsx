@@ -68,6 +68,14 @@ const SpeakerContent = () => {
     }
   }, [reset, store.listSpeaker])
 
+  useEffect(() => {
+    if (store.listSpeaker.length == 0) {
+      addSpeakerFiled()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const addSpeakerFiled = () => {
     prepend({
       avatar: '',
@@ -86,15 +94,20 @@ const SpeakerContent = () => {
 
   return (
     <Box>
-      <Typography variant='subtitle2'>Title</Typography>
+      <Typography variant='h6' sx={{ mb: 3 }}>
+        Title
+      </Typography>
       <TextField
         fullWidth
         id='title-speaker'
-        sx={{ '& .MuiInputBase-input': { color: 'text.secondary' } }}
+        sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
         placeholder='Title Header'
       />
 
       <Divider sx={{ mt: 4, mb: 4 }} />
+      <Typography variant='h6' sx={{ mb: 3 }}>
+        Speaker List
+      </Typography>
 
       <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'flex-end' }}>
         <Button size='small' variant='contained' startIcon={<Plus fontSize='small' />} onClick={addSpeakerFiled}>
