@@ -9,7 +9,7 @@ import TabContext from '@mui/lab/TabContext'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
-import TabInformation from 'src/views/event/view/TabInformation'
+import TabInformation from 'src/views/event/view/information/TabInformation'
 import TabWebsite from 'src/views/event/view/TabWebsite'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'

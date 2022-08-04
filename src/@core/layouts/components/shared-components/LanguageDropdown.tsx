@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
-import { useRouter } from 'next/router'
 
 interface Props {
   settings: Settings
@@ -27,7 +26,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   // ** Hook
   const { i18n } = useTranslation()
-  const route = useRouter()
 
   // ** Vars
   const { direction } = settings
@@ -48,7 +46,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   const handleLangItemClick = (lang: 'en-US' | 'zh-CN') => {
     i18n.changeLanguage(lang)
-    route.reload()
     handleLangDropdownClose()
   }
 

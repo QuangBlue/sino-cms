@@ -1,4 +1,5 @@
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,7 +19,7 @@ const SpeakerTabView = () => {
   }, [dispatch, store.eventData.baseName])
 
   return (
-    <>
+    <Box sx={{ my: 4, mx: 4 }}>
       <Grid container spacing={6}>
         <Grid item xl={9} md={8} xs={12}>
           <SpeakerContent />
@@ -27,7 +28,7 @@ const SpeakerTabView = () => {
           <AddActions />
         </Grid>
       </Grid>
-    </>
+    </Box>
   )
 }
 

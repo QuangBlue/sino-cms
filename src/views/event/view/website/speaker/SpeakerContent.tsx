@@ -19,6 +19,9 @@ import Spinner from 'src/@core/components/spinner'
 
 import { array, object, string } from 'yup'
 import { handleSaveSpeaker, speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
+import Divider from '@mui/material/Divider'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 const SpeakerContent = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -82,7 +85,17 @@ const SpeakerContent = () => {
   if (store.isLoading) return <Spinner />
 
   return (
-    <Box sx={{ my: 4, ml: 4 }}>
+    <Box>
+      <Typography variant='subtitle2'>Title</Typography>
+      <TextField
+        fullWidth
+        id='title-speaker'
+        sx={{ '& .MuiInputBase-input': { color: 'text.secondary' } }}
+        placeholder='Title Header'
+      />
+
+      <Divider sx={{ mt: 4, mb: 4 }} />
+
       <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'flex-end' }}>
         <Button size='small' variant='contained' startIcon={<Plus fontSize='small' />} onClick={addSpeakerFiled}>
           Add Speaker

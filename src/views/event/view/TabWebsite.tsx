@@ -7,7 +7,7 @@ import MuiTab, { TabProps } from '@mui/material/Tab'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
 import { useRouter } from 'next/router'
 import { SyntheticEvent, useEffect, useState } from 'react'
-import SpeakerTabView from './WebsiteSpeakerTabView'
+import SpeakerTabView from './website/speaker/SpeakerTabView'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
