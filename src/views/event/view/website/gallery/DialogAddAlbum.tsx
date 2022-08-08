@@ -22,7 +22,7 @@ interface DialogAddAlbumProps {
 const maxValue = 2100
 
 const DialogAddAlbumForm = (props: DialogAddAlbumProps) => {
-  const { handleDialogClose, open, isVideo } = props
+  const { handleDialogClose, open } = props
 
   // ** State
 
@@ -34,15 +34,8 @@ const DialogAddAlbumForm = (props: DialogAddAlbumProps) => {
   }
 
   return (
-    <Dialog
-      fullWidth
-      open={open}
-      maxWidth='md'
-      scroll='body'
-      onClose={handleDialogClose}
-      onBackdropClick={handleDialogClose}
-    >
-      <DialogContent sx={{ pb: 6, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
+    <Dialog fullWidth open={open} scroll='body' onClose={handleDialogClose} onBackdropClick={handleDialogClose}>
+      <DialogContent sx={{ position: 'relative' }}>
         <IconButton size='small' onClick={handleDialogClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
           <Close />
         </IconButton>
@@ -52,10 +45,10 @@ const DialogAddAlbumForm = (props: DialogAddAlbumProps) => {
           </Typography>
         </Box>
         <Grid container spacing={6}>
-          <Grid item sm={8}>
+          <Grid item sm={8} xs={12}>
             <TextField fullWidth label='Album Title' placeholder='Album Title' />
           </Grid>
-          <Grid item sm={4}>
+          <Grid item sm={4} xs={12}>
             <TextField fullWidth label='Year of Album' placeholder='Year of Album' value={year} onChange={handleYear} />
           </Grid>
         </Grid>

@@ -103,6 +103,15 @@ const EventDetail = () => {
               </Box>
             }
           />
+          <Tab
+            value='package'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Web sx={{ fontSize: '1.125rem' }} />
+                <TabName>Package</TabName>
+              </Box>
+            }
+          />
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='information'>

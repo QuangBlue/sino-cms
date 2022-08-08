@@ -27,7 +27,7 @@ export type EventType = {
     location?: string
     calendar?: string
     description?: string
-    guests?: string[] | string | undefined
+    speakers?: string[] | string | undefined
   }
 }
 

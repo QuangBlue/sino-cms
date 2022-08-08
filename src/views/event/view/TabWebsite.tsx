@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
+import CalendarRange from 'mdi-material-ui/CalendarRange'
 import FolderMultipleImage from 'mdi-material-ui/FolderMultipleImage'
 import InformationOutline from 'mdi-material-ui/InformationOutline'
 import Lifebuoy from 'mdi-material-ui/Lifebuoy'
@@ -15,6 +16,7 @@ import StarCheck from 'mdi-material-ui/StarCheck'
 import { useRouter } from 'next/router'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import AboutUsTabView from './website/about-us/AboutUsTabView'
+import AgendaTabView from './website/agenda/AgendaTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
 
@@ -85,7 +87,7 @@ const TabWebsite = () => {
         <TabList orientation='vertical' onChange={handleChange} aria-label='forced scroll tabs example'>
           <Tab value='about-us' label='about us' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
           <Tab value='gallery' label='gallery' icon={<FolderMultipleImage sx={{ fontSize: '18px' }} />} />
-          <Tab value='agenda' label='agenda' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
+          <Tab value='agenda' label='agenda' icon={<CalendarRange sx={{ fontSize: '18px' }} />} />
           <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
@@ -99,6 +101,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='gallery'>
           <GalleryTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='agenda'>
+          <AgendaTabView />
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='speaker'>
           <SpeakerTabView />
