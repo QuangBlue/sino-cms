@@ -18,6 +18,7 @@ import { SyntheticEvent, useEffect, useState } from 'react'
 import AboutUsTabView from './website/about-us/AboutUsTabView'
 import AgendaTabView from './website/agenda/AgendaTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
+import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
 import SponsorsTabView from './website/sponsors/SponsorsTabView'
 
@@ -111,6 +112,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='sponsors'>
           <SponsorsTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='organiser-partners'>
+          <OrganiserPartnersTabView />
         </TabPanel>
       </Box>
     </TabContext>
