@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
+import { Cog } from 'mdi-material-ui'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
 import CalendarRange from 'mdi-material-ui/CalendarRange'
 import FolderMultipleImage from 'mdi-material-ui/FolderMultipleImage'
@@ -20,6 +21,7 @@ import AgendaTabView from './website/agenda/AgendaTabView'
 import ContactUsTabView from './website/contact-us/ContactUsTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
 import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
+import SettingTabView from './website/setting/SettingTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
 import SponsorsTabView from './website/sponsors/SponsorsTabView'
 
@@ -95,6 +97,7 @@ const TabWebsite = () => {
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
           <Tab value='contact-us' label='contact us' icon={<Lifebuoy sx={{ fontSize: '18px' }} />} />
+          <Tab value='setting' label='setting' icon={<Cog sx={{ fontSize: '18px' }} />} />
         </TabList>
 
         <Divider orientation='vertical' flexItem />
@@ -119,6 +122,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='contact-us'>
           <ContactUsTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='setting'>
+          <SettingTabView />
         </TabPanel>
       </Box>
     </TabContext>
