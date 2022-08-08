@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import AboutUsTabView from './website/about-us/AboutUsTabView'
 import AgendaTabView from './website/agenda/AgendaTabView'
+import ContactUsTabView from './website/contact-us/ContactUsTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
 import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
@@ -93,7 +94,7 @@ const TabWebsite = () => {
           <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
-          <Tab value='contact us' label='contact us' icon={<Lifebuoy sx={{ fontSize: '18px' }} />} />
+          <Tab value='contact-us' label='contact us' icon={<Lifebuoy sx={{ fontSize: '18px' }} />} />
         </TabList>
 
         <Divider orientation='vertical' flexItem />
@@ -115,6 +116,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='organiser-partners'>
           <OrganiserPartnersTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='contact-us'>
+          <ContactUsTabView />
         </TabPanel>
       </Box>
     </TabContext>
