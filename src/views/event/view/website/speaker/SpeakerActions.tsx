@@ -18,6 +18,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getSpeaker } from 'src/store/event/view/website/speakerStore'
+import { useRouter } from 'next/router'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -26,6 +27,9 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
 }))
 
 const AddActions = () => {
+  const router = useRouter()
+  const { selected } = router.query
+
   // ** Hook
   const { i18n } = useTranslation()
   const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
@@ -79,7 +83,7 @@ const AddActions = () => {
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/speakers`}
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
             passHref
           >
             <Button

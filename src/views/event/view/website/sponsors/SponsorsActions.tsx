@@ -27,12 +27,11 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-between'
 }))
 
-const AddActions = () => {
-  const router = useRouter()
-  const { selected } = router.query
-
+const SponsorsActions = () => {
   // ** Hook
   const { i18n } = useTranslation()
+  const router = useRouter()
+  const { selected } = router.query
 
   // const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
@@ -92,4 +91,4 @@ const AddActions = () => {
   )
 }
 
-export default AddActions
+export default SponsorsActions

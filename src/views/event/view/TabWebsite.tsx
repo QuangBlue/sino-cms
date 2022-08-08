@@ -19,6 +19,7 @@ import AboutUsTabView from './website/about-us/AboutUsTabView'
 import AgendaTabView from './website/agenda/AgendaTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
+import SponsorsTabView from './website/sponsors/SponsorsTabView'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
@@ -55,7 +56,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
 
 const TabWebsite = () => {
   // ** State
-  const [value, setValue] = useState<string>('speaker')
+  const [value, setValue] = useState<string>('about-us')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -107,6 +108,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='speaker'>
           <SpeakerTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='sponsors'>
+          <SponsorsTabView />
         </TabPanel>
       </Box>
     </TabContext>

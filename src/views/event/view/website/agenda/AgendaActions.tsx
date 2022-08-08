@@ -17,6 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 
 // import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 
@@ -27,6 +28,9 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
 }))
 
 const AgendaActions = () => {
+  const router = useRouter()
+  const { selected } = router.query
+
   // ** Hook
   const { i18n } = useTranslation()
 
@@ -75,7 +79,7 @@ const AgendaActions = () => {
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/about-us`}
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
             passHref
           >
             <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined' target='_blank'>
