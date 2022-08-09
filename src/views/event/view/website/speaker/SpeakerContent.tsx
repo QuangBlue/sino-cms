@@ -2,7 +2,6 @@
 import { useEffect } from 'react'
 
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
 
 // ** Icon Imports
 import Plus from 'mdi-material-ui/Plus'
@@ -19,9 +18,8 @@ import Spinner from 'src/@core/components/spinner'
 
 import { array, object, string } from 'yup'
 import { handleSaveSpeaker, speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
-import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import { Card, CardContent, CardHeader } from '@mui/material'
 
 const SpeakerContent = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -93,41 +91,48 @@ const SpeakerContent = () => {
   if (store.isLoading) return <Spinner />
 
   return (
-    <Box>
-      <Typography variant='h6' sx={{ mb: 3 }}>
-        Title
-      </Typography>
-      <TextField
-        fullWidth
-        id='title-speaker'
-        sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
-        placeholder='Title Header'
-      />
+    <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
+      <Card>
+        <CardHeader title='Title' />
+        <CardContent>
+          <TextField
+            fullWidth
+            id='title-speaker'
+            sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
+            placeholder='Title Header'
+          />
+        </CardContent>
+      </Card>
 
-      <Divider sx={{ mt: 4, mb: 4 }} />
-      <Typography variant='h6' sx={{ mb: 3 }}>
-        List Speaker
-      </Typography>
-
-      <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button size='small' variant='contained' startIcon={<Plus fontSize='small' />} onClick={addSpeakerFiled}>
-          Add Speaker
-        </Button>
-      </Grid>
-      <form onSubmit={handleSubmit(onSubmit)} id='speaker-form'>
-        {fields.map((item, index) => {
-          return (
-            <SpeakerAdd
-              key={item.id}
-              id={store.listSpeaker[index]?.id || 0}
-              index={index}
-              control={control}
-              errors={errors}
-              remove={remove}
-            />
-          )
-        })}
-      </form>
+      <Card>
+        <CardHeader
+          title='List Speaker'
+          action={
+            <Box>
+              <TextField size='small' placeholder='Search Speaker' sx={{ mr: 4, mb: 2, maxWidth: '180px' }} />
+              <Button variant='contained' startIcon={<Plus fontSize='small' />} onClick={addSpeakerFiled}>
+                Add Speaker
+              </Button>
+            </Box>
+          }
+        />
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} id='speaker-form'>
+            {fields.map((item, index) => {
+              return (
+                <SpeakerAdd
+                  key={item.id}
+                  id={store.listSpeaker[index]?.id || 0}
+                  index={index}
+                  control={control}
+                  errors={errors}
+                  remove={remove}
+                />
+              )
+            })}
+          </form>
+        </CardContent>
+      </Card>
     </Box>
   )
 }

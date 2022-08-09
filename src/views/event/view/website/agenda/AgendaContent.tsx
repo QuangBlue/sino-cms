@@ -1,6 +1,6 @@
 // ** React Imports
 
-import { Box, Button, Divider, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
 
 import { Plus } from 'mdi-material-ui'
 import { useState } from 'react'
@@ -13,35 +13,39 @@ const AgendaContent = () => {
   const handleDialogClose = () => setOpen(false)
 
   return (
-    <Box>
-      <Typography variant='h6' sx={{ mb: 3 }}>
-        Title
-      </Typography>
-      <TextField
-        fullWidth
-        id='title-speaker'
-        sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
-        placeholder='Title Header'
-      />
-      <Divider sx={{ mt: 4, mb: 4 }} />
-      <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant='h6' sx={{ mb: 3 }}>
-          List Agenda
-        </Typography>
-        <Button
-          sx={{ mb: 5 }}
-          size='small'
-          variant='contained'
-          startIcon={<Plus fontSize='small' />}
-          onClick={handleClickOpen}
-        >
-          Add Agenda
-        </Button>
-        <DialogAddAgenda handleDialogClose={handleDialogClose} open={open} />
-      </Grid>
-      <AgengaItem />
-      <AgengaItem />
-      <AgengaItem />
+    <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
+      <Card>
+        <CardHeader title='Title' />
+        <CardContent>
+          <TextField
+            fullWidth
+            id='title-speaker'
+            sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
+            placeholder='Title Header'
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader
+          title=' List Agenda'
+          action={
+            <Box>
+              <TextField size='small' placeholder='Search Agenda' sx={{ mr: 4, mb: 2, maxWidth: '180px' }} />
+              <Button variant='contained' startIcon={<Plus fontSize='small' />} onClick={handleClickOpen}>
+                Add Agenda
+              </Button>
+            </Box>
+          }
+        />
+
+        <CardContent>
+          <AgengaItem />
+          <AgengaItem />
+          <AgengaItem />
+        </CardContent>
+      </Card>
+      <DialogAddAgenda handleDialogClose={handleDialogClose} open={open} />
     </Box>
   )
 }

@@ -20,7 +20,8 @@ const SponsorsContent = () => {
       minWidth: 110,
       borderRadius: 8,
       paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      marginBottom: theme.spacing(6)
     }
   }))
 
