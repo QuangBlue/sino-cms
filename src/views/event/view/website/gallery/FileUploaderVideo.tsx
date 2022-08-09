@@ -52,9 +52,9 @@ const FileUploaderVideo = () => {
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
-    maxSize: 2000000,
+    maxSize: 2000000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'video/*': ['.mp4', '.mkv']
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))

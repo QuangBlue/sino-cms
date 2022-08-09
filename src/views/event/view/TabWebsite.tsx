@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
-import { Cog } from 'mdi-material-ui'
+import { Cog, Home } from 'mdi-material-ui'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
 import CalendarRange from 'mdi-material-ui/CalendarRange'
 import FolderMultipleImage from 'mdi-material-ui/FolderMultipleImage'
@@ -20,6 +20,7 @@ import AboutUsTabView from './website/about-us/AboutUsTabView'
 import AgendaTabView from './website/agenda/AgendaTabView'
 import ContactUsTabView from './website/contact-us/ContactUsTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
+import HomeTabView from './website/home/HomeTabView'
 import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
 import SettingTabView from './website/setting/SettingTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
@@ -90,6 +91,7 @@ const TabWebsite = () => {
     <TabContext value={value}>
       <Box sx={{ display: 'flex', height: '100%' }}>
         <TabList orientation='vertical' onChange={handleChange} aria-label='forced scroll tabs example'>
+          <Tab value='home' label='home' icon={<Home sx={{ fontSize: '18px' }} />} />
           <Tab value='about-us' label='about us' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
           <Tab value='gallery' label='gallery' icon={<FolderMultipleImage sx={{ fontSize: '18px' }} />} />
           <Tab value='agenda' label='agenda' icon={<CalendarRange sx={{ fontSize: '18px' }} />} />
@@ -102,6 +104,9 @@ const TabWebsite = () => {
 
         <Divider orientation='vertical' flexItem />
 
+        <TabPanel sx={{ p: 0, width: '100%' }} value='home'>
+          <HomeTabView />
+        </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='about-us'>
           <AboutUsTabView />
         </TabPanel>

@@ -8,7 +8,7 @@ const KeenSliderWrapper = styled('div')(({ theme }) => ({
   '& .keen-slider': {
     '& .keen-slider__slide': {
       '& img': {
-        height: 'auto',
+        height: 300,
         maxWidth: '100%'
       }
     },

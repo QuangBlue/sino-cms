@@ -107,7 +107,7 @@ const Sponsors = () => {
 
       <Divider sx={{ mt: 4, mb: 4 }} />
       <Typography variant='h6' sx={{ mb: 3 }}>
-        Sponsors List
+        List Sponsors
       </Typography>
 
       <Grid container sx={{ mt: 4.75, display: 'flex', justifyContent: 'flex-end' }}>
