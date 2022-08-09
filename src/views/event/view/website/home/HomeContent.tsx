@@ -117,6 +117,11 @@ const HomeContent = () => {
         />
         <CardContent>
           <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <TextField label='Title' />
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={8}>
               <EditorWrapper>
                 <ReactDraftWysiwyg editorState={value} onEditorStateChange={data => setValue(data)} />
