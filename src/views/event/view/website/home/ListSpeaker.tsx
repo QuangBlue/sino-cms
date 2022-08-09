@@ -1,15 +1,18 @@
 import {
   Avatar,
+  Box,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemSecondaryAction,
-  ListItemText
+  ListItemText,
+  Switch
 } from '@mui/material'
 import { useState } from 'react'
 
@@ -42,12 +45,22 @@ export default function HomeListSpeaker() {
       <CardHeader
         title='List Speaker'
         action={
-          <Checkbox
-            disableRipple
-            onChange={checkAll}
-            checked={checked.length === 3}
-            inputProps={{ 'aria-labelledby': 'checkbox-list-label-2' }}
-          />
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+              Hide / Show
+            </InputLabel>
+            <Switch id='go-live' />
+            <InputLabel htmlFor='check-all' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+              Check All
+            </InputLabel>
+            <Checkbox
+              id='check-all'
+              disableRipple
+              onChange={checkAll}
+              checked={checked.length === 3}
+              inputProps={{ 'aria-labelledby': 'checkbox-list-label-2' }}
+            />
+          </Box>
         }
       />
       <CardContent>

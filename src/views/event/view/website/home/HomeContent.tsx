@@ -8,9 +8,11 @@ import {
   CardMedia,
   FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Select,
   styled,
+  Switch,
   TextField,
   Typography
 } from '@mui/material'
@@ -44,9 +46,15 @@ const HomeContent = () => {
         <CardHeader
           title='Banner'
           action={
-            <Button size='small' variant='contained' onClick={handleClickOpen}>
-              Upload Banner
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Button size='small' variant='contained' onClick={handleClickOpen} sx={{ mr: 6 }}>
+                Upload Banner
+              </Button>
+              <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+                Hide / Show
+              </InputLabel>
+              <Switch id='go-live' />
+            </Box>
           }
         />
         <CardContent>
@@ -74,7 +82,17 @@ const HomeContent = () => {
       </Card>
 
       <Card>
-        <CardHeader title='Organiser & Partners Banner' />
+        <CardHeader
+          title='Organiser & Partners Banner'
+          action={
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+                Hide / Show
+              </InputLabel>
+              <Switch id='go-live' />
+            </Box>
+          }
+        />
         <CardContent>
           {' '}
           <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
@@ -110,9 +128,15 @@ const HomeContent = () => {
         <CardHeader
           title='About Event'
           action={
-            <Button size='small' variant='contained' onClick={handleClickOpen}>
-              Upload Image
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Button size='small' variant='contained' onClick={handleClickOpen} sx={{ mr: 6 }}>
+                Upload Image
+              </Button>
+              <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+                Hide / Show
+              </InputLabel>
+              <Switch id='go-live' />
+            </Box>
           }
         />
         <CardContent>
