@@ -70,7 +70,7 @@ const TableHeaderHotel = (props: TableHeaderProps) => {
       }}
     >
       <CardHeader
-        title='Agent List'
+        title='Hotel List'
         sx={{ '& .MuiCardHeader-action': { m: 0 } }}
         titleTypographyProps={{
           variant: 'h6',
