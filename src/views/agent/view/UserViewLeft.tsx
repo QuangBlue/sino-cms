@@ -101,11 +101,11 @@ const UserViewLeft = ({ data }: Props) => {
   const schema = yup.object().shape({
     lastName: yup
       .string()
-      .min(3, obj => showErrors('Last Name', obj.value.length, obj.min))
+      .min(1, obj => showErrors('Last Name', obj.value.length, obj.min))
       .required(),
     firstName: yup
       .string()
-      .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
+      .min(1, obj => showErrors('First Name', obj.value.length, obj.min))
       .required(),
     phone: yup
       .string()

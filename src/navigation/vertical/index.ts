@@ -1,4 +1,5 @@
 // ** Icon imports
+import { OfficeBuildingMarker } from 'mdi-material-ui'
 import CalendarStar from 'mdi-material-ui/CalendarStar'
 import Domain from 'mdi-material-ui/Domain'
 import FaceAgent from 'mdi-material-ui/FaceAgent'
@@ -26,6 +27,11 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Agent',
       icon: FaceAgent,
       path: '/agent'
+    },
+    {
+      title: 'Hotel',
+      icon: OfficeBuildingMarker,
+      path: '/hotel'
     }
   ]
 }
