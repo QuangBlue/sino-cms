@@ -28,7 +28,7 @@ import HomeListSponsor from './ListSponsor'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: '100%',
-  maxWidth: '80%',
+  maxWidth: '240px',
   marginBottom: theme.spacing(4),
   borderRadius: theme.shape.borderRadius
 }))
@@ -146,12 +146,12 @@ const HomeContent = () => {
                 <TextField label='Title' />
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={8} md={8}>
               <EditorWrapper>
                 <ReactDraftWysiwyg editorState={value} onEditorStateChange={data => setValue(data)} />
               </EditorWrapper>
             </Grid>
-            <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item xs={12} sm={4}>
               <ImgStyled
                 src={''}
                 alt='Profile Pic'
@@ -165,10 +165,10 @@ const HomeContent = () => {
       </Card>
 
       <Grid container spacing={6}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <HomeListSpeaker />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <HomeListSponsor />
         </Grid>
       </Grid>

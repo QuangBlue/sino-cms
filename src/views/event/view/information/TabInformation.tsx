@@ -139,7 +139,7 @@ const TabInformation = (data: TabInformationProps) => {
         <Grid container spacing={6}>
           <Grid item xs={12} sm={6} sx={{ my: 5 }}>
             <Typography variant='h6' sx={{ mb: 5 }}>
-              Logo Event
+              Event Logo
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
               <ImgStyled src={logoImg} alt='Profile Pic' />

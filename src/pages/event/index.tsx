@@ -150,7 +150,7 @@ const EventList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title='Delete Event'>
+            <Tooltip title={row.status ? 'Delete Agent' : 'Resume Agent'}>
               <IconButton size='small' onClick={handleClickOpenAlert}>
                 {row.status ? <DeleteOutline /> : <BackupRestore />}
               </IconButton>

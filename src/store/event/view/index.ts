@@ -137,9 +137,9 @@ export const uploadLogo = createAsyncThunk(
         })
 
       toast.promise(promise, {
-        loading: 'Request Update Logo Event',
-        success: 'Update Logo Event Successfully',
-        error: 'Error when Update Logo Event'
+        loading: 'Request Update Event Logo',
+        success: 'Update Event Logo Successfully',
+        error: 'Error when Update Event Logo'
       })
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Unknow Error')

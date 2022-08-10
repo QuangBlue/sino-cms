@@ -100,7 +100,6 @@ const Sponsors = () => {
         <CardContent>
           <TextField
             fullWidth
-            id='title-speaker'
             sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
             placeholder='Title Header'
           />
@@ -109,7 +108,7 @@ const Sponsors = () => {
 
       <Card>
         <CardHeader
-          title='List Speaker'
+          title='List Sponsor'
           action={
             <Box>
               <TextField size='small' placeholder='Search Sponsor' sx={{ mr: 4, mb: 2, maxWidth: '180px' }} />

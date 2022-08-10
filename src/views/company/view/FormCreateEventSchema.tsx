@@ -30,6 +30,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+import { Divider, Typography } from '@mui/material'
 
 interface FormValidationSchemaProps {
   handleClickCloseModal: () => void
@@ -192,7 +193,10 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                 )}
               </FormControl>
             </Grid>
-
+            <Grid item xs={12}>
+              <Divider />
+              <Typography variant='h6'>Default Admin Account</Typography>
+            </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <Controller
@@ -206,7 +210,7 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                         autoComplete: 'new-password'
                       }}
                       value={value}
-                      label='Host Event Email '
+                      label='Admin Email'
                       onChange={onChange}
                       error={Boolean(errors.host?.email)}
                       placeholder='host.event@sinoelite.com'
@@ -225,7 +229,7 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor='validation-schema-password' error={Boolean(errors.host?.password)}>
-                  Password
+                  Admin Password
                 </InputLabel>
                 <Controller
                   name='host.password'
@@ -234,7 +238,7 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
                   render={({ field: { value, onChange } }) => (
                     <OutlinedInput
                       value={value}
-                      label='Password'
+                      label='Admin Password'
                       onChange={onChange}
                       id='validation-schema-password'
                       error={Boolean(errors.host?.password)}
@@ -263,14 +267,14 @@ const FormCreateEventSchema = (props: FormValidationSchemaProps) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel htmlFor='user-view-security-confirm-password'>Confirm Password</InputLabel>
+                <InputLabel htmlFor='user-view-security-confirm-password'>Admin Confirm Password</InputLabel>
                 <Controller
                   name='host.confirmPassword'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <OutlinedInput
-                      label='Confirm Password'
+                      label='Admin Confirm Password'
                       value={value}
                       id='user-view-security-confirm-password'
                       error={Boolean(errors.host?.confirmPassword)}
