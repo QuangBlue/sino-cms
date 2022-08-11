@@ -19,3 +19,14 @@ export interface LanguageTypes {
   createdAt: string
   updatedAt: string
 }
+
+export interface SettingHeaderTypes {
+  key: string
+  id?: number
+  title: string
+  content: string
+  isPublished: boolean
+  createdAt?: string
+  updatedAt?: string
+  header?: any
+}

@@ -13,7 +13,7 @@ import Button from '@mui/material/Button'
 // import { AppDispatch, RootState } from 'src/store'
 // import { useDispatch, useSelector } from 'react-redux'
 
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, useFieldArray } from 'react-hook-form'
 
 import { array, object, string } from 'yup'
