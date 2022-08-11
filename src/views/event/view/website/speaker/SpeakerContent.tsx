@@ -80,7 +80,8 @@ const SpeakerContent = () => {
       name: '',
       jobTitle: '',
       biography: '',
-      id: 0
+      id: 0,
+      status: false
     })
   }
 

@@ -5,9 +5,9 @@ export interface SpeakerTypes {
   jobTitle: string
   biography: string
   status: boolean
-  order: number
-  createdAt: string
-  updatedAt: string
+  order?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface LanguageTypes {
