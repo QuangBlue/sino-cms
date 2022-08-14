@@ -1,19 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import toast from 'react-hot-toast'
 import axiosClient from 'src/configs/axiosClient'
-import { SettingHeaderTypes } from 'src/types/website'
+import { SettingHeaderTypes, HeaderKey } from 'src/types/website'
 
-export interface EditHeaderParams {
+export interface HeaderParams {
   key: string
   title: string
-  content: string
+  content?: string
   isPublished: boolean
-  header: any
+  header?: any
 }
 
 interface EditHeaderProps {
   eventId: number
-  params: EditHeaderParams
+  params: HeaderParams[]
 }
 
 export const getHeaders = createAsyncThunk('settingWebsite/getHeaders', async (eventId: number) => {
@@ -31,11 +31,21 @@ export const editHeader = createAsyncThunk(
   }
 )
 
+export const getHeaderByKey = createAsyncThunk(
+  'settingWebsite/getHeaderByKey',
+  async ({ eventId, key }: { eventId: number; key: HeaderKey }) => {
+    const response = await axiosClient.get(`header-page/event/${eventId}?key=${key}`)
+
+    return response.data
+  }
+)
+
 export const settingWebsiteSlice = createSlice({
   name: 'settingWebsite',
   initialState: {
     headers: [] as SettingHeaderTypes[],
-    isLoading: true
+    isLoading: true,
+    header: [] as SettingHeaderTypes[]
   },
   reducers: {},
 
@@ -62,6 +72,18 @@ export const settingWebsiteSlice = createSlice({
       })
       .addCase(editHeader.rejected, state => {
         toast.success('Something went wrong!')
+        state.isLoading = false
+      })
+
+      .addCase(getHeaderByKey.pending, state => {
+        state.header = []
+        state.isLoading = true
+      })
+      .addCase(getHeaderByKey.fulfilled, (state, action) => {
+        state.header = action.payload
+        state.isLoading = false
+      })
+      .addCase(getHeaderByKey.rejected, state => {
         state.isLoading = false
       })
   }

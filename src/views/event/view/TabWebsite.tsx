@@ -99,7 +99,7 @@ const TabWebsite = () => {
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
           <Tab value='contact-us' label='contact us' icon={<Lifebuoy sx={{ fontSize: '18px' }} />} />
-          <Tab value='setting' label='setting' icon={<Cog sx={{ fontSize: '18px' }} />} />
+          <Tab value='setting' label='settings' icon={<Cog sx={{ fontSize: '18px' }} />} />
         </TabList>
 
         <Divider orientation='vertical' flexItem />

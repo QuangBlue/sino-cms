@@ -8,8 +8,12 @@ import company from 'src/store/company'
 import eventDetail from 'src/store/event/view'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
+
+// ** Website Reducers
 import speakerWebsite from 'src/store/event/view/website/speakerStore'
-import settingWebsite from 'src/store/event/view/website/settingStore'
+import settingWebsite from 'src/store/event/view/website/settingsStore'
+import agendaWebsite from 'src/store/event/view/website/agendaStore'
+import galleryWebsite from 'src/store/event/view/website/galleryStore'
 
 export const store = configureStore({
   reducer: {
@@ -20,7 +24,9 @@ export const store = configureStore({
     agentDetail,
     companyDetail,
     speakerWebsite,
-    settingWebsite
+    settingWebsite,
+    agendaWebsite,
+    galleryWebsite
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

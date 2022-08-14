@@ -4,10 +4,19 @@ import { Box, Button, Card, CardContent, CardHeader, TextField } from '@mui/mate
 
 import { Plus } from 'mdi-material-ui'
 import { useState } from 'react'
-import AgengaItem from './AgendaItem'
+
+import AgendaItem from './AgendaItem'
 import DialogAddAgenda from './DialogAddAgenda'
 
-const AgendaContent = () => {
+import { AgendaTypes } from 'src/types/website'
+
+interface AgendaContentProps {
+  agendaList: AgendaTypes[]
+}
+
+const AgendaContent = ({ agendaList }: AgendaContentProps) => {
+  console.log('🚀 ~ ~ agendaList', agendaList)
+
   const [open, setOpen] = useState<boolean>(false)
   const handleClickOpen = () => setOpen(true)
   const handleDialogClose = () => setOpen(false)
@@ -40,9 +49,10 @@ const AgendaContent = () => {
         />
 
         <CardContent>
-          <AgengaItem />
-          <AgengaItem />
-          <AgengaItem />
+          {agendaList?.length > 0 &&
+            agendaList.map(agenda => {
+              return <AgendaItem key={agenda.id} title={agenda.name} agendaId={agenda.id} />
+            })}
         </CardContent>
       </Card>
       <DialogAddAgenda handleDialogClose={handleDialogClose} open={open} />

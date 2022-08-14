@@ -34,7 +34,7 @@ const Sponsors = () => {
     createSponsors: array()
       .of(
         object().shape({
-          avatar: string().required('Avarta field is required'),
+          avatar: string().required('Avatar field is required'),
           sponsorName: string().required('Sponsor Name field is required')
         })
       )

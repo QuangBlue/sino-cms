@@ -13,7 +13,7 @@ import { ChangeEvent, ElementType } from 'react'
 
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
-import { deleteSpeaker, uploadAvarta } from 'src/store/event/view/website/speakerStore'
+import { deleteSpeaker, uploadAvatar } from 'src/store/event/view/website/speakerStore'
 
 import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
@@ -75,7 +75,7 @@ export const SpeakerAdd = ({ index, control, errors, id, remove }: any) => {
   const handleChange = async (file: ChangeEvent, onChange: any) => {
     const { files } = file.target as HTMLInputElement
     if (files && files.length !== 0) {
-      const urlImg = await uploadAvarta(files[0])
+      const urlImg = await uploadAvatar(files[0])
       if (urlImg) {
         onChange(urlImg.data)
       }
@@ -110,7 +110,7 @@ export const SpeakerAdd = ({ index, control, errors, id, remove }: any) => {
                 color: 'text.primary'
               }}
             >
-              Image
+              Avatar
             </Typography>
             <Controller
               name={`createSpeaker.${index}.avatar`}
@@ -140,7 +140,7 @@ export const SpeakerAdd = ({ index, control, errors, id, remove }: any) => {
                     )}
                     <Box>
                       <ButtonStyled size='small' component='label' variant='contained'>
-                        Upload Avarta
+                        Upload Avatar
                         <input
                           hidden
                           type='file'

@@ -24,9 +24,67 @@ export interface SettingHeaderTypes {
   key: string
   id?: number
   title: string
-  content: string
+  content?: string
   isPublished: boolean
   createdAt?: string
   updatedAt?: string
   header?: any
+}
+
+export type HeaderKey =
+  | 'about-us'
+  | 'agenda'
+  | 'contact-us'
+  | 'gallery'
+  | 'org-partner'
+  | 'register'
+  | 'speaker'
+  | 'sponsor'
+
+export interface AgendaTypes {
+  id?: number
+  name: string
+  slug: string
+  description: string
+  date: string
+}
+
+export interface AgendaDetailTypes {
+  id?: number
+  title: string
+  topic: string
+  speaker: string
+  speakerTitle: string
+  timeStart: string
+  timeEnd: string
+}
+
+export interface AlbumTypes {
+  id?: number
+  year: number
+  name: string
+}
+
+export interface PhotoAlbumTypes {
+  id?: number
+  createdAt?: string
+  name: string
+  photos: any
+  type: string
+  updatedAt?: string
+  year: number
+}
+
+export interface AddPhotoTypes {
+  id?: number
+  order?: number
+  imgUrl: string
+}
+
+export interface PhotoTypes {
+  id?: number
+  imgUrl: string
+  order?: number
+  createdAt?: string
+  updatedAt?: string
 }

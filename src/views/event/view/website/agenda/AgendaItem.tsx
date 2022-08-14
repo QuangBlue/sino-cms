@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 // ** MUI Import
 import Box from '@mui/material/Box'
 
@@ -14,6 +16,9 @@ import AddEventSidebar from './AddEventSidebar'
 import { useState } from 'react'
 import { Card, IconButton, CardHeader, CardContent, Collapse } from '@mui/material'
 import { ChevronDown, ChevronUp } from 'mdi-material-ui'
+import { getAgendaDetail } from 'src/store/event/view/website/agendaStore'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({
@@ -27,19 +32,37 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
   }
 })
 
-const AgengaItem = () => {
+interface AgendaItemProps {
+  title: string
+  agendaId: number | undefined
+}
+
+const AgendaItem = ({ title, agendaId }: AgendaItemProps) => {
   // ** Vars
 
   const addEventSidebarWidth = 400
   const [collapsed, setCollapsed] = useState<boolean>(false)
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
 
+  const dispatch = useDispatch<AppDispatch>()
+  const agendaStore = useSelector((state: RootState) => state.agendaWebsite)
+  console.log('agendaStore', agendaStore)
+
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
+
+  console.log('agendaId', agendaId)
+
+  useEffect(() => {
+    if (agendaId && collapsed) {
+      dispatch(getAgendaDetail(agendaId))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agendaId, collapsed])
 
   return (
     <Card variant='outlined' sx={{ boxShadow: 0, mb: 4 }}>
       <CardHeader
-        title='Agenda Title'
+        title={title}
         action={
           <Box>
             {collapsed && (
@@ -75,6 +98,7 @@ const AgengaItem = () => {
             drawerWidth={addEventSidebarWidth}
             addEventSidebarOpen={addEventSidebarOpen}
             handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+            agendaId={agendaId}
           />
         </CardContent>
       </Collapse>
@@ -82,4 +106,4 @@ const AgengaItem = () => {
   )
 }
 
-export default AgengaItem
+export default AgendaItem
