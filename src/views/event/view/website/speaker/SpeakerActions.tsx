@@ -36,7 +36,6 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
   const router = useRouter()
   const { selected } = router.query
 
-
   // ** Hook
   const { i18n } = useTranslation()
   const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
@@ -94,7 +93,7 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/speakers`}
             passHref
           >
             <Button
