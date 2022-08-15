@@ -36,7 +36,6 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
   const router = useRouter()
   const { selected } = router.query
 
-  console.log('speakerHeader', speakerHeader)
 
   // ** Hook
   const { i18n } = useTranslation()

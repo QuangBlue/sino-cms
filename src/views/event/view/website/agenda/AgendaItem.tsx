@@ -46,11 +46,9 @@ const AgendaItem = ({ title, agendaId }: AgendaItemProps) => {
 
   const dispatch = useDispatch<AppDispatch>()
   const agendaStore = useSelector((state: RootState) => state.agendaWebsite)
-  console.log('agendaStore', agendaStore)
 
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
 
-  console.log('agendaId', agendaId)
 
   useEffect(() => {
     if (agendaId && collapsed) {

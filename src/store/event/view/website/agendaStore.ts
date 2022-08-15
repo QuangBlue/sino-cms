@@ -101,7 +101,6 @@ export const AgendaSlice = createSlice({
         state.isFetchingAgendaDetail = true
       })
       .addCase(getAgendaDetail.fulfilled, (state, action) => {
-        console.log('action', action)
         state.isFetchingAgendaDetail = false
         state.agendaDetail = { ...state.agendaDetail, [action.meta.arg]: action.payload.data }
       })
@@ -119,10 +118,6 @@ export const AgendaSlice = createSlice({
       .addCase(addAgendaDetail.rejected, state => {
         state.isFetchingAgendaDetail = false
         toast.success('Something went wrong!')
-      })
-      .addCase(addDetailToAgendaById, (state, action) => {
-        console.log('state', state)
-        console.log('action', action)
       })
   }
 })

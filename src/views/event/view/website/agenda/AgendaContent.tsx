@@ -15,7 +15,6 @@ interface AgendaContentProps {
 }
 
 const AgendaContent = ({ agendaList }: AgendaContentProps) => {
-  console.log('🚀 ~ ~ agendaList', agendaList)
 
   const [open, setOpen] = useState<boolean>(false)
   const handleClickOpen = () => setOpen(true)

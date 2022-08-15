@@ -114,7 +114,6 @@ const AddEventSidebar = (props: any) => {
   }
 
   const onSubmit = (params: any) => {
-    console.log('submit', params)
     dispatch(addDetailToAgendaById({ agendaId, params }))
   }
 
