@@ -21,14 +21,14 @@ export const addAlbum = createAsyncThunk(
 export const addPhotos = createAsyncThunk(
   'galleryWebsite/addPhotos',
   async ({ albumId, params }: { albumId: number; params: AddPhotoTypes }) => {
-    const response = await axiosClient.post(`gallery/album/photo?album=${albumId}`, { items: params })
+    const response = await axiosClient.post(`gallery/album/photo?albumId=${albumId}`, { items: params })
 
     return response.data
   }
 )
 
 export const getPhotosByAlbumId = createAsyncThunk('galleryWebsite/getPhotosByAlbumId', async (albumId: number) => {
-  const response = await axiosClient.get(`gallery/album/photo?album=${albumId}`)
+  const response = await axiosClient.get(`gallery/album/photo?albumId=${albumId}`)
 
   return response.data
 })

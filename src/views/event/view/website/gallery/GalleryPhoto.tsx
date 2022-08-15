@@ -53,7 +53,7 @@ const GalleryPhoto = () => {
 
       {galleyStore?.albums?.length > 0 &&
         galleyStore?.albums?.map(album => {
-          return <AlbumItem key={album.id} title={album.name} albumId={album.id} />
+          return <AlbumItem key={album.id} title={`${album.name} (${album.year})`} albumId={album.id} />
         })}
     </Box>
   )

@@ -21,13 +21,13 @@ const GalleryVideo = () => {
           Add Album
         </Button>
       </Box>
-      <DialogAddAlbumForm handleDialogClose={handleDialogClose} open={open} isVideo={true} />
+      {/* <DialogAddAlbumForm handleDialogClose={handleDialogClose} open={open} isVideo={true} /> */}
 
+      {/* <AlbumItem isVideo={true} />
       <AlbumItem isVideo={true} />
       <AlbumItem isVideo={true} />
       <AlbumItem isVideo={true} />
-      <AlbumItem isVideo={true} />
-      <AlbumItem isVideo={true} />
+      <AlbumItem isVideo={true} /> */}
     </Box>
   )
 }
