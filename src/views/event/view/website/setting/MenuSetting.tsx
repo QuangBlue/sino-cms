@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
 import { Box, Card, CardContent, CardHeader, Switch, Typography } from '@mui/material'
 import React, { useCallback } from 'react'
 import { SettingHeaderTypes } from 'src/types/website'
 import { ABOUT_US, AGENDA, CONTACT_US, GALLERY, ORG_PARTNER, REGISTER, SPEAKER, SPONSOR } from 'src/constants/headers'
 import LoadingButton from '@mui/lab/LoadingButton'
 
+import { keyBy, merge, toArray } from 'lodash'
 interface Props {
   headers: SettingHeaderTypes[]
   handleToggleHeader: (params: any) => void
@@ -62,16 +64,13 @@ const defaultHeaders = [
 ]
 
 export default function MenuSetting({ headers, handleToggleHeader, isLoading }: Props) {
-  const [settingHeaders, setSettingHeaders] = React.useState(headers || defaultHeaders)
+  const headerList = useMemo(() => {
+    const list = toArray(merge(keyBy(defaultHeaders, 'key'), keyBy(headers, 'header.key')))
 
-  React.useEffect(() => {
-    if (headers?.length > 0) {
-      setSettingHeaders(headers)
-
-      return
-    }
-    setSettingHeaders(defaultHeaders)
+    return list
   }, [headers])
+
+  const [settingHeaders, setSettingHeaders] = React.useState(headerList)
 
   const handleToggleHeaders = useCallback((item: any, value: boolean) => {
     if (item?.header) {
