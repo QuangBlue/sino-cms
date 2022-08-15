@@ -20,10 +20,22 @@ import { array, object, string } from 'yup'
 import { handleSaveSpeaker, speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
 import TextField from '@mui/material/TextField'
 import { Card, CardContent, CardHeader } from '@mui/material'
+import { SettingHeaderTypes } from 'src/types/website'
 
-const SpeakerContent = () => {
+import { editHeader } from 'src/store/event/view/website/settingsStore'
+import { useRouter } from 'next/router'
+
+interface SpeakerContentProps {
+  speakerHeader: SettingHeaderTypes
+}
+
+const SpeakerContent = ({ speakerHeader }: SpeakerContentProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.speakerWebsite)
+
+  const router = useRouter()
+
+  const { id } = router.query
 
   const defaultValues = {
     createSpeaker: store.listSpeaker
@@ -33,7 +45,7 @@ const SpeakerContent = () => {
     createSpeaker: array()
       .of(
         object().shape({
-          avatar: string().required('Avarta field is required'),
+          avatar: string().required('Avatar field is required'),
           name: string().required('Full Name field is required')
         })
       )
@@ -86,6 +98,8 @@ const SpeakerContent = () => {
   }
 
   const onSubmit = (data: any) => {
+    dispatch(editHeader({ eventId: Number(id), params: [speakerHeader] }))
+
     dispatch(handleSaveSpeaker(data.createSpeaker))
   }
 

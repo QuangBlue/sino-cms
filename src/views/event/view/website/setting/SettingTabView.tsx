@@ -3,7 +3,7 @@ import MenuSetting from './MenuSetting'
 import StylesSite from './StylesSite'
 
 import { Box, Grid } from '@mui/material'
-import { getHeaders, editHeader, EditHeaderParams } from 'src/store/event/view/website/settingStore'
+import { getHeaders, editHeader, HeaderParams } from 'src/store/event/view/website/settingsStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 
@@ -26,7 +26,7 @@ export default function SettingTabView() {
   }, [id, dispatch])
 
   const handleToggleHeader = (values: any) => {
-    const data = values?.map((header: EditHeaderParams) => {
+    const data = values?.map((header: HeaderParams) => {
       return {
         key: header.header ? header.header.key : header.key,
         title: header.title,

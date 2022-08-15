@@ -13,10 +13,11 @@ import FileUploaderPhoto from './FileUploaderPhoto'
 interface DialogUploadPhotoProps {
   handleDialogClose: () => void
   open: boolean
+  handleAddPhotos: (file: any[]) => void
 }
 
 const DialogUploadPhoto = (props: DialogUploadPhotoProps) => {
-  const { handleDialogClose, open } = props
+  const { handleDialogClose, open, handleAddPhotos } = props
 
   return (
     <Fragment>
@@ -30,7 +31,7 @@ const DialogUploadPhoto = (props: DialogUploadPhotoProps) => {
         <DialogTitle id='simple-dialog-title'>Upload Photo</DialogTitle>
         <Box sx={{ p: 4 }}>
           <DropzoneWrapper>
-            <FileUploaderPhoto />
+            <FileUploaderPhoto handleAddPhotos={handleAddPhotos} />
           </DropzoneWrapper>
         </Box>
       </Dialog>

@@ -111,7 +111,7 @@ export default function MenuSetting({ headers, handleToggleHeader, isLoading }: 
   return (
     <Card>
       <CardHeader
-        title='Menu Setting'
+        title='Menu Settings'
         subheader='You can hide/show the menus'
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}

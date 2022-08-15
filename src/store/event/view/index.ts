@@ -102,7 +102,7 @@ export const uploadEventMap = createAsyncThunk(
         error: 'Error when Upload Event Map'
       })
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'Unknow Error')
+      toast.error(error?.response?.data?.message || 'Unknown Error')
     }
   }
 )

@@ -6,7 +6,8 @@ import Tab from '@mui/material/Tab'
 import TabPanel from '@mui/lab/TabPanel'
 import { FilmstripBoxMultiple, FolderMultipleImage } from 'mdi-material-ui'
 import GalleryPhoto from './GalleryPhoto'
-import GalleryVideo from './GalleryVideo'
+
+// import GalleryVideo from './GalleryVideo'
 
 const GalleryContent = () => {
   const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
@@ -41,9 +42,10 @@ const GalleryContent = () => {
       <TabPanel value='photo' sx={{ p: 0, width: '100%' }}>
         <GalleryPhoto />
       </TabPanel>
-      <TabPanel value='video' sx={{ p: 0, width: '100%' }}>
+      {/* TODO: Integrate api API for gallery videos */}
+      {/* <TabPanel value='video' sx={{ p: 0, width: '100%' }}>
         <GalleryVideo />
-      </TabPanel>
+      </TabPanel> */}
     </TabContext>
   )
 }

@@ -106,7 +106,7 @@ const UserViewNotification = () => {
           Save Changes
         </Button>
         <Button color='secondary' variant='outlined'>
-          Discard
+          Cancel
         </Button>
       </CardActions>
     </Card>

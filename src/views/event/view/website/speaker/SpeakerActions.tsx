@@ -19,6 +19,7 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 import { useRouter } from 'next/router'
+import { SettingHeaderTypes } from 'src/types/website'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -26,9 +27,15 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-between'
 }))
 
-const AddActions = () => {
+interface AddActionsProps {
+  speakerHeader: SettingHeaderTypes
+  handleToggleSpeakerHeader: (checked: boolean) => void
+}
+
+const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActionsProps) => {
   const router = useRouter()
   const { selected } = router.query
+
 
   // ** Hook
   const { i18n } = useTranslation()
@@ -50,7 +57,11 @@ const AddActions = () => {
             <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
               Hide / Show
             </InputLabel>
-            <Switch id='go-live' />
+            <Switch
+              id='go-live'
+              checked={speakerHeader.isPublished}
+              onChange={e => handleToggleSpeakerHeader(e.target.checked)}
+            />
           </OptionsWrapper>
 
           <OptionsWrapper sx={{ mb: 4 }}>
@@ -103,4 +114,4 @@ const AddActions = () => {
   )
 }
 
-export default AddActions
+export default SpeakerActions

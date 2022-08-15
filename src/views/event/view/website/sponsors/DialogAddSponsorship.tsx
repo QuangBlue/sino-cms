@@ -43,7 +43,7 @@ const DialogAddSponsorship = (props: DialogAddAlbumProps) => {
       </DialogContent>
       <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}>
         <Button variant='outlined' color='secondary' onClick={handleDialogClose}>
-          Discard
+          Cancel
         </Button>
         <Button variant='contained' sx={{ mr: 2 }} onClick={handleDialogClose}>
           Create
