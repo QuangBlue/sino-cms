@@ -19,6 +19,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import { speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
 import Web from 'mdi-material-ui/Web'
 import InformationVariant from 'mdi-material-ui/InformationVariant'
+import TabPackage from 'src/views/event/view/TabPackage'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -119,6 +120,9 @@ const EventDetail = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='website'>
           <TabWebsite />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='package'>
+          <TabPackage />
         </TabPanel>
       </TabContext>
     </Card>
