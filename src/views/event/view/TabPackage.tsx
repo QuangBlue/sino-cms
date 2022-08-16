@@ -8,6 +8,7 @@ import DialogAddContactInfo from './DialogAddPackage'
 interface ContactInfoTypes {
   title: string
   price: string
+  limit: number
   startDate: string
   endDate: string
   benefit: string[]
@@ -33,6 +34,13 @@ const defaultColumns = [
     minWidth: 90,
     headerName: 'Price',
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.price || ''}`}</Typography>
+  },
+  {
+    flex: 1,
+    field: 'limit',
+    minWidth: 90,
+    headerName: 'Limit',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.limit || 0}`}</Typography>
   },
   {
     flex: 1,
@@ -69,7 +77,8 @@ const ContactUs = [
       'Live Streaming of SIFW Opening Ceremony',
       'Virtual Exhibition Hall - Communication Exchanges with Sponsors (16 May - 20 May：9:00 -18:00)'
     ],
-    type: 'live-stream'
+    type: 'live-stream',
+    limit: 50
   },
   {
     id: 2,
@@ -82,7 +91,8 @@ const ContactUs = [
       'Live Streaming of SIFW Opening Ceremony',
       'Virtual Exhibition Hall - Communication Exchanges with Sponsors (16 May - 20 May：9:00 -18:00)'
     ],
-    type: 'live-stream'
+    type: 'live-stream',
+    limit: 50
   },
   {
     id: 3,
@@ -95,7 +105,8 @@ const ContactUs = [
       'Live Streaming of SIFW Opening Ceremony',
       'Virtual Exhibition Hall - Communication Exchanges with Sponsors (16 May - 20 May：9:00 -18:00)'
     ],
-    type: 'live-stream'
+    type: 'live-stream',
+    limit: 50
   },
   {
     id: 4,
@@ -108,7 +119,8 @@ const ContactUs = [
       'Live Streaming of SIFW Opening Ceremony',
       'Virtual Exhibition Hall - Communication Exchanges with Sponsors (16 May - 20 May：9:00 -18:00)'
     ],
-    type: 'in-person'
+    type: 'in-person',
+    limit: 50
   },
   {
     id: 5,
@@ -121,7 +133,8 @@ const ContactUs = [
       'Live Streaming of SIFW Opening Ceremony',
       'Virtual Exhibition Hall - Communication Exchanges with Sponsors (16 May - 20 May：9:00 -18:00)'
     ],
-    type: 'in-person'
+    type: 'in-person',
+    limit: 50
   }
 ]
 

@@ -153,8 +153,11 @@ const DialogAddPackage = (props: DialogAddAlbumProps) => {
             <Grid item sm={12} xs={12}>
               <TextField fullWidth label='Title' placeholder='Title' />
             </Grid>
-            <Grid item sm={12} xs={12}>
-              <TextField fullWidth label='Price' placeholder='Price' />
+            <Grid item sm={6} xs={12}>
+              <TextField type='number' fullWidth label='Price' placeholder='Price' />
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <TextField type='number' fullWidth label='Limit' placeholder='Limit' />
             </Grid>
             <Grid item sm={6} xs={12}>
               <FormControl fullWidth>

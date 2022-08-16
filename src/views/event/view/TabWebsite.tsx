@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
-import { Cog, Home } from 'mdi-material-ui'
+import { Cog, FileDocumentEditOutline, Home } from 'mdi-material-ui'
 import AccountTieVoice from 'mdi-material-ui/AccountTieVoice'
 import CalendarRange from 'mdi-material-ui/CalendarRange'
 import FolderMultipleImage from 'mdi-material-ui/FolderMultipleImage'
@@ -22,6 +22,7 @@ import ContactUsTabView from './website/contact-us/ContactUsTabView'
 import GalleryTabView from './website/gallery/GalleryTabView'
 import HomeTabView from './website/home/HomeTabView'
 import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
+import RegisterTabView from './website/register/RegisterTabView'
 import SettingTabView from './website/setting/SettingTabView'
 import SpeakerTabView from './website/speaker/SpeakerTabView'
 import SponsorsTabView from './website/sponsors/SponsorsTabView'
@@ -98,6 +99,7 @@ const TabWebsite = () => {
           <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
+          <Tab value='register' label='register' icon={<FileDocumentEditOutline sx={{ fontSize: '18px' }} />} />
           <Tab value='contact-us' label='contact us' icon={<Lifebuoy sx={{ fontSize: '18px' }} />} />
           <Tab value='setting' label='settings' icon={<Cog sx={{ fontSize: '18px' }} />} />
         </TabList>
@@ -124,6 +126,9 @@ const TabWebsite = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='organiser-partners'>
           <OrganiserPartnersTabView />
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='register'>
+          <RegisterTabView />
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='contact-us'>
           <ContactUsTabView />
