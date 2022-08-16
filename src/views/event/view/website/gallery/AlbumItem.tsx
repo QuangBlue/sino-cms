@@ -23,19 +23,23 @@ import CircularProgress from '@mui/material/CircularProgress'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import Tooltip from '@mui/material/Tooltip'
 import LoadingButton from '@mui/lab/LoadingButton'
-
+import MenuPopover from 'src/layouts/components/menu'
+import MenuItem from '@mui/material/MenuItem'
+import EditIcon from '@mui/icons-material/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
 import { addPhotos, getAlbum } from 'src/store/event/view/website/galleryStore'
-import { PhotoTypes } from 'src/types/website'
+import { PhotoTypes, AlbumTypes } from 'src/types/website'
 
 import { getPhotos, deletePhoto, deleteAlbum } from 'src/@core/api/gallery-api'
 import toast from 'react-hot-toast'
 
 interface AlbumItemProps {
   isVideo?: boolean
-  title: string
+  name: string
+  year: number
   albumId: number | undefined
+  handleOpenEditAlbumModal: (params: AlbumTypes) => void
 }
 
 interface DeleteAlbumModalProps {
@@ -60,7 +64,7 @@ const AlbumItem = (prop: AlbumItemProps) => {
   const handleClickOpen = () => setOpen(true)
   const handleDialogClose = () => setOpen(false)
 
-  const { isVideo, title, albumId } = prop
+  const { isVideo, name, albumId, year, handleOpenEditAlbumModal } = prop
 
   useEffect(() => {
     if (albumId && collapsed) {
@@ -118,31 +122,47 @@ const AlbumItem = (prop: AlbumItemProps) => {
   return (
     <Card variant='outlined' sx={{ boxShadow: 0, mb: 4 }}>
       <CardHeader
-        title={title}
+        title={`${name} (${year})`}
         action={
-          <Box>
-            {collapsed && (
-              <>
+          <Box sx={{ display: 'flex' }}>
+            <MenuPopover>
+              <MenuItem>
                 <Button
                   sx={{ mr: 2 }}
                   size='small'
-                  variant='contained'
+                  variant='text'
                   startIcon={<Plus fontSize='small' />}
                   onClick={handleClickOpen}
+                  color='secondary'
                 >
                   {isVideo ? 'Add Video' : 'Add Photo'}
                 </Button>
+              </MenuItem>
+              <MenuItem>
                 <Button
                   sx={{ mr: 10 }}
                   size='small'
-                  variant='contained'
+                  variant='text'
                   startIcon={<HighlightOffIcon fontSize='small' />}
                   onClick={() => setOpenDeletedModal(true)}
+                  color='secondary'
                 >
                   {isVideo ? 'Delete Video' : 'Delete Album'}
                 </Button>
-              </>
-            )}
+              </MenuItem>
+              <MenuItem>
+                <Button
+                  sx={{ mr: 10 }}
+                  size='small'
+                  variant='text'
+                  startIcon={<EditIcon fontSize='small' />}
+                  onClick={() => handleOpenEditAlbumModal({ id: Number(albumId), name, year })}
+                  color='secondary'
+                >
+                  Edit Album
+                </Button>
+              </MenuItem>
+            </MenuPopover>
 
             <IconButton
               size='small'
