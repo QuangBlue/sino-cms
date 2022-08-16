@@ -1,6 +1,6 @@
 import { Box, Button, CardHeader, IconButton, Tooltip, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import { Plus, Pencil } from 'mdi-material-ui'
+import { Plus, Pencil, DeleteOutline } from 'mdi-material-ui'
 import * as React from 'react'
 import { useState } from 'react'
 import DialogAddContactInfo from './DialogAddRegister'
@@ -63,6 +63,11 @@ export default function RegisterInfo() {
             <Tooltip title={'Edit Sponsorship'}>
               <IconButton size='small' sx={{ mr: 0.5 }} onClick={handleClickOpen}>
                 <Pencil />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={'Delete Package'}>
+              <IconButton size='small'>
+                <DeleteOutline />
               </IconButton>
             </Tooltip>
           </Box>
