@@ -18,6 +18,15 @@ export const addAlbum = createAsyncThunk(
   }
 )
 
+export const editAlbum = createAsyncThunk(
+  'galleryWebsite/editAlbum',
+  async ({ albumId, params }: { albumId: number; params: AlbumTypes }) => {
+    const response = await axiosClient.put(`gallery/album/${albumId}`, params)
+
+    return response.data
+  }
+)
+
 export const addPhotos = createAsyncThunk(
   'galleryWebsite/addPhotos',
   async ({ albumId, params }: { albumId: number; params: AddPhotoTypes }) => {
@@ -61,6 +70,17 @@ export const galleryWebsiteSlice = createSlice({
         state.isLoading = false
       })
       .addCase(addAlbum.rejected, state => {
+        state.isLoading = false
+        toast.error('Something went wrong!')
+      })
+      .addCase(editAlbum.pending, state => {
+        state.isLoading = true
+      })
+      .addCase(editAlbum.fulfilled, state => {
+        toast.success('Album has been updated')
+        state.isLoading = false
+      })
+      .addCase(editAlbum.rejected, state => {
         state.isLoading = false
         toast.error('Something went wrong!')
       })

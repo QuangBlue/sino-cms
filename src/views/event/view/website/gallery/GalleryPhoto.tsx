@@ -10,17 +10,24 @@ import DialogAddAlbumForm from './DialogAddAlbum'
 // * Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
-import { getAlbum, addAlbum } from 'src/store/event/view/website/galleryStore'
+import { getAlbum, addAlbum, editAlbum } from 'src/store/event/view/website/galleryStore'
 import { AlbumTypes } from 'src/types/website'
 
 const GalleryPhoto = () => {
   const [open, setOpen] = useState<boolean>(false)
+  const [editParams, setEditParams] = useState<AlbumTypes | null>(null)
+
   const handleClickOpen = () => setOpen(true)
-  const handleDialogClose = () => setOpen(false)
+  const handleDialogClose = () => {
+    setEditParams(null)
+    setOpen(false)
+  }
 
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.eventDetail)
   const galleyStore = useSelector((state: RootState) => state.galleryWebsite)
+
+  const { isLoading, albums } = galleyStore
 
   const eventName = store.eventData.baseName
 
@@ -39,6 +46,20 @@ const GalleryPhoto = () => {
     }
   }
 
+  const handleEditAlbum = async (params: AlbumTypes) => {
+    const result = await dispatch(editAlbum({ albumId: Number(params.id), params }))
+
+    if (result?.payload?.id) {
+      setOpen(false)
+      dispatch(getAlbum(eventName))
+    }
+  }
+
+  const handleOpenEditAlbumModal = (params: AlbumTypes) => {
+    setEditParams(params)
+    handleClickOpen()
+  }
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
@@ -49,11 +70,26 @@ const GalleryPhoto = () => {
           Add Album
         </Button>
       </Box>
-      <DialogAddAlbumForm handleDialogClose={handleDialogClose} open={open} handleAddAlbum={handleAddAlbum} />
+      <DialogAddAlbumForm
+        handleDialogClose={handleDialogClose}
+        open={open}
+        handleAddAlbum={handleAddAlbum}
+        handleEditAlbum={handleEditAlbum}
+        editParams={editParams}
+        isLoading={isLoading}
+      />
 
-      {galleyStore?.albums?.length > 0 &&
-        galleyStore?.albums?.map(album => {
-          return <AlbumItem key={album.id} title={`${album.name} (${album.year})`} albumId={album.id} />
+      {albums?.length > 0 &&
+        albums?.map(album => {
+          return (
+            <AlbumItem
+              key={album.id}
+              name={album.name}
+              year={album.year}
+              albumId={album.id}
+              handleOpenEditAlbumModal={handleOpenEditAlbumModal}
+            />
+          )
         })}
     </Box>
   )
