@@ -93,7 +93,7 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/speakers`}
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
             passHref
           >
             <Button

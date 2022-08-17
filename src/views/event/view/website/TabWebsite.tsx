@@ -16,16 +16,16 @@ import StarCheck from 'mdi-material-ui/StarCheck'
 
 import { useRouter } from 'next/router'
 import { SyntheticEvent, useEffect, useState } from 'react'
-import AboutUsTabView from './website/about-us/AboutUsTabView'
-import AgendaTabView from './website/agenda/AgendaTabView'
-import ContactUsTabView from './website/contact-us/ContactUsTabView'
-import GalleryTabView from './website/gallery/GalleryTabView'
-import HomeTabView from './website/home/HomeTabView'
-import OrganiserPartnersTabView from './website/organiser-partners/OrganiserPartnersTabView'
-import RegisterTabView from './website/register/RegisterTabView'
-import SettingTabView from './website/setting/SettingTabView'
-import SpeakerTabView from './website/speaker/SpeakerTabView'
-import SponsorsTabView from './website/sponsors/SponsorsTabView'
+import AboutUsTabView from './about-us/AboutUsTabView'
+import AgendaTabView from './agenda/AgendaTabView'
+import ContactUsTabView from './contact-us/ContactUsTabView'
+import GalleryTabView from './gallery/GalleryTabView'
+import HomeTabView from './home/HomeTabView'
+import OrganiserPartnersTabView from './organiser-partners/OrganiserPartnersTabView'
+import RegisterTabView from './register/RegisterTabView'
+import SettingTabView from './setting/SettingTabView'
+import SpeakerTabView from './speaker/SpeakerTabView'
+import SponsorsTabView from './sponsors/SponsorsTabView'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
@@ -96,7 +96,7 @@ const TabWebsite = () => {
           <Tab value='about-us' label='about us' icon={<InformationOutline sx={{ fontSize: '18px' }} />} />
           <Tab value='gallery' label='gallery' icon={<FolderMultipleImage sx={{ fontSize: '18px' }} />} />
           <Tab value='agenda' label='agenda' icon={<CalendarRange sx={{ fontSize: '18px' }} />} />
-          <Tab value='speaker' label='speaker' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
+          <Tab value='speakers' label='speakers' icon={<AccountTieVoice sx={{ fontSize: '18px' }} />} />
           <Tab value='sponsors' label='sponsors' icon={<ShieldStar sx={{ fontSize: '18px' }} />} />
           <Tab value='organiser-partners' label='organiser & partners' icon={<StarCheck sx={{ fontSize: '18px' }} />} />
           <Tab value='register' label='register' icon={<FileDocumentEditOutline sx={{ fontSize: '18px' }} />} />
@@ -118,7 +118,7 @@ const TabWebsite = () => {
         <TabPanel sx={{ p: 0, width: '100%' }} value='agenda'>
           <AgendaTabView />
         </TabPanel>
-        <TabPanel sx={{ p: 0, width: '100%' }} value='speaker'>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='speakers'>
           <SpeakerTabView />
         </TabPanel>
         <TabPanel sx={{ p: 0, width: '100%' }} value='sponsors'>

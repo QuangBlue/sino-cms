@@ -106,7 +106,7 @@ const CompanyList = () => {
     dispatch(fetchCompany())
 
     return () => {
-      companySlice.actions.handlePageChange()
+      dispatch(companySlice.actions.handlePageChange())
     }
   }, [dispatch])
 
