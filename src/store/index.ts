@@ -5,9 +5,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import agent from 'src/store/agent'
 import event from 'src/store/event'
 import company from 'src/store/company'
-import eventDetail from 'src/store/event/view'
+import eventDetail from 'src/store/event/view/informationStore'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
+import packageEvent from 'src/store/event/view/packageStore'
 
 // ** Website Reducers
 import speakerWebsite from 'src/store/event/view/website/speakerStore'
@@ -23,6 +24,7 @@ export const store = configureStore({
     company,
     eventDetail,
     agentDetail,
+    packageEvent,
     companyDetail,
     speakerWebsite,
     settingWebsite,

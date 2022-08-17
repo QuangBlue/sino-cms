@@ -4,7 +4,6 @@ const axiosClient = axios.create({
   // baseURL: 'https://sino-elite-api-stg.mlpert.com',
 
   baseURL: 'https://sino-elite-api-dev.mlpert.com',
-
   headers: {
     'Content-Type': 'application/json'
   }

@@ -10,15 +10,18 @@ import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
 import TabInformation from 'src/views/event/view/information/TabInformation'
-import TabWebsite from 'src/views/event/view/TabWebsite'
+import TabWebsite from 'src/views/event/view/website/TabWebsite'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
-import { eventDetailSlice, fetchEventDetail } from 'src/store/event/view'
+import { eventDetailSlice, fetchEventDetail } from 'src/store/event/view/informationStore'
 import { useRouter } from 'next/router'
 import TabPanel from '@mui/lab/TabPanel'
 import { speakerWebsiteSlice } from 'src/store/event/view/website/speakerStore'
 import Web from 'mdi-material-ui/Web'
 import InformationVariant from 'mdi-material-ui/InformationVariant'
+import TabPackage from 'src/views/event/view/package/TabPackage'
+import { FileDocumentEditOutline, VideoCheck } from 'mdi-material-ui'
+import TabLiveStream from 'src/views/event/view/live-stream/TabLiveStream'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -107,8 +110,17 @@ const EventDetail = () => {
             value='package'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Web sx={{ fontSize: '1.125rem' }} />
+                <FileDocumentEditOutline sx={{ fontSize: '1.125rem' }} />
                 <TabName>Package</TabName>
+              </Box>
+            }
+          />
+          <Tab
+            value='live-stream'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <VideoCheck sx={{ fontSize: '1.125rem' }} />
+                <TabName>Live Stream</TabName>
               </Box>
             }
           />
@@ -119,6 +131,12 @@ const EventDetail = () => {
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='website'>
           <TabWebsite />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='package'>
+          <TabPackage />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='live-stream'>
+          <TabLiveStream />
         </TabPanel>
       </TabContext>
     </Card>

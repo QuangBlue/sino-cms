@@ -182,7 +182,7 @@ const AgentList = () => {
     dispatch(fetchAgent())
 
     return () => {
-      agentSlice.actions.handlePageChange()
+      dispatch(agentSlice.actions.handlePageChange())
     }
   }, [dispatch])
 

@@ -19,7 +19,13 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { EventMapTypes, EventTypes } from 'src/types/eventTypes'
 import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
-import { deleteEvent, editEventDetail, resumeEvent, uploadEventMap, uploadLogo } from 'src/store/event/view'
+import {
+  deleteEvent,
+  editEventDetail,
+  resumeEvent,
+  uploadEventMap,
+  uploadLogo
+} from 'src/store/event/view/informationStore'
 import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
 import { formatDate } from 'src/@core/utils/format'
 
