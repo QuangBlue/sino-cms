@@ -3,7 +3,8 @@ import axios from 'axios'
 const axiosClient = axios.create({
   // baseURL: 'https://sino-elite-api-stg.mlpert.com',
 
-  baseURL: 'http://ironore-api-dev.eba-spqgruhh.ap-southeast-1.elasticbeanstalk.com',
+  baseURL: 'https://sino-elite-api-dev.mlpert.com',
+
   headers: {
     'Content-Type': 'application/json'
   }
