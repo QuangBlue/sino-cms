@@ -19,6 +19,7 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 import { SettingHeaderTypes } from 'src/types/website'
+import { useRouter } from 'next/router'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -40,6 +41,8 @@ const SpeakerActions = ({
   const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
   const dispatch = useDispatch<AppDispatch>()
+  const router = useRouter()
+  const { selected } = router.query
 
   const handleLangItemClick = (event: ChangeEvent<HTMLInputElement>) => {
     i18n.changeLanguage((event.target as HTMLInputElement).value)
