@@ -18,8 +18,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getSpeaker } from 'src/store/event/view/website/speakerStore'
-import { useRouter } from 'next/router'
 import { SettingHeaderTypes } from 'src/types/website'
+import { useRouter } from 'next/router'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -32,15 +32,17 @@ interface AddActionsProps {
   handleToggleSpeakerHeader: (checked: boolean) => void
 }
 
-const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActionsProps) => {
-  const router = useRouter()
-  const { selected } = router.query
-
+const SpeakerActions = ({
+  speakerHeader,
+  handleToggleSpeakerHeader
+}: AddActionsProps) => {
   // ** Hook
   const { i18n } = useTranslation()
   const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
   const dispatch = useDispatch<AppDispatch>()
+  const router = useRouter()
+  const { selected } = router.query
 
   const handleLangItemClick = (event: ChangeEvent<HTMLInputElement>) => {
     i18n.changeLanguage((event.target as HTMLInputElement).value)
@@ -53,7 +55,14 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
       <Card>
         <CardContent>
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Hide / Show
             </InputLabel>
             <Switch
@@ -64,7 +73,14 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
           </OptionsWrapper>
 
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Languages
             </InputLabel>
             <FormControl sx={{ flexWrap: 'wrap', flexDirection: 'row' }}>
@@ -76,8 +92,16 @@ const SpeakerActions = ({ speakerHeader, handleToggleSpeakerHeader }: AddActions
                 onChange={handleLangItemClick}
                 aria-label='simple-radio'
               >
-                <FormControlLabel value='en-US' control={<Radio />} label='English' />
-                <FormControlLabel value='zh-CN' control={<Radio />} label='Chinese' />
+                <FormControlLabel
+                  value='en-US'
+                  control={<Radio />}
+                  label='English'
+                />
+                <FormControlLabel
+                  value='zh-CN'
+                  control={<Radio />}
+                  label='Chinese'
+                />
               </RadioGroup>
             </FormControl>
           </OptionsWrapper>

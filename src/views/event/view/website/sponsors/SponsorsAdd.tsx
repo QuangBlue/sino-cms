@@ -7,78 +7,29 @@ import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Close from 'mdi-material-ui/Close'
-import { ChangeEvent, ElementType, useState } from 'react'
+import { ChangeEvent, ElementType } from 'react'
 
 // ** Third Party Imports
 
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
 import { uploadAvatar } from 'src/store/event/view/website/speakerStore'
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { InputLabel, MenuItem, Select } from '@mui/material'
 
-// import { AppDispatch } from 'src/store'
-// import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/store'
 
-const ImgStyled = styled('img')(({ theme }) => ({
-  width: '100%',
-  maxWidth: '240px',
-  marginBottom: theme.spacing(4),
-  borderRadius: theme.shape.borderRadius
-}))
+export const SponsorsAdd = ({
+  index,
+  control,
+  errors,
+  handleDeleteSponsor,
+  remove,
+  ...props
+}: any) => {
+  const sponsorStore = useSelector((state: RootState) => state.sponsorWebsite)
 
-const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const SponsorAction = styled(Box)<BoxProps>(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  padding: theme.spacing(2, 1),
-  borderLeft: `1px solid ${theme.palette.divider}`
-}))
-
-const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
-  paddingRight: 0,
-  display: 'flex',
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
-  '& .col-title': {
-    top: '-1.5rem',
-    position: 'absolute'
-  },
-  '& .MuiInputBase-input': {
-    color: theme.palette.text.secondary
-  },
-  [theme.breakpoints.down('lg')]: {
-    '& .col-title': {
-      top: '0',
-      position: 'relative'
-    }
-  }
-}))
-
-export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
-  // const dispatch = useDispatch<AppDispatch>()
-
-  // ** Deletes form
-  const deleteForm = async () => {
-    remove(index)
-
-    // if (id != 0) {
-    //   await dispatch(deleteSpeaker(id))
-    // }
-  }
-
-  const [value, setValue] = useState<string>('')
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string)
-  }
+  const { sponsorsType } = sponsorStore
 
   const handleChangeLogo = async (file: ChangeEvent, onChange: any) => {
     const { files } = file.target as HTMLInputElement
@@ -88,6 +39,11 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
         onChange(urlImg.data)
       }
     }
+  }
+
+  const handleDelete = () => {
+    remove(index)
+    handleDeleteSponsor(props)
   }
 
   return (
@@ -118,10 +74,10 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
                 color: 'text.primary'
               }}
             >
-              Image
+              Logo
             </Typography>
             <Controller
-              name={`createSponsors.${index}.avatar`}
+              name={`createSponsors.${index}.logoUrl`}
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => {
@@ -141,13 +97,18 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
                         e.currentTarget.src = '/images/avatars/1.png'
                       }}
                     />
-                    {errors.createSponsors && errors.createSponsors[index]?.avatar && (
-                      <FormHelperText sx={{ color: 'error.main', mb: 2 }}>
-                        {errors.createSponsors[index].avatar.message}
-                      </FormHelperText>
-                    )}
+                    {errors.createSponsors &&
+                      errors.createSponsors[index]?.logoUrl && (
+                        <FormHelperText sx={{ color: 'error.main', mb: 2 }}>
+                          {errors.createSponsors[index].logoUrl.message}
+                        </FormHelperText>
+                      )}
                     <Box>
-                      <ButtonStyled size='small' component='label' variant='contained'>
+                      <ButtonStyled
+                        size='small'
+                        component='label'
+                        variant='contained'
+                      >
                         Upload Logo
                         <input
                           hidden
@@ -191,7 +152,7 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
 
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
-                name={`createSponsors.${index}.sponsorName`}
+                name={`createSponsors.${index}.name`}
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -203,37 +164,69 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
                     label='Sponsor Name'
                     onChange={onChange}
                     placeholder='Full Name'
-                    error={Boolean(errors.name)}
+                    error={Boolean(
+                      errors?.createSponsors &&
+                        errors?.createSponsors?.[index]?.name
+                    )}
                     aria-describedby='validation-schema-full-name'
                   />
                 )}
               />
-              {errors.createSponsors && errors.createSponsors[index]?.sponsorName && (
-                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-full-name'>
-                  {errors.createSponsors[index].sponsorName.message}
+              {errors.createSponsors && errors.createSponsors[index]?.name && (
+                <FormHelperText
+                  sx={{ color: 'error.main' }}
+                  id='validation-schema-full-name'
+                >
+                  {errors.createSponsors[index].name.message}
                 </FormHelperText>
               )}
             </FormControl>
 
-            <FormControl fullWidth sx={{ mb: 4 }}>
-              <InputLabel id='controlled-select-label'>Type</InputLabel>
-              <Select
-                value={value}
-                label='Type'
-                id='controlled-select'
-                onChange={handleChange}
-                labelId='controlled-select-label'
-              >
-                <MenuItem value='diamond'>Diamond</MenuItem>
-                <MenuItem value='gold'>Gold</MenuItem>
-                <MenuItem value='silver'>Silver</MenuItem>
-                <MenuItem value='bronze'>Bronze</MenuItem>
-              </Select>
+            <FormControl
+              fullWidth
+              sx={{ mb: 4 }}
+              error={Boolean(
+                errors?.createSponsors &&
+                  errors?.createSponsors?.[index]?.sponsorType
+              )}
+            >
+              <Controller
+                name={`createSponsors.${index}.sponsorType`}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <>
+                    <InputLabel id='controlled-select-label'>Type</InputLabel>
+                    <Select
+                      value={value || ''}
+                      label='Type'
+                      id='controlled-select'
+                      onChange={onChange}
+                      labelId='controlled-select-label'
+                    >
+                      {sponsorsType?.length > 0 &&
+                        sponsorsType?.map(sponsor => (
+                          <MenuItem key={sponsor.id} value={sponsor.id}>
+                            {sponsor.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.createSponsors &&
+                errors.createSponsors[index]?.sponsorType && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-sponsorType'
+                  >
+                    {errors.createSponsors[index].sponsorType.message}
+                  </FormHelperText>
+                )}
             </FormControl>
 
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
-                name={`createSponsors.${index}.introduction`}
+                name={`createSponsors.${index}.description`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <TextField
@@ -243,24 +236,31 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
                     value={value}
                     multiline
                     rows={8}
-                    label='Introduction'
+                    label='Description'
                     onChange={onChange}
-                    placeholder='Introduction'
-                    error={Boolean(errors.introduction)}
-                    aria-describedby='validation-schema-introduction'
+                    placeholder='Description'
+                    error={Boolean(
+                      errors?.createSponsors &&
+                        errors?.createSponsors?.[index]?.description
+                    )}
+                    aria-describedby='validation-schema-description'
                   />
                 )}
               />
-              {errors.introduction && (
-                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-introduction'>
-                  {errors.introduction.message}
-                </FormHelperText>
-              )}
+              {errors.createSponsors &&
+                errors.createSponsors[index]?.description && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-description'
+                  >
+                    {errors.createSponsors[index].description.message}
+                  </FormHelperText>
+                )}
             </FormControl>
           </Grid>
         </Grid>
         <SponsorAction>
-          <IconButton size='small' onClick={deleteForm}>
+          <IconButton size='small' onClick={handleDelete}>
             <Close fontSize='small' />
           </IconButton>
         </SponsorAction>
@@ -268,3 +268,48 @@ export const SponsorsAdd = ({ index, control, errors, remove }: any) => {
     </Grid>
   )
 }
+
+const ImgStyled = styled('img')(({ theme }) => ({
+  width: '100%',
+  maxWidth: '240px',
+  marginBottom: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius
+}))
+
+const ButtonStyled = styled(Button)<
+  ButtonProps & { component?: ElementType; htmlFor?: string }
+>(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    textAlign: 'center'
+  }
+}))
+
+const SponsorAction = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  padding: theme.spacing(2, 1),
+  borderLeft: `1px solid ${theme.palette.divider}`
+}))
+
+const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
+  paddingRight: 0,
+  display: 'flex',
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid ${theme.palette.divider}`,
+  '& .col-title': {
+    top: '-1.5rem',
+    position: 'absolute'
+  },
+  '& .MuiInputBase-input': {
+    color: theme.palette.text.secondary
+  },
+  [theme.breakpoints.down('lg')]: {
+    '& .col-title': {
+      top: '0',
+      position: 'relative'
+    }
+  }
+}))

@@ -88,3 +88,28 @@ export interface PhotoTypes {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface SponsorShip {
+  id?: number
+  name: string
+  price: number
+  slot: number
+  updatedAt?: string
+  createdAt?: string
+  group?: any
+}
+
+export interface SponsorGroup {
+  id?: number
+  event: any
+  levels: SponsorShip
+  name: string
+  updatedAt?: string
+  createdAt?: string
+}
+
+export interface SponsorSettings {
+  title: string
+  description: string
+  contactInfo: string
+}
