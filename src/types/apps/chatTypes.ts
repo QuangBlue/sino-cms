@@ -139,13 +139,12 @@ export type UserProfileRightType = {
 }
 
 export type SendMsgComponentType = {
-  store: ChatStoreType
-  dispatch: Dispatch<any>
-  sendMsg: (params: SendMsgParamsType) => void
+  store?: ChatStoreType
+  dispatch?: Dispatch<any>
+  sendMsg?: (params: SendMsgParamsType) => void
 }
 
 export type ChatLogType = {
-  hidden: boolean
   data: {
     chat: ChatsObj
     contact: ContactType
