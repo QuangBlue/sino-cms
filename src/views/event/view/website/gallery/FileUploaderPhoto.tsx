@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, SyntheticEvent } from 'react'
+import { Fragment, useState, SyntheticEvent, useRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,6 +10,8 @@ import ListItem from '@mui/material/ListItem'
 import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Typography, { TypographyProps } from '@mui/material/Typography'
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // ** Icons Imports
 import Close from 'mdi-material-ui/Close'
@@ -18,6 +20,21 @@ import FileDocumentOutline from 'mdi-material-ui/FileDocumentOutline'
 // ** Third Party Imports
 import { FileRejection, useDropzone } from 'react-dropzone'
 import toast from 'react-hot-toast'
+
+import { upload as UploadImage } from 'src/@core/api/upload-api'
+
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant='determinate' {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant='body2' color='text.secondary'>{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  )
+}
 
 interface FileProp {
   name: string
@@ -46,9 +63,16 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
   }
 }))
 
-const FileUploaderPhoto = () => {
+interface FileUploaderPhotoProps {
+  handleAddPhotos: (photos: any[]) => void
+}
+
+const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
   // ** State
-  const [files, setFiles] = useState<File[]>([])
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [progressInfos, setProgressInfos] = useState<any>({ val: [] })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const progressInfosRef = useRef(null)
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -57,7 +81,7 @@ const FileUploaderPhoto = () => {
       'image/*': ['.png', '.jpg', '.jpeg', '.gif']
     },
     onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      setSelectedFiles(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: fileRejections => {
       fileRejections.map((file: FileRejection) => {
@@ -77,36 +101,106 @@ const FileUploaderPhoto = () => {
   }
 
   const handleRemoveFile = (file: FileProp) => {
-    const uploadedFiles = files
+    const uploadedFiles = selectedFiles
     const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-    setFiles([...filtered])
+
+    // @ts-ignore
+    setSelectedFiles([...filtered])
   }
 
-  const fileList = files.map((file: FileProp) => (
-    <ListItem key={file.name}>
-      <div className='file-details'>
-        <div className='file-preview'>{renderFilePreview(file)}</div>
-        <div>
-          <Typography className='file-name'>{file.name}</Typography>
-          <Typography className='file-size' variant='body2'>
-            {Math.round(file.size / 100) / 10 > 1000
-              ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-              : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
-          </Typography>
-        </div>
-      </div>
-      <IconButton onClick={() => handleRemoveFile(file)}>
-        <Close fontSize='small' />
-      </IconButton>
-    </ListItem>
-  ))
+  const upload = (idx: number, file: File) => {
+    // @ts-ignore
+    const _progressInfos = [...progressInfosRef.current.val]
+
+    return UploadImage(file, (event: { loaded: number; total: number }) => {
+      _progressInfos[idx].percentage = Math.round((100 * event.loaded) / event.total)
+      _progressInfos[idx].file = file
+    })
+      .then(result => {
+        if (result?.success) {
+          _progressInfos[idx].imgUrl = result.data
+          setProgressInfos({ val: [..._progressInfos] })
+        }
+
+        return result
+      })
+      .catch(() => {
+        _progressInfos[idx].percentage = 0
+        setProgressInfos({ val: _progressInfos })
+      })
+  }
+
+  const uploadFiles = () => {
+    setIsLoading(true)
+    const files = Array.from(selectedFiles)
+
+    const _progressInfos = files.map(file => ({ percentage: 0, fileName: file.name }))
+
+    // @ts-ignore
+    progressInfosRef.current = {
+      val: _progressInfos
+    }
+
+    const uploadPromises = selectedFiles.map((file, i) => upload(i, file))
+
+    Promise.all(uploadPromises).then(photos => {
+      setSelectedFiles([])
+
+      handleAddPhotos(photos)
+
+      setIsLoading(false)
+    })
+  }
+
+  const fileList =
+    selectedFiles?.length > 0
+      ? selectedFiles?.map((file: FileProp) => (
+          <ListItem key={file.name}>
+            <div className='file-details'>
+              <div className='file-preview'>{renderFilePreview(file)}</div>
+              <div>
+                <Typography className='file-name'>{file.name}</Typography>
+                <Typography className='file-size' variant='body2'>
+                  {Math.round(file.size / 100) / 10 > 1000
+                    ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
+                    : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
+                </Typography>
+              </div>
+            </div>
+            <IconButton onClick={() => handleRemoveFile(file)}>
+              <Close fontSize='small' />
+            </IconButton>
+          </ListItem>
+        ))
+      : progressInfos &&
+        progressInfos.val.length > 0 &&
+        progressInfos.val.map((progressInfo: any, index: number) => (
+          <ListItem key={index}>
+            <div className='' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex' }}>
+                <div className='file-preview'>{renderFilePreview(progressInfo.file)}</div>
+                <div>
+                  <Typography className='file-name'>{progressInfo.fileName}</Typography>
+                  <Typography className='file-size' variant='body2'>
+                    {Math.round(progressInfo.file.size / 100) / 10 > 1000
+                      ? `${(Math.round(progressInfo.file.size / 100) / 10000).toFixed(1)} mb`
+                      : `${(Math.round(progressInfo.file.size / 100) / 10).toFixed(1)} kb`}
+                  </Typography>
+                </div>
+              </div>
+              <div>
+                <LinearProgressWithLabel value={progressInfo.percentage} />
+              </div>
+            </div>
+          </ListItem>
+        ))
 
   const handleLinkClick = (event: SyntheticEvent) => {
     event.preventDefault()
   }
 
   const handleRemoveAllFiles = () => {
-    setFiles([])
+    setSelectedFiles([])
   }
 
   return (
@@ -118,7 +212,7 @@ const FileUploaderPhoto = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
             <HeadingTypography variant='h5'>Drop files here or click to upload.</HeadingTypography>
             <Typography color='textSecondary'>
-              Drop files here or click{' '}
+              Drop selectedFiles here or click{' '}
               <Link href='/' onClick={handleLinkClick}>
                 browse
               </Link>{' '}
@@ -127,17 +221,23 @@ const FileUploaderPhoto = () => {
           </Box>
         </Box>
       </div>
-      {files.length ? (
-        <Fragment>
-          <List>{fileList}</List>
-          <div className='buttons'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
-              Remove All
-            </Button>
-            <Button variant='contained'>Upload Files</Button>
-          </div>
-        </Fragment>
-      ) : null}
+
+      <Fragment>
+        <List sx={{ width: '100%' }}>{fileList}</List>
+        <div className='buttons'>
+          <Button color='error' variant='outlined' onClick={handleRemoveAllFiles} disabled={selectedFiles.length === 0}>
+            Remove All
+          </Button>
+          <LoadingButton
+            loading={isLoading}
+            variant='contained'
+            onClick={uploadFiles}
+            disabled={selectedFiles.length === 0}
+          >
+            Upload Files
+          </LoadingButton>
+        </div>
+      </Fragment>
     </Fragment>
   )
 }

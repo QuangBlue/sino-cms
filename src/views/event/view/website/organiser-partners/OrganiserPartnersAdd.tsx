@@ -13,7 +13,7 @@ import { ChangeEvent, ElementType, useState } from 'react'
 
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
-import { uploadAvarta } from 'src/store/event/view/website/speakerStore'
+import { uploadAvatar } from 'src/store/event/view/website/speakerStore'
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 // import { AppDispatch } from 'src/store'
@@ -83,7 +83,7 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
   const handleChangeLogo = async (file: ChangeEvent, onChange: any) => {
     const { files } = file.target as HTMLInputElement
     if (files && files.length !== 0) {
-      const urlImg = await uploadAvarta(files[0])
+      const urlImg = await uploadAvatar(files[0])
       if (urlImg) {
         onChange(urlImg.data)
       }

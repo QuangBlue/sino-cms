@@ -6,10 +6,17 @@ import agent from 'src/store/agent'
 import event from 'src/store/event'
 import company from 'src/store/company'
 import hotel from 'src/store/hotel'
-import eventDetail from 'src/store/event/view'
+import eventDetail from 'src/store/event/view/informationStore'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
+import packageEvent from 'src/store/event/view/packageStore'
+
+// ** Website Reducers
 import speakerWebsite from 'src/store/event/view/website/speakerStore'
+import settingWebsite from 'src/store/event/view/website/settingsStore'
+import agendaWebsite from 'src/store/event/view/website/agendaStore'
+import galleryWebsite from 'src/store/event/view/website/galleryStore'
+import sponsorWebsite from 'src/store/event/view/website/sponsorStore'
 
 export const store = configureStore({
   reducer: {
@@ -19,8 +26,13 @@ export const store = configureStore({
     hotel,
     eventDetail,
     agentDetail,
+    packageEvent,
     companyDetail,
-    speakerWebsite
+    speakerWebsite,
+    settingWebsite,
+    agendaWebsite,
+    galleryWebsite,
+    sponsorWebsite
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -130,7 +130,7 @@ const EventList = () => {
     }
 
     return () => {
-      eventSlice.actions.handlePageChange()
+      dispatch(eventSlice.actions.handlePageChange())
     }
   }, [auth.user, dispatch])
 

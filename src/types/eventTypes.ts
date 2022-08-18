@@ -32,3 +32,19 @@ export interface EventMapTypes {
   createdAt: string
   updatedAt: string
 }
+
+export interface PackageTypes {
+  id: number
+  name: string
+  price: number
+  periodEnd: string
+  periodStart: string
+  description: string | null
+  priceType: string
+  stockLimit: number
+  type: string
+  isExpired: boolean
+  status: boolean
+  createdAt: string
+  updatedAt: string
+}

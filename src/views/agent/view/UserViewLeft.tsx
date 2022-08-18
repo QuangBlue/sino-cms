@@ -38,7 +38,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Third Party Imports
 import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
 
 // ** Redux
@@ -444,7 +444,7 @@ const UserViewLeft = ({ data }: Props) => {
                   Submit
                 </Button>
                 <Button variant='outlined' color='secondary' onClick={handleEditClose}>
-                  Discard
+                  Cancel
                 </Button>
               </DialogActions>
             </Dialog>

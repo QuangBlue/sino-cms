@@ -29,7 +29,11 @@ import Chip from '@mui/material/Chip'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 import CustomInput from './CustomInput'
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
+
+import { addDetailToAgendaById } from 'src/store/event/view/website/agendaStore'
 
 interface DefaultStateType {
   url: string
@@ -79,17 +83,13 @@ const names = [
 
 const AddEventSidebar = (props: any) => {
   // ** Props
-  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle } = props
+  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, agendaId } = props
 
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
-  const [personName, setPersonName] = useState<string[]>([])
-  const [timeStart, setTimeStart] = useState<DateType>(new Date())
-  const [timeEnd, setTimeEnd] = useState<DateType>(new Date())
+  const speakerStore = useSelector((state: RootState) => state.speakerWebsite)
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    setPersonName(event.target.value as string[])
-  }
+  const dispatch = useDispatch<AppDispatch>()
 
   const {
     control,
@@ -97,7 +97,14 @@ const AddEventSidebar = (props: any) => {
     clearErrors,
     handleSubmit,
     formState: { errors }
-  } = useForm({ defaultValues: { title: '' } })
+  } = useForm({
+    defaultValues: {
+      title: '',
+      timeStart: new Date(),
+      timeEnd: new Date(),
+      speakers: []
+    }
+  })
 
   const handleSidebarClose = async () => {
     setValues(defaultState)
@@ -106,8 +113,8 @@ const AddEventSidebar = (props: any) => {
     handleAddEventSidebarToggle()
   }
 
-  const onSubmit = () => {
-    console.log('submit')
+  const onSubmit = (params: any) => {
+    dispatch(addDetailToAgendaById({ agendaId, params }))
   }
 
   const handleDeleteEvent = () => {
@@ -195,62 +202,91 @@ const AddEventSidebar = (props: any) => {
             </FormControl>
 
             <Box sx={{ mb: 6 }}>
-              <DatePicker
-                selectsStart
-                showTimeSelect
-                selected={timeStart}
-                timeIntervals={5}
-                showTimeSelectOnly
-                dateFormat='h:mm aa'
-                id='time-only-picker'
-                timeCaption='Time Picker'
-                onChange={(date: Date) => setTimeStart(date)}
-                customInput={<CustomInput label='Start Time' />}
-              />
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <Controller
+                  name='timeStart'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                      selectsStart
+                      showTimeSelect
+                      selected={value}
+                      timeIntervals={5}
+                      showTimeSelectOnly
+                      dateFormat='h:mm aa'
+                      id='time-only-picker'
+                      timeCaption='Time Picker'
+                      onChange={(date: Date) => onChange(date)}
+                      customInput={<CustomInput label='Start Time' />}
+                    />
+                  )}
+                />
+              </FormControl>
             </Box>
             <Box sx={{ mb: 6 }}>
-              <FormControl fullWidth>
-                <DatePicker
-                  selectsEnd
-                  showTimeSelect
-                  selected={timeEnd}
-                  timeIntervals={5}
-                  showTimeSelectOnly
-                  dateFormat='h:mm aa'
-                  id='time-only-picker'
-                  timeCaption='Time Picker'
-                  onChange={(date: Date) => setTimeEnd(date)}
-                  customInput={<CustomInput label='End Time' />}
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <Controller
+                  name='timeEnd'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                      selectsStart
+                      showTimeSelect
+                      selected={value}
+                      timeIntervals={5}
+                      showTimeSelectOnly
+                      dateFormat='h:mm aa'
+                      id='time-only-picker'
+                      timeCaption='Time Picker'
+                      onChange={(date: Date) => onChange(date)}
+                      customInput={<CustomInput label='End Time' />}
+                    />
+                  )}
                 />
               </FormControl>
             </Box>
 
             <Box sx={{ mb: 6 }}>
-              <FormControl fullWidth>
-                <InputLabel id='demo-multiple-chip-label'>Speaker</InputLabel>
-                <Select
-                  multiple
-                  label='Speaker'
-                  value={personName}
-                  MenuProps={MenuProps}
-                  id='multiple-speaker'
-                  onChange={handleChange}
-                  labelId='multiple-speaker-label'
-                  renderValue={selected => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                      {(selected as unknown as string[]).map(value => (
-                        <Chip key={value} label={value} sx={{ m: 0.75 }} />
+              <Controller
+                name='speakers'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl fullWidth>
+                    <InputLabel id='demo-multiple-chip-label'>Speaker</InputLabel>
+                    <Select
+                      multiple
+                      label='Speaker'
+                      value={value}
+                      MenuProps={MenuProps}
+                      id='multiple-speaker'
+                      onChange={onChange}
+                      labelId='multiple-speaker-label'
+                      renderValue={selected => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                          {(selected as unknown as string[]).map(value => (
+                            <Chip key={value} label={value} sx={{ m: 0.75 }} />
+                          ))}
+                        </Box>
+                      )}
+                    >
+                      {/* TODO: need BE to update the speaker api */}
+                      {speakerStore?.listSpeaker?.map(speaker => (
+                        <MenuItem key={speaker.id} value={speaker.name}>
+                          {speaker.name}
+                        </MenuItem>
                       ))}
-                    </Box>
-                  )}
-                >
-                  {names.map(name => (
-                    <MenuItem key={name} value={name}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                    </Select>
+                  </FormControl>
+                )}
+              />
+              {errors.title && (
+                <FormHelperText sx={{ color: 'error.main' }} id='event-title-error'>
+                  This field is required
+                </FormHelperText>
+              )}
             </Box>
             <TextField
               rows={4}

@@ -14,12 +14,18 @@ import Button, { ButtonProps } from '@mui/material/Button'
 // ** Third Party Imports
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import FormHelperText from '@mui/material/FormHelperText'
 import { EventMapTypes, EventTypes } from 'src/types/eventTypes'
 import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
-import { deleteEvent, editEventDetail, resumeEvent, uploadEventMap, uploadLogo } from 'src/store/event/view'
+import {
+  deleteEvent,
+  editEventDetail,
+  resumeEvent,
+  uploadEventMap,
+  uploadLogo
+} from 'src/store/event/view/informationStore'
 import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
 import { formatDate } from 'src/@core/utils/format'
 

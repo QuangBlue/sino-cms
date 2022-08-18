@@ -27,8 +27,8 @@ export const createSpeaker = async (data: CreateSpeakerProps) => {
   return axiosClient.post(`speaker?eventName=${eventName}`, params)
 }
 
-// ** Upload Avarta
-export const uploadAvarta = async (file: File) => {
+// ** Upload Avatar
+export const uploadAvatar = async (file: File) => {
   const formData = new FormData()
   formData.append('files', file)
   try {

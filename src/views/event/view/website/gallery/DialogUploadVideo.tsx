@@ -29,9 +29,7 @@ const DialogUploadPhoto = (props: DialogUploadPhotoProps) => {
       >
         <DialogTitle id='simple-dialog-title'>Upload Video</DialogTitle>
         <Box sx={{ p: 4 }}>
-          <DropzoneWrapper>
-            <FileUploaderPhoto />
-          </DropzoneWrapper>
+          <DropzoneWrapper>{/* <FileUploaderPhoto /> */}</DropzoneWrapper>
         </Box>
       </Dialog>
     </Fragment>
