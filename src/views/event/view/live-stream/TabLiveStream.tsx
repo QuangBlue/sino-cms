@@ -1,10 +1,14 @@
+import TabContext from '@mui/lab/TabContext'
+import TabPanel from '@mui/lab/TabPanel'
 import { Box, CardHeader, IconButton, Tooltip, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import { Pencil, DeleteOutline } from 'mdi-material-ui'
-import * as React from 'react'
-import { useState } from 'react'
+import { ArrowLeft, EyeOutline } from 'mdi-material-ui'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import LiveStreamDetail from './LiveSteamDetail'
 
 interface ContactInfoTypes {
+  id: number
   url: string
   title: string
   startDate: string
@@ -85,6 +89,30 @@ const ContactUs = [
 
 export default function TabLiveStream() {
   const [pageSize, setPageSize] = useState<number>(10)
+  const [value, setValue] = useState<string>('list')
+  const router = useRouter()
+
+  const { id, idLive } = router.query
+
+  const handleClickBack = () => {
+    router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=live-stream`, undefined, {
+      shallow: true
+    })
+  }
+
+  const handleClickDetail = (idLive: number) => {
+    router.push(`${router.pathname.replace('[id]', `${id}`)}?tab=live-stream&idLive=${idLive}`, undefined, {
+      shallow: true
+    })
+  }
+
+  useEffect(() => {
+    if (idLive) {
+      setValue('detail')
+    } else {
+      setValue('list')
+    }
+  }, [idLive])
 
   const columns = [
     ...defaultColumns,
@@ -94,17 +122,17 @@ export default function TabLiveStream() {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: () => {
+      renderCell: ({ row }: CellType) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title={'Edit Sponsorship'}>
-              <IconButton size='small' sx={{ mr: 0.5 }}>
-                <Pencil />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={'Delete Package'}>
-              <IconButton size='small'>
-                <DeleteOutline />
+            <Tooltip title={'View Detail'}>
+              <IconButton
+                size='small'
+                component='a'
+                sx={{ textDecoration: 'none', mr: 0.5 }}
+                onClick={() => handleClickDetail(row.id)}
+              >
+                <EyeOutline />
               </IconButton>
             </Tooltip>
           </Box>
@@ -114,20 +142,48 @@ export default function TabLiveStream() {
   ]
 
   return (
-    <Box sx={{ boxShadow: 0, mb: 4 }}>
-      <CardHeader title='List Live Stream' />
+    <TabContext value={value}>
+      <Box sx={{ display: 'flex', height: '100%' }}>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='list'>
+          <Box sx={{ boxShadow: 0, mb: 4 }}>
+            <CardHeader title='List Live Stream' />
 
-      <DataGrid
-        autoHeight
-        pagination
-        rows={ContactUs}
-        columns={columns}
-        disableSelectionOnClick
-        pageSize={Number(pageSize)}
-        rowsPerPageOptions={[10, 25, 50]}
-        sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-        onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-      />
-    </Box>
+            <DataGrid
+              autoHeight
+              pagination
+              rows={ContactUs}
+              columns={columns}
+              disableSelectionOnClick
+              pageSize={Number(pageSize)}
+              rowsPerPageOptions={[10, 25, 50]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          </Box>
+        </TabPanel>
+        <TabPanel sx={{ p: 0, width: '100%' }} value='detail'>
+          {idLive && (
+            <Box sx={{ m: 4 }}>
+              <Box sx={{ boxShadow: 0, mb: 4, ml: 4, display: 'flex' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Tooltip title={'Back'}>
+                    <IconButton
+                      size='small'
+                      component='a'
+                      sx={{ textDecoration: 'none', mr: 0.5 }}
+                      onClick={handleClickBack}
+                    >
+                      <ArrowLeft />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                <CardHeader title={`Live Stream Detail ${idLive}`} />
+              </Box>
+              <LiveStreamDetail />
+            </Box>
+          )}
+        </TabPanel>
+      </Box>
+    </TabContext>
   )
 }
