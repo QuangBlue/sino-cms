@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -15,22 +16,17 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
 // ** Icons Imports
 import Button from '@mui/material/Button'
 
-// ** Redux Inports
+// ** Types Imports
+import { CreateHotelParams, HotelTypes } from 'src/types/hotelTypes'
+
+// ** Redux Imports
 import { AppDispatch, RootState } from 'src/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { createAgent } from 'src/store/agent'
+import { createHotel, editHotel } from 'src/store/hotel'
 
 interface FormValidationSchemaProps {
+  fieldData: HotelTypes | undefined
   handleClickCloseModal: () => void
-}
-
-const defaultValues = {
-  email: '',
-  hotelName: '',
-  phone: '',
-  googleMap: '',
-  star: 0,
-  price: ''
 }
 
 const showErrors = (field: string, valueLen: number, min: number) => {
@@ -50,11 +46,11 @@ const phoneRegExp =
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Email field is required'),
-  hotelName: yup
+  name: yup
     .string()
-    .min(1, obj => showErrors('Last Name', obj.value.length, obj.min))
+    .min(1, obj => showErrors('Name', obj.value.length, obj.min))
     .required(),
-  googleMap: yup
+  location: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
@@ -77,7 +73,16 @@ const schema = yup.object().shape({
 
 const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
   // ** Props
-  const { handleClickCloseModal } = props
+  const { fieldData, handleClickCloseModal } = props
+
+  const defaultValues = {
+    email: fieldData && fieldData !== null ? fieldData.email : "",
+    name: fieldData && fieldData !== null ? fieldData.name : "",
+    location: fieldData && fieldData !== null ? fieldData.location : "",
+    phone: fieldData && fieldData !== null ? fieldData.phone : 0,
+    star: fieldData && fieldData !== null ? fieldData.star : 0,
+    price: fieldData && fieldData !== null ? fieldData.price : 0,
+  }
 
   // ** Hook
   const dispatch = useDispatch<AppDispatch>()
@@ -92,8 +97,22 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = async (params: any) => {
-    dispatch(createAgent({ params, handleClickCloseModal }))
+  const onSubmit = async (payload: CreateHotelParams) => {
+    const { name, star, price, location, phone, email } = payload
+    const params: CreateHotelParams = {
+      name,
+      star: Number(star),
+      price: Number(price),
+      location,
+      phone,
+      email,    
+    }
+    if(fieldData?.id) {
+      dispatch(editHotel({ params, id: fieldData?.id }))
+      handleClickCloseModal()
+    } else {
+      dispatch(createHotel({ params, handleClickCloseModal }))
+    }
   }
 
   return (
@@ -104,7 +123,7 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <Controller
-                  name='hotelName'
+                  name='name'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -116,14 +135,14 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                       label='Hotel Name'
                       onChange={onChange}
                       placeholder='Hotel Name'
-                      error={Boolean(errors.hotelName)}
+                      error={Boolean(errors.name)}
                       aria-describedby='validation-schema-hotel-name'
                     />
                   )}
                 />
-                {errors.hotelName && (
+                {errors.name && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-hotel-name'>
-                    {errors.hotelName.message}
+                    {errors.name.message}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -162,7 +181,7 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <Controller
-                  name='googleMap'
+                  name='location'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -173,15 +192,15 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                       value={value}
                       label='Google Map'
                       onChange={onChange}
-                      error={Boolean(errors.googleMap)}
+                      error={Boolean(errors.location)}
                       placeholder='Link google map'
                       aria-describedby='validation-schema-google-map'
                     />
                   )}
                 />
-                {errors.googleMap && (
+                {errors.location && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-google-map'>
-                    {errors.googleMap.message}
+                    {errors.location.message}
                   </FormHelperText>
                 )}
               </FormControl>

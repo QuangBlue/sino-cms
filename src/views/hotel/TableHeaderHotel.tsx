@@ -1,58 +1,46 @@
+import { useCallback } from 'react'
+
 // ** Next Import
 // import Link from 'next/link'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-
-// import Select from '@mui/material/Select'
-// import { GridRowId } from '@mui/x-data-grid'
-// import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-
-// import DialogActions from '@mui/material/DialogActions'
-import { useCallback, useState } from 'react'
-import Grid from '@mui/material/Grid'
-import FormCreateHotelSchema from './FormCreateHotelSchema'
 import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+
+// ** Redux Imports
 import { useDispatch, useSelector } from 'react-redux'
+
+// ** Store Imports
 import { AppDispatch, RootState } from 'src/store'
-import { agentSlice, fetchAgent } from 'src/store/agent'
+import { hotelSlice, fetchHotel } from 'src/store/hotel'
 
 interface TableHeaderProps {
   value: string
 
   // selectedRows: GridRowId[]
   handleFilter: (val: string) => void
+  handleOpenDialog: () => void
 }
 
 const TableHeaderHotel = (props: TableHeaderProps) => {
   // ** Props
-  const { value, /* selectedRows */ handleFilter } = props
+  const { value, handleFilter, handleOpenDialog } = props
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.agent)
 
-  const [open, setOpen] = useState<boolean>(false)
-
-  const handleClickOpen = () => setOpen(true)
-
-  const handleClose = () => setOpen(false)
-
   const handleStatusChange = useCallback(
     async (e: SelectChangeEvent) => {
       const status = e.target.value == 'active' ? true : false
-      await dispatch(agentSlice.actions.handleChangeStatus(status))
-      await dispatch(fetchAgent())
+      await dispatch(hotelSlice.actions.handleChangeStatus(status))
+      await dispatch(fetchHotel())
     },
     [dispatch]
   )
@@ -101,25 +89,25 @@ const TableHeaderHotel = (props: TableHeaderProps) => {
           onChange={e => handleFilter(e.target.value)}
         />
 
-        <Button sx={{ mb: 2 }} variant='contained' onClick={handleClickOpen}>
+        <Button sx={{ mb: 2 }} variant='contained' onClick={handleOpenDialog}>
           Create Hotel
         </Button>
       </Box>
-      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      {/* <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>Create Hotel</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ mb: 3 }}>Please fill in the information to create an Hotel.</DialogContentText>
           <Grid item xs={12}>
             <FormCreateHotelSchema handleClickCloseModal={handleClose} />
           </Grid>
-        </DialogContent>
+        </DialogContent> */}
         {/* <DialogActions className='dialog-actions-dense'>
           <Button onClick={handleClose}>Cancel</Button>
           <Button size='large' type='submit' variant='contained'>
             Create
           </Button>
         </DialogActions> */}
-      </Dialog>
+      {/* </Dialog> */}
     </Box>
   )
 }
