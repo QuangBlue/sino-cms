@@ -60,6 +60,13 @@ const defaultColumns = [
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.name || ''}`}</Typography>
   },
   {
+    flex: 1,
+    minWidth: 90,
+    field: 'email',
+    headerName: 'Email',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.email || ''}`}</Typography>
+  },
+  {
     flex: 2,
     field: 'star',
     minWidth: 150,
