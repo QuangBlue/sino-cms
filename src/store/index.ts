@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import agent from 'src/store/agent'
 import event from 'src/store/event'
 import company from 'src/store/company'
+import hotel from 'src/store/hotel'
 import eventDetail from 'src/store/event/view/informationStore'
 import agentDetail from 'src/store/agent/view'
 import companyDetail from 'src/store/company/view'
@@ -22,6 +23,7 @@ export const store = configureStore({
     agent,
     event,
     company,
+    hotel,
     eventDetail,
     agentDetail,
     packageEvent,

@@ -4,11 +4,11 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { HotelType } from 'src/pages/hotel'
+import { HotelTypes } from 'src/types/hotelTypes'
 
 interface DialogAlertDeleteProps {
   open: boolean
-  dataHotel: HotelType
+  dataHotel: HotelTypes
   handleCloseAlert: () => void
   handleSubmit: () => void
 }

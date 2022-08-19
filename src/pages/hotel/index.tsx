@@ -1,8 +1,5 @@
 // ** React Imports
-import { useState, forwardRef } from 'react'
-
-// ** Next Import
-import Link from 'next/link'
+import { useState, forwardRef, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -13,10 +10,15 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
+import { Rating } from '@mui/material'
+import NumberFormat from "react-number-format";
 
 // ** Icons Imports
-import EyeOutline from 'mdi-material-ui/EyeOutline'
 import DeleteOutline from 'mdi-material-ui/DeleteOutline'
+import PencilOutline from 'mdi-material-ui/PencilOutline'
+
+// ** Types Imports
+import { HotelTypes } from 'src/types/hotelTypes'
 
 // ** Third Party Imports
 import format from 'date-fns/format'
@@ -26,9 +28,19 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
 import BackupRestore from 'mdi-material-ui/BackupRestore'
-import { Rating } from '@mui/material'
+import { fetchHotel, hotelSlice, deleteHotel, resumeHotel } from 'src/store/hotel'
+import { AppDispatch, RootState } from 'src/store'
+
+// ** View Imports
 import DialogAlertDeleteHotel from 'src/views/hotel/DialogAlertDeleteHotel'
 import TableHeaderHotel from 'src/views/hotel/TableHeaderHotel'
+import DialogHotel from 'src/views/hotel/DialogHotel'
+
+// ** View Utils
+
+
+// ** Store & Actions Imports
+import { useDispatch, useSelector } from 'react-redux'
 
 interface CustomInputProps {
   dates: Date[]
@@ -39,57 +51,8 @@ interface CustomInputProps {
 }
 
 interface CellType {
-  row: HotelType
+  row: HotelTypes
 }
-
-export interface HotelType {
-  id: number
-  name: string
-  star: number
-  address: string
-  price: string
-  goolgeMap: string
-  status: boolean
-}
-
-const data: HotelType[] = [
-  {
-    id: 1,
-    name: 'Peninsula Excelsior',
-    star: 3.7,
-    address: 'ABC',
-    price: 'S$100',
-    goolgeMap: 'string',
-    status: true
-  },
-  {
-    id: 2,
-    name: 'Pullman',
-    star: 5,
-    address: 'ABC',
-    price: 'S$100',
-    goolgeMap: 'string',
-    status: true
-  },
-  {
-    id: 3,
-    name: 'Pullman',
-    star: 5,
-    address: 'ABC',
-    price: 'S$100',
-    goolgeMap: 'string',
-    status: true
-  },
-  {
-    id: 4,
-    name: 'Pullman',
-    star: 5,
-    address: 'ABC',
-    price: 'S$100',
-    goolgeMap: 'string',
-    status: true
-  }
-]
 
 const defaultColumns = [
   {
@@ -101,34 +64,46 @@ const defaultColumns = [
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.name || ''}`}</Typography>
   },
   {
-    flex: 2,
-    field: 'star',
-    minWidth: 150,
-    headerName: 'Star',
-    renderCell: ({ row }: CellType) => <Rating readOnly defaultValue={row.star} precision={0.5} />
-  },
-
-  {
-    flex: 2,
-    field: 'address',
+    flex: 1,
     minWidth: 90,
-    headerName: 'Address',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.address || ''}`}</Typography>
+    field: 'email',
+    headerName: 'Email',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.email || ''}`}</Typography>
+  },
+  {
+    flex: 1,
+    minWidth: 90,
+    field: 'phone',
+    headerName: 'Phone',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.phone || ''}`}</Typography>
   },
   {
     flex: 1,
     minWidth: 90,
     field: 'price',
     headerName: 'Price',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.price || ''}`}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <NumberFormat 
+        value={row.price}
+        prefix="S $"
+        thousandSeparator={true}
+        displayType="text"
+      />
+    )
   },
-
+  {
+    flex: 2,
+    field: 'star',
+    minWidth: 150,
+    headerName: 'Star',
+    renderCell: ({ row }: CellType) => <Rating readOnly defaultValue={row.star} precision={0.5} />
+  },
   {
     flex: 1,
     minWidth: 90,
-    field: 'goolgeMap',
-    headerName: 'Goolge Map',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.goolgeMap}</Typography>
+    field: 'googleMap',
+    headerName: 'Google Map',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.location}</Typography>
   }
 ]
 
@@ -150,38 +125,48 @@ const HotelList = () => {
   // ** State
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
-
-  // const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
+  const [isOpenDialogHotel, setIsOpenDialogHotel] = useState<boolean>(false)
+  const [selectedRows, setSelectedRows] = useState<HotelTypes | undefined>(undefined)
 
   // ** Hooks
-  // const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>()
 
-  // const store = useSelector((state: RootState) => state.agent)
+  const store = useSelector((state: RootState) => state.hotel)
 
-  // useEffect(() => {
-  //   dispatch(fetchAgent())
-
-  //   return () => {
-  //     agentSlice.actions.handlePageChange()
-  //   }
-  // }, [dispatch])
+  const onToggleDialog = () => {
+    setIsOpenDialogHotel(!isOpenDialogHotel)
+    if (!isOpenDialogHotel) { 
+      setSelectedRows(undefined)
+    }
+  }
 
   const handleFilter = (val: string) => {
     setValue(val)
 
-    // dispatch(fetchAgent(val))
+    dispatch(fetchHotel(val))
   }
 
   // Handle Detele Hotel
   const handleSubmitDeleteHotel = (rowId: number, handleCloseAlert: () => void) => {
-    console.log(rowId)
-    handleCloseAlert()
+    dispatch(deleteHotel(rowId)).then(() => {
+      handleCloseAlert()
+    })
   }
 
   const handleSubmitResumeHotel = (rowId: number, handleCloseAlert: () => void) => {
-    console.log(rowId)
-    handleCloseAlert()
+    dispatch(resumeHotel(rowId)).then(() => {
+      handleCloseAlert()
+    })
   }
+
+  useEffect(() => {
+    dispatch(fetchHotel())
+
+    return () => {
+      hotelSlice.actions.handlePageChange()
+    }
+
+  }, [dispatch])
 
   const columns = [
     ...defaultColumns,
@@ -204,16 +189,22 @@ const HotelList = () => {
                 {row.status ? <DeleteOutline /> : <BackupRestore />}
               </IconButton>
             </Tooltip>
-            <Tooltip title='View'>
+            <Tooltip title='Edit'>
               <Box>
-                <Link href={`/hotel/view/${row.id}`} passHref>
-                  <IconButton size='small' component='a' sx={{ textDecoration: 'none', mr: 0.5 }}>
-                    <EyeOutline />
-                  </IconButton>
-                </Link>
+                <IconButton 
+                  size='small' 
+                  component='a' 
+                  sx={{ textDecoration: 'none', mr: 0.5 }} 
+                  onClick={() => {
+                    setSelectedRows(row),
+                    setIsOpenDialogHotel(true)
+                  }}
+                >
+                  <PencilOutline />
+                </IconButton>
               </Box>
             </Tooltip>
-            {/* <RowOptions id={row.id} /> */}
+
             <DialogAlertDeleteHotel
               open={open}
               dataHotel={row}
@@ -234,11 +225,12 @@ const HotelList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <TableHeaderHotel value={value} /* selectedRows={selectedRows} */ handleFilter={handleFilter} />
+          <TableHeaderHotel value={value} handleFilter={handleFilter} handleOpenDialog={onToggleDialog} />
+          <DialogHotel open={isOpenDialogHotel} handleClose={onToggleDialog} params={selectedRows} />
           <DataGrid
             autoHeight
             pagination
-            rows={data}
+            rows={store.listHotel}
             columns={columns}
             disableSelectionOnClick
             pageSize={Number(pageSize)}
