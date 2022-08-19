@@ -1,7 +1,7 @@
 export interface CreateHotelParams {
   name: string
-  star: number
-  price: number
+  star: string | number
+  price: string | number
   location: string
   phone: string | number
   email: string
@@ -10,8 +10,8 @@ export interface CreateHotelParams {
 export interface EditHotelParams {
   id: number
   name: string
-  star: number
-  price: number
+  star: string | number
+  price: string | number
   location: string
   phone: string | number
   email: string
