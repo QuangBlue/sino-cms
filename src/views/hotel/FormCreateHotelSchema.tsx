@@ -281,7 +281,7 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                       <OutlinedInput
                         id="outlined-adornment-amount"
                         value={value}
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        startAdornment={<InputAdornment position="start">S $</InputAdornment>}
                         label="Price"
                         error={Boolean(errors.price)}
                         onChange={onChange}
@@ -303,7 +303,7 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                 Cancel
               </Button>
               <Button size='large' type='submit' variant='contained' style={{ minWidth: 120 }}>
-                {store.isCreating ? <CircularProgress size='1.6rem' color='inherit' /> : 'Create'}
+                {store.isCreating ? <CircularProgress size='1.6rem' color='inherit' /> : fieldData?.id ? 'Update' : "Create" }
               </Button>
             </Grid>
           </Grid>

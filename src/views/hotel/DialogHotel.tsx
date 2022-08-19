@@ -28,7 +28,7 @@ function DialogHotel(props : DialogHotelTypes) {
     <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>{params && params !== null ? "Edit Hotel" : "Create Hotel"}</DialogTitle>
       <DialogContent>
-        <DialogContentText sx={{ mb: 3 }}>Please fill in the information to create an Hotel.</DialogContentText>
+        <DialogContentText sx={{ mb: 3 }}>Please fill in the information to {params && params !== null ? "edit" : "create"} an Hotel.</DialogContentText>
         <Grid item xs={12}>
           <FormCreateHotelSchema  fieldData={params} handleClickCloseModal={handleClose} />
         </Grid>
