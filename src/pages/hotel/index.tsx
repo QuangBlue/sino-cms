@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
 import { Rating } from '@mui/material'
+import NumberFormat from "react-number-format";
 
 // ** Icons Imports
 import DeleteOutline from 'mdi-material-ui/DeleteOutline'
@@ -34,6 +35,9 @@ import { AppDispatch, RootState } from 'src/store'
 import DialogAlertDeleteHotel from 'src/views/hotel/DialogAlertDeleteHotel'
 import TableHeaderHotel from 'src/views/hotel/TableHeaderHotel'
 import DialogHotel from 'src/views/hotel/DialogHotel'
+
+// ** View Utils
+
 
 // ** Store & Actions Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -67,18 +71,32 @@ const defaultColumns = [
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.email || ''}`}</Typography>
   },
   {
-    flex: 2,
-    field: 'star',
-    minWidth: 150,
-    headerName: 'Star',
-    renderCell: ({ row }: CellType) => <Rating readOnly defaultValue={row.star} precision={0.5} />
+    flex: 1,
+    minWidth: 90,
+    field: 'phone',
+    headerName: 'Phone',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.phone || ''}`}</Typography>
   },
   {
     flex: 1,
     minWidth: 90,
     field: 'price',
     headerName: 'Price',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.price || 0}`}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <NumberFormat 
+        value={row.price}
+        prefix="$"
+        thousandSeparator={true}
+        displayType="text"
+      />
+    )
+  },
+  {
+    flex: 2,
+    field: 'star',
+    minWidth: 150,
+    headerName: 'Star',
+    renderCell: ({ row }: CellType) => <Rating readOnly defaultValue={row.star} precision={0.5} />
   },
   {
     flex: 1,

@@ -1,12 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import CircularProgress from '@mui/material/CircularProgress'
-import TextField from '@mui/material/TextField'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
+import { 
+  InputLabel,
+  OutlinedInput, 
+  Card,
+  Grid,
+  CircularProgress,
+  TextField,
+  CardContent,
+  FormControl,
+  FormHelperText,
+  InputAdornment 
+} from '@mui/material'
 
 // ** Third Party Imports
 import * as yup from 'yup'
@@ -79,14 +84,14 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
     email: fieldData && fieldData !== null ? fieldData.email : "",
     name: fieldData && fieldData !== null ? fieldData.name : "",
     location: fieldData && fieldData !== null ? fieldData.location : "",
-    phone: fieldData && fieldData !== null ? fieldData.phone : "",
-    star: fieldData && fieldData !== null ? fieldData.star : 0,
-    price: fieldData && fieldData !== null ? fieldData.price : 0,
+    phone: fieldData && fieldData !== null ? fieldData.phone : '',
+    star: fieldData && fieldData !== null ? fieldData.star : null,
+    price: fieldData && fieldData !== null ? fieldData.price : null,
   }
 
   // ** Hook
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.agent)
+  const store = useSelector((state: RootState) => state.hotel)
   const {
     control,
     handleSubmit,
@@ -244,18 +249,17 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      type='phone'
-                      inputProps={{
-                        autoComplete: 'new-password'
-                      }}
-                      value={value}
-                      label='Phone'
-                      onChange={onChange}
-                      error={Boolean(errors.phone)}
-                      placeholder='+65 0000 0000'
-                      aria-describedby='validation-schema-email'
-                    />
+                    <>
+                      <InputLabel htmlFor="outlined-adornment-amount">Phone</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-amount"
+                        value={value}
+                        startAdornment={<InputAdornment position="start">+65</InputAdornment>}
+                        label="Phone"
+                        error={Boolean(errors.phone)}
+                        onChange={onChange}
+                      />
+                    </>
                   )}
                 />
                 {errors.phone && (
@@ -272,26 +276,26 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      type='number'
-                      inputProps={{
-                        autoComplete: 'new-password'
-                      }}
-                      value={value}
-                      label='Price'
-                      onChange={onChange}
-                      error={Boolean(errors.price)}
-                      placeholder='0'
-                      aria-describedby='validation-schema-price'
-                    />
+                    <>
+                      <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-amount"
+                        value={value}
+                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        label="Amount"
+                        error={Boolean(errors.price)}
+                        onChange={onChange}
+                      />
+                    </>
                   )}
                 />
+               
                 {errors.price && (
                   <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-price'>
                     {errors.price.message}
                   </FormHelperText>
-                )}
-              </FormControl>
+                )}  
+              </FormControl>  
             </Grid>
 
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
