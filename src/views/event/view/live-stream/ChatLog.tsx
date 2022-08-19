@@ -246,7 +246,7 @@ const ChatLog = (props: ChatLogType) => {
   }
 
   return (
-    <Box sx={{ height: 'calc(100% - 9.4375rem)' }}>
+    <Box sx={{ height: 'calc(100% - 10.4375rem)' }}>
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
   )
