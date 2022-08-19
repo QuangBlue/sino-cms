@@ -34,7 +34,7 @@ const TableHeaderHotel = (props: TableHeaderProps) => {
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.agent)
+  const store = useSelector((state: RootState) => state.hotel)
 
   const handleStatusChange = useCallback(
     async (e: SelectChangeEvent) => {

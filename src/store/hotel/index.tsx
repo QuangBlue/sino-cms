@@ -1,18 +1,18 @@
 import { createAsyncThunk, createSlice, Dispatch } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import axiosClient from "src/configs/axiosClient";
-import { HotelTypes } from "src/types/hotelTypes";
+import { HotelTypes, CreateHotelParams } from "src/types/hotelTypes";
 
 interface Redux {
   getState: any,
   dispatch: Dispatch<any>
 }
 
-
 export interface EditHotelParams {
   id: number
   params: HotelTypes | { status: boolean }
 }
+
 
 // ** Fetch Hotel 
 export const fetchHotel = createAsyncThunk(
@@ -27,7 +27,7 @@ export const fetchHotel = createAsyncThunk(
 // ** Create Hotel
 export const createHotel = createAsyncThunk(
   'hotel/createHotel',
-  async (props: any, {dispatch}: Redux) => {
+  async (props: CreateHotelParams, {dispatch}: Redux) => {
     const {params, handleClickCloseModal} = props
     await axiosClient
       .post("/hotel", params)
@@ -73,7 +73,7 @@ export const resumeHotel = createAsyncThunk('hotel/resumeHotel', async (id: numb
 // ** Edit Hotel Detail
 export const editHotel = createAsyncThunk(
   'hotel/editHotel',
-  async (data: any, {dispatch}: Redux) => {
+  async (data: EditHotelParams, {dispatch}: Redux) => {
     const { id, params } = data
 
     const promise = axiosClient.put(`/hotel/${id}`, params).then((res) => {
@@ -100,12 +100,12 @@ export const hotelSlice = createSlice({
     total: 0,
     status: true,
     isLoading: false,
-    isCreateting: false,
+    isCreating: false,
     isDeleting: false
   },
   reducers: {
     handleChangeStatus: (state, { payload }) => {
-      state.status = payload;
+      state.status = payload
     },
     handlePageChange: (state) => {
       state.listHotel = [] as HotelTypes[]
@@ -122,10 +122,10 @@ export const hotelSlice = createSlice({
         state.listHotel = action.payload.data
       })
       .addCase(createHotel.pending, state => {
-        state.isCreateting = true
+        state.isCreating = true
       })
       .addCase(createHotel.fulfilled, state => {
-        state.isCreateting = false
+        state.isCreating = false
       })
       .addCase(deleteHotel.pending, state => {
         state.isDeleting = true
