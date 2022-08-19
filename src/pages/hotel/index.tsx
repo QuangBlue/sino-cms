@@ -85,7 +85,7 @@ const defaultColumns = [
     renderCell: ({ row }: CellType) => (
       <NumberFormat 
         value={row.price}
-        prefix="$"
+        prefix="S $"
         thousandSeparator={true}
         displayType="text"
       />
