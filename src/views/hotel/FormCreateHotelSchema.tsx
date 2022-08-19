@@ -99,16 +99,18 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
 
   const onSubmit = async (payload: CreateHotelParams) => {
     const { name, star, price, location, phone, email } = payload
-    const params: CreateHotelParams = {
+
+    const params = {
       name,
       star: Number(star),
       price: Number(price),
       location,
       phone,
       email,    
-    }
+    };
+
     if(fieldData?.id) {
-      dispatch(editHotel({ params, id: fieldData?.id }))
+      dispatch(editHotel({...params, id: fieldData?.id}))
       handleClickCloseModal()
     } else {
       dispatch(createHotel({ params, handleClickCloseModal }))

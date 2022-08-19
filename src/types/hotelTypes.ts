@@ -1,4 +1,4 @@
-export interface HotelParams {
+export interface CreateHotelParams {
   name: string
   star: number
   price: number
@@ -7,9 +7,14 @@ export interface HotelParams {
   email: string
 }
 
-export interface CreateHotelParams {
-  params: HotelParams | undefined
-  handleClickCloseModal: () => void
+export interface EditHotelParams {
+  id: number
+  name: string
+  star: number
+  price: number
+  location: string
+  phone: string | number
+  email: string
 }
 
 export interface HotelTypes {

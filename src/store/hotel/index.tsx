@@ -1,16 +1,20 @@
 import { createAsyncThunk, createSlice, Dispatch } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import axiosClient from "src/configs/axiosClient";
-import { HotelTypes, CreateHotelParams } from "src/types/hotelTypes";
+import { HotelTypes, CreateHotelParams, EditHotelParams } from "src/types/hotelTypes";
 
 interface Redux {
   getState: any,
   dispatch: Dispatch<any>
 }
 
-export interface EditHotelParams {
-  id: number
-  params: HotelTypes | { status: boolean }
+export interface EditHotelProps {
+  params: EditHotelParams
+}
+
+interface CreateHotelProps {
+  params: CreateHotelParams
+  handleClickCloseModal: () => void
 }
 
 
@@ -27,7 +31,7 @@ export const fetchHotel = createAsyncThunk(
 // ** Create Hotel
 export const createHotel = createAsyncThunk(
   'hotel/createHotel',
-  async (props: CreateHotelParams, {dispatch}: Redux) => {
+  async (props: CreateHotelProps, {dispatch}: Redux) => {
     const {params, handleClickCloseModal} = props
     await axiosClient
       .post("/hotel", params)
@@ -74,9 +78,8 @@ export const resumeHotel = createAsyncThunk('hotel/resumeHotel', async (id: numb
 export const editHotel = createAsyncThunk(
   'hotel/editHotel',
   async (data: EditHotelParams, {dispatch}: Redux) => {
-    const { id, params } = data
 
-    const promise = axiosClient.put(`/hotel/${id}`, params).then((res) => {
+    const promise = axiosClient.put(`/hotel/${data?.id}`, data).then((res) => {
       if (res?.data) {
         dispatch(fetchHotel())
       }
