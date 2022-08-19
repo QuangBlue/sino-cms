@@ -277,12 +277,12 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <>
-                      <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                      <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-amount"
                         value={value}
                         startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                        label="Amount"
+                        label="Price"
                         error={Boolean(errors.price)}
                         onChange={onChange}
                       />
