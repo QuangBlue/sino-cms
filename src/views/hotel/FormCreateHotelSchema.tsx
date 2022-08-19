@@ -79,7 +79,7 @@ const FormCreateHotelSchema = (props: FormValidationSchemaProps) => {
     email: fieldData && fieldData !== null ? fieldData.email : "",
     name: fieldData && fieldData !== null ? fieldData.name : "",
     location: fieldData && fieldData !== null ? fieldData.location : "",
-    phone: fieldData && fieldData !== null ? fieldData.phone : 0,
+    phone: fieldData && fieldData !== null ? fieldData.phone : "",
     star: fieldData && fieldData !== null ? fieldData.star : 0,
     price: fieldData && fieldData !== null ? fieldData.price : 0,
   }
