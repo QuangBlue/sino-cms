@@ -5,14 +5,19 @@ import TimelineItem from '@mui/lab/TimelineItem'
 import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import { Avatar, Box, Divider, IconButton, Typography } from '@mui/material'
 import { Pencil, DeleteForever } from 'mdi-material-ui'
+import { formatDisplayTime } from 'src/@core/utils/dateTime'
 
 interface AgendaEventItemProps {
-  handleAddEventSidebarToggle: () => void
+  stage: any
+  handleDeleteAgendaDetail: (id: number) => void
+  handleSetEditParams: (params: any) => void
 }
 
-export default function AgendaEventItem(props: AgendaEventItemProps) {
-  const { handleAddEventSidebarToggle } = props
-
+export default function AgendaEventItem({
+  stage,
+  handleDeleteAgendaDetail,
+  handleSetEditParams
+}: AgendaEventItemProps) {
   return (
     <TimelineItem>
       <TimelineSeparator>
@@ -20,40 +25,75 @@ export default function AgendaEventItem(props: AgendaEventItemProps) {
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
-        <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-            8:30am - 9:30am
+        <Box
+          sx={{
+            mb: 2,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Typography
+            variant='body2'
+            sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}
+          >
+            {`${formatDisplayTime(stage?.timeStart)} - ${formatDisplayTime(
+              stage?.timeEnd
+            )}`}
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <div>
-              <IconButton sx={{ color: 'text.secondary' }} onClick={handleAddEventSidebarToggle}>
+              <IconButton
+                sx={{ color: 'text.secondary' }}
+                onClick={() => handleSetEditParams(stage)}
+              >
                 <Pencil fontSize='small' />
               </IconButton>
-              <IconButton sx={{ color: 'text.secondary' }}>
+              <IconButton
+                sx={{ color: 'text.secondary' }}
+                onClick={() => handleDeleteAgendaDetail(stage.id)}
+              >
                 <DeleteForever fontSize='small' />
               </IconButton>
             </div>
           </Box>
         </Box>
 
-        <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-            Registration
+        <Box
+          sx={{
+            mb: 2,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Typography
+            variant='body2'
+            sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}
+          >
+            {stage.title}
           </Typography>
         </Box>
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Possimus quos, voluptates voluptas rem.
+          {stage.description}
         </Typography>
         <Divider sx={{ my: 3 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex' }}>
-            <Avatar src='/images/avatars/2.png' sx={{ width: '2rem', height: '2rem', mr: 2 }} />
+            <Avatar
+              src={stage?.speaker?.avatar}
+              sx={{ width: '2rem', height: '2rem', mr: 2 }}
+            />
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                Main Speaker
+                {stage?.speaker?.name}
               </Typography>
-              <Typography variant='caption'>CEO - Sino Elite</Typography>
+              <Typography variant='caption'>
+                {stage?.speaker?.jobTitle}
+              </Typography>
             </Box>
           </Box>
         </Box>
