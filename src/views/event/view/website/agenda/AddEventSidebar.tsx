@@ -1,10 +1,10 @@
 // ** React Imports
-import { useState, useCallback, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
@@ -24,8 +24,6 @@ import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
-import Chip from '@mui/material/Chip'
-
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 import CustomInput from './CustomInput'
@@ -33,7 +31,9 @@ import CustomInput from './CustomInput'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
 
-import { addDetailToAgendaById } from 'src/store/event/view/website/agendaStore'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { formatDateFromTime } from 'src/@core/utils/dateTime'
 
 interface DefaultStateType {
   url: string
@@ -49,7 +49,7 @@ interface DefaultStateType {
 const defaultState: DefaultStateType = {
   url: '',
   title: '',
-  speakers: [],
+  speakers: '',
   allDay: true,
   description: '',
   endDate: new Date(),
@@ -68,43 +68,78 @@ const MenuProps = {
   }
 }
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-]
+const schema = yup.object().shape({
+  title: yup.string().required('Title field is required'),
 
-const AddEventSidebar = (props: any) => {
-  // ** Props
-  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, agendaId } = props
+  // description: yup.string().required('Description field is required'),
 
+  speakerId: yup
+    .number()
+    .required('Speaker field is required')
+    .typeError('Speaker field is required'),
+  timeStart: yup.date().required('Start time is required'),
+  timeEnd: yup
+    .date()
+    .when('timeStart', (timeStart, schema) => {
+      if (timeStart) {
+        const currentDay = new Date(timeStart.getTime())
+        const nextDay = new Date(timeStart.getTime() + 86400000)
+
+        return schema
+          .min(currentDay, 'End time must be after Start time')
+          .max(
+            nextDay,
+            'End time cannot be more than 24 hours after Start Date/Time'
+          )
+      } else {
+        return schema
+      }
+    })
+    .required('End Date/Time is required')
+})
+
+const AddEventSidebar = ({
+  drawerWidth,
+  isSidebarOpen,
+  handleAddEventSidebarToggle,
+  agendaId,
+  handleAddAgendaDetail,
+  editParams
+}: any) => {
   // ** States
-  const [values, setValues] = useState<DefaultStateType>(defaultState)
+  const [, setValues] = useState<DefaultStateType>(defaultState)
   const speakerStore = useSelector((state: RootState) => state.speakerWebsite)
 
-  const dispatch = useDispatch<AppDispatch>()
+  const defaultValues = {
+    title: '',
+    timeStart: new Date(),
+    timeEnd: new Date(),
+    speakerId: '',
+    description: ''
+  }
 
   const {
     control,
-    setValue,
     clearErrors,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
-    defaultValues: {
-      title: '',
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      speakers: []
-    }
+    defaultValues: defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema)
   })
+
+  useEffect(() => {
+    if (editParams) {
+      reset({
+        ...editParams,
+        timeStart: formatDateFromTime(editParams.timeStart),
+        timeEnd: formatDateFromTime(editParams.timeEnd),
+        speakerId: editParams.speaker.id
+      })
+    }
+  }, [editParams, reset])
 
   const handleSidebarClose = async () => {
     setValues(defaultState)
@@ -114,53 +149,33 @@ const AddEventSidebar = (props: any) => {
   }
 
   const onSubmit = (params: any) => {
-    dispatch(addDetailToAgendaById({ agendaId, params }))
+    handleAddAgendaDetail({ agendaId, params })
   }
 
   const handleDeleteEvent = () => {
-    // calendarApi.getEventById(store.selectedEvent.id).remove()
     handleSidebarClose()
   }
 
-  const resetToStoredValues = useCallback(() => {
-    console.log('reset')
-  }, [])
-
-  const resetToEmptyValues = useCallback(() => {
-    setValue('title', '')
-    setValues(defaultState)
-  }, [setValue])
-
-  const RenderSidebarFooter = () => {
-    if (true) {
-      return (
-        <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
-            Add
-          </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToEmptyValues}>
-            Reset
-          </Button>
-        </Fragment>
-      )
-    } else {
-      return (
-        <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
-            Update
-          </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToStoredValues}>
-            Reset
-          </Button>
-        </Fragment>
-      )
-    }
-  }
+  const RenderSidebarFooter = () => (
+    <Fragment>
+      <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
+        {editParams ? 'Save' : 'Add'}
+      </Button>
+      <Button
+        size='large'
+        variant='outlined'
+        color='secondary'
+        onClick={handleSidebarClose}
+      >
+        Cancel
+      </Button>
+    </Fragment>
+  )
 
   return (
     <Drawer
       anchor='right'
-      open={addEventSidebarOpen}
+      open={isSidebarOpen}
       onClose={handleSidebarClose}
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: ['100%', drawerWidth] } }}
@@ -174,12 +189,21 @@ const AddEventSidebar = (props: any) => {
           p: theme => theme.spacing(3, 3.255, 3, 5.255)
         }}
       >
-        <Typography variant='h6'>{false ? 'Update Event' : 'Add Event'}</Typography>
+        <Typography variant='h6'>
+          {editParams ? 'Update Event' : 'Add Event'}
+        </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {true ? (
-            <DeleteOutline fontSize='small' sx={{ cursor: 'pointer', mr: 2 }} onClick={handleDeleteEvent} />
-          ) : null}
-          <Close fontSize='small' onClick={handleSidebarClose} sx={{ cursor: 'pointer' }} />
+          <DeleteOutline
+            fontSize='small'
+            sx={{ cursor: 'pointer', mr: 2 }}
+            onClick={handleDeleteEvent}
+          />
+
+          <Close
+            fontSize='small'
+            onClick={handleSidebarClose}
+            sx={{ cursor: 'pointer' }}
+          />
         </Box>
       </Box>
       <Box className='sidebar-body' sx={{ p: theme => theme.spacing(5, 6) }}>
@@ -191,18 +215,30 @@ const AddEventSidebar = (props: any) => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField label='Title' value={value} onChange={onChange} error={Boolean(errors.title)} />
+                  <TextField
+                    label='Title'
+                    value={value}
+                    onChange={onChange}
+                    error={Boolean(errors.title)}
+                  />
                 )}
               />
               {errors.title && (
-                <FormHelperText sx={{ color: 'error.main' }} id='event-title-error'>
-                  This field is required
+                <FormHelperText
+                  sx={{ color: 'error.main' }}
+                  id='event-title-error'
+                >
+                  Title is required
                 </FormHelperText>
               )}
             </FormControl>
 
             <Box sx={{ mb: 6 }}>
-              <FormControl fullWidth sx={{ mb: 6 }}>
+              <FormControl
+                fullWidth
+                sx={{ mb: 6 }}
+                error={Boolean(errors.timeStart)}
+              >
                 <Controller
                   name='timeStart'
                   control={control}
@@ -222,10 +258,22 @@ const AddEventSidebar = (props: any) => {
                     />
                   )}
                 />
+                {errors.timeStart && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='event-title-error'
+                  >
+                    {errors.timeStart.message}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Box>
             <Box sx={{ mb: 6 }}>
-              <FormControl fullWidth sx={{ mb: 6 }}>
+              <FormControl
+                fullWidth
+                sx={{ mb: 6 }}
+                error={Boolean(errors.timeEnd)}
+              >
                 <Controller
                   name='timeEnd'
                   control={control}
@@ -245,36 +293,36 @@ const AddEventSidebar = (props: any) => {
                     />
                   )}
                 />
+                {errors.timeEnd && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='event-title-error'
+                  >
+                    {errors.timeEnd.message}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Box>
 
             <Box sx={{ mb: 6 }}>
               <Controller
-                name='speakers'
+                name='speakerId'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <FormControl fullWidth>
-                    <InputLabel id='demo-multiple-chip-label'>Speaker</InputLabel>
+                  <FormControl fullWidth error={Boolean(errors.speakerId)}>
+                    <InputLabel id='demo-multiple-chip-label'>
+                      Speaker
+                    </InputLabel>
                     <Select
-                      multiple
                       label='Speaker'
                       value={value}
                       MenuProps={MenuProps}
                       id='multiple-speaker'
-                      onChange={onChange}
+                      onChange={e => onChange(e.target.value)}
                       labelId='multiple-speaker-label'
-                      renderValue={selected => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                          {(selected as unknown as string[]).map(value => (
-                            <Chip key={value} label={value} sx={{ m: 0.75 }} />
-                          ))}
-                        </Box>
-                      )}
                     >
-                      {/* TODO: need BE to update the speaker api */}
                       {speakerStore?.listSpeaker?.map(speaker => (
-                        <MenuItem key={speaker.id} value={speaker.name}>
+                        <MenuItem key={speaker.id} value={speaker.id}>
                           {speaker.name}
                         </MenuItem>
                       ))}
@@ -282,22 +330,35 @@ const AddEventSidebar = (props: any) => {
                   </FormControl>
                 )}
               />
-              {errors.title && (
-                <FormHelperText sx={{ color: 'error.main' }} id='event-title-error'>
-                  This field is required
+              {errors.speakerId && (
+                <FormHelperText
+                  sx={{ color: 'error.main' }}
+                  id='event-title-error'
+                >
+                  Speaker is required
                 </FormHelperText>
               )}
             </Box>
-            <TextField
-              rows={4}
-              multiline
-              fullWidth
-              sx={{ mb: 6 }}
-              label='Description'
-              id='event-description'
-              value={values.description}
-              onChange={e => setValues({ ...values, description: e.target.value })}
-            />
+
+            <FormControl fullWidth sx={{ mb: 6 }}>
+              <Controller
+                name='description'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    label='Description'
+                    value={value}
+                    onChange={onChange}
+                    rows={4}
+                    multiline
+                    fullWidth
+                    error={Boolean(errors.description)}
+                  />
+                )}
+              />
+            </FormControl>
+
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />
             </Box>

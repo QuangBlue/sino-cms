@@ -1,5 +1,5 @@
 // ** React Imports
-
+import { useEffect } from 'react'
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -14,14 +14,14 @@ import FormHelperText from '@mui/material/FormHelperText'
 
 // ** Third Party Styles Imports
 import { Box, Grid, IconButton, Typography } from '@mui/material'
-import DatePicker from 'react-datepicker'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
 
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import CustomInput from './CustomInput'
 import slugify from 'slugify'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
 
 import { formatDate } from 'src/@core/utils/dateTime'
 
@@ -34,11 +34,16 @@ interface DialogAddAgendaProps {
   handleDialogClose: () => void
   open: boolean
   isVideo?: boolean
+  editParams: any
+  handleEditAgenda: (params: any) => void
 }
 
-const DialogAddAgenda = (props: DialogAddAgendaProps) => {
-  const { handleDialogClose, open } = props
-
+const DialogAddAgenda = ({
+  handleDialogClose,
+  open,
+  editParams,
+  handleEditAgenda
+}: DialogAddAgendaProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.eventDetail)
 
@@ -54,9 +59,9 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
   })
 
   const {
-    reset,
     control,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -64,11 +69,26 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
     resolver: yupResolver(schema)
   })
 
+  useEffect(() => {
+    if (editParams) {
+      reset(editParams)
+    }
+  }, [editParams, reset])
+
   const onSubmit = async (payload: any) => {
     const slug = slugify(payload.name, { lower: true })
 
+    if (editParams) {
+      const params = { ...payload, slug, date: formatDate(payload.date) }
+      handleEditAgenda(params)
+      return
+    }
+
     const result = await dispatch(
-      addAgenda({ eventName: store.eventData.baseName, params: { ...payload, slug, date: formatDate(payload.date) } })
+      addAgenda({
+        eventId: Number(store.eventData.id),
+        params: { ...payload, slug, date: formatDate(payload.date) }
+      })
     )
     if (result?.payload?.id) {
       reset()
@@ -96,7 +116,7 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant='h5' sx={{ mb: 3, lineHeight: '2rem' }}>
-              Add Agenda
+              {editParams ? 'Edit Agenda' : 'Add Agenda'}
             </Typography>
           </Box>
           <Grid container spacing={6}>
@@ -121,7 +141,10 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
                   )}
                 />
                 {errors.name && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-name'
+                  >
                     {errors.name.message}
                   </FormHelperText>
                 )}
@@ -149,7 +172,10 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
                   )}
                 />
                 {errors.description && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-name'
+                  >
                     {errors.description.message}
                   </FormHelperText>
                 )}
@@ -162,21 +188,26 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <DatePickerWrapper>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
-                        selected={value}
+                        value={value}
                         onChange={onChange}
-                        showYearDropdown
-                        showMonthDropdown
-                        id='account-settings-date'
-                        placeholderText='MM-DD-YYYY'
-                        customInput={<CustomInput fullWidth label='Date' error={Boolean(errors.date)} />}
+                        renderInput={(params: any) => (
+                          <TextField
+                            {...params}
+                            placeholder='Date'
+                            error={Boolean(errors.date)}
+                          />
+                        )}
                       />
-                    </DatePickerWrapper>
+                    </LocalizationProvider>
                   )}
                 />
                 {errors.date && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-name'
+                  >
                     {errors.date.message}
                   </FormHelperText>
                 )}
@@ -184,12 +215,18 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}>
-          <Button variant='outlined' color='secondary' onClick={handleDialogClose}>
+        <DialogActions
+          sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}
+        >
+          <Button
+            variant='outlined'
+            color='secondary'
+            onClick={handleDialogClose}
+          >
             Cancel
           </Button>
           <Button type='submit' variant='contained'>
-            Create
+            {editParams ? 'Save' : 'Create'}
           </Button>
         </DialogActions>
       </form>

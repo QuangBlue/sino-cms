@@ -4,54 +4,47 @@ import axiosClient from 'src/configs/axiosClient'
 import { AgendaTypes, AgendaDetailTypes } from 'src/types/website'
 
 interface AddAgendaTypes {
-  eventName: string
+  eventId: number
   params: AgendaTypes
 }
 
-export const getAgenda = createAsyncThunk('website/getAgenda', async (eventName: string) => {
-  const response = await axiosClient.get(`agenda?eventName=${eventName}`)
-
-  return response.data
-})
-
-export const addAgenda = createAsyncThunk('website/addAgenda', async ({ eventName, params }: AddAgendaTypes) => {
-  const response = await axiosClient.post(`agenda?eventName=${eventName}`, params)
-
-  return response.data
-})
-
-export const getAgendaDetail = createAsyncThunk('website/getAgendaDetail', async (agendaId: number) => {
-  const response = await axiosClient.get(`agenda/${agendaId}/detail`)
-
-  return response.data
-})
-
-export const addAgendaDetail = createAsyncThunk(
-  'website/addAgendaDetail',
-  async ({ agendaId, params }: { agendaId: number; params: AgendaDetailTypes }) => {
-    const response = await axiosClient.post(`agenda/${agendaId}/detail}`, { items: params })
+export const getAgenda = createAsyncThunk(
+  'website/getAgenda',
+  async (eventId: number) => {
+    const response = await axiosClient.get(`agenda/event/${eventId}`)
 
     return response.data
   }
 )
 
-// export const editHeader = createAsyncThunk(
-//   'settingWebsite/editHeader',
-//   async ({ eventId, params }: EditHeaderProps) => {
-//     const response = await axiosClient.post(`header-page/event/${eventId}`, { items: params })
+export const addAgenda = createAsyncThunk(
+  'website/addAgenda',
+  async ({ eventId, params }: AddAgendaTypes) => {
+    const response = await axiosClient.post(`agenda/event/${eventId}`, params)
 
-//     return response.data
-//   }
-// )
+    return response.data
+  }
+)
 
-// export const getHeaderByKey = createAsyncThunk(
-//   'settingWebsite/getHeaderByKey',
-//   async ({ eventId, key }: { eventId: number; key: HeaderKey }) => {
-//     const response = await axiosClient.get(`header-page/event/${eventId}?key=${key}`)
+export const getAgendaDetail = createAsyncThunk(
+  'website/getAgendaDetail',
+  async (agendaId: number) => {
+    const response = await axiosClient.get(`agenda/${agendaId}/detail`)
 
-//     return response.data
-//   }
-// )
+    return response.data
+  }
+)
+
+export const addAgendaDetail = createAsyncThunk(
+  'website/addAgendaDetail',
+  async ({ agendaId, params }: { agendaId: number; params: AgendaDetailTypes }) => {
+    const response = await axiosClient.post(`agenda/${agendaId}/detail}`, {
+      items: params
+    })
+
+    return response.data
+  }
+)
 
 export const addDetailToAgendaById = createAction(
   'website/addDetailToAgendaById',
@@ -80,7 +73,7 @@ export const AgendaSlice = createSlice({
         state.isLoading = true
       })
       .addCase(getAgenda.fulfilled, (state, action) => {
-        state.agendaList = action.payload.data
+        state.agendaList = action.payload
         state.isLoading = false
       })
       .addCase(getAgenda.rejected, state => {
@@ -102,7 +95,10 @@ export const AgendaSlice = createSlice({
       })
       .addCase(getAgendaDetail.fulfilled, (state, action) => {
         state.isFetchingAgendaDetail = false
-        state.agendaDetail = { ...state.agendaDetail, [action.meta.arg]: action.payload.data }
+        state.agendaDetail = {
+          ...state.agendaDetail,
+          [action.meta.arg]: action.payload.data
+        }
       })
       .addCase(getAgendaDetail.rejected, state => {
         state.isFetchingAgendaDetail = false

@@ -27,14 +27,14 @@
       }
     ],
     // add new line above return
-    "newline-before-return": "error",
-    // add new line below import
-    "import/newline-after-import": [
-      "error",
-      {
-        "count": 1
-      }
-    ],
+    // "newline-before-return": "error",
+    // // add new line below import
+    // "import/newline-after-import": [
+    //   "error",
+    //   {
+    //     "count": 1
+    //   }
+    // ],
     "@typescript-eslint/ban-types": [
       "error",
       {

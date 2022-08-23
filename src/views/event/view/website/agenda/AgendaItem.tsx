@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
 
 // ** MUI Import
 import Box from '@mui/material/Box'
@@ -7,18 +7,34 @@ import { styled } from '@mui/material/styles'
 
 import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 
+import { useCallback } from 'react'
+
 // ** Icons Imports
 import Button from '@mui/material/Button'
 import Plus from 'mdi-material-ui/Plus'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import EditIcon from '@mui/icons-material/Edit'
 
 import AgendaEventItem from './AgendaEventItem'
 import AddEventSidebar from './AddEventSidebar'
 import { useState } from 'react'
-import { Card, IconButton, CardHeader, CardContent, Collapse } from '@mui/material'
+import {
+  Card,
+  IconButton,
+  CardHeader,
+  CardContent,
+  Collapse
+} from '@mui/material'
 import { ChevronDown, ChevronUp } from 'mdi-material-ui'
-import { getAgendaDetail } from 'src/store/event/view/website/agendaStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
+import { updateAgendaStage } from 'src/@core/api/agenda-api'
+
+import { formatTime } from 'src/@core/utils/dateTime'
+import { getAgenda } from 'src/store/event/view/website/agendaStore'
+
+import MenuPopover from 'src/layouts/components/menu'
+import MenuItem from '@mui/material/MenuItem'
 
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({
@@ -35,45 +51,122 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 interface AgendaItemProps {
   title: string
   agendaId: number | undefined
+  stages: any[]
+  handleDeleteAgenda: (agendaId: number) => void
+  handleOpenEditModal: (params: any) => void
+  agenda: any
 }
 
-const AgendaItem = ({ title, agendaId }: AgendaItemProps) => {
-  // ** Vars
+const addEventSidebarWidth = 400
 
-  const addEventSidebarWidth = 400
-  const [collapsed, setCollapsed] = useState<boolean>(false)
-  const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
-
+const AgendaItem = ({
+  title,
+  agendaId,
+  stages,
+  handleDeleteAgenda,
+  handleOpenEditModal,
+  agenda
+}: AgendaItemProps) => {
+  const store = useSelector((state: RootState) => state.eventDetail)
   const dispatch = useDispatch<AppDispatch>()
-  const agendaStore = useSelector((state: RootState) => state.agendaWebsite)
 
-  const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
+  const [collapsed, setCollapsed] = useState<boolean>(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [detailList, setDetailList] = useState<any[]>(stages)
+  const [editParams, setEditParams] = useState(null)
 
+  const handleAddEventSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen)
+    setEditParams(null)
+  }
 
-  useEffect(() => {
-    if (agendaId && collapsed) {
-      dispatch(getAgendaDetail(agendaId))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agendaId, collapsed])
+  const handleAddAgendaDetail = useCallback(
+    async ({ agendaId, params }: any) => {
+      const items = [
+        {
+          ...params,
+          timeStart: formatTime(params.timeStart),
+          timeEnd: formatTime(params.timeEnd)
+        }
+      ]
+      const response = await updateAgendaStage(agendaId, { items })
+      if (response?.[0]?.id) {
+        setIsSidebarOpen(false)
+        handleGetAgenda()
+      }
+    },
+    []
+  )
+
+  const handleDeleteAgendaDetail = useCallback(
+    async (id: number) => {
+      const deleteIds = [id]
+
+      // @ts-ignore
+      const response = await updateAgendaStage(agendaId, { deleteIds })
+      if (response) {
+        const newList = detailList.filter(agenda => agenda.id !== id)
+        setDetailList(newList)
+        setIsSidebarOpen(false)
+      }
+    },
+    [detailList]
+  )
+
+  const handleGetAgenda = () => {
+    agendaId && dispatch(getAgenda(store.eventData.id))
+  }
+
+  const handleSetEditParams = (params: any) => {
+    setEditParams(params)
+    setIsSidebarOpen(true)
+  }
 
   return (
     <Card variant='outlined' sx={{ boxShadow: 0, mb: 4 }}>
       <CardHeader
         title={title}
         action={
-          <Box>
-            {collapsed && (
-              <Button
-                size='small'
-                variant='contained'
-                sx={{ mr: 10 }}
-                startIcon={<Plus fontSize='small' />}
-                onClick={handleAddEventSidebarToggle}
-              >
-                Add Event
-              </Button>
-            )}
+          <Box sx={{ display: 'flex' }}>
+            <MenuPopover>
+              <MenuItem>
+                <Button
+                  sx={{ mr: 10 }}
+                  size='small'
+                  variant='text'
+                  startIcon={<EditIcon fontSize='small' />}
+                  onClick={() => handleOpenEditModal(agenda)}
+                  color='secondary'
+                >
+                  Edit Agenda
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button
+                  sx={{ mr: 10 }}
+                  size='small'
+                  variant='text'
+                  startIcon={<HighlightOffIcon fontSize='small' />}
+                  onClick={() => handleDeleteAgenda(Number(agendaId))}
+                  color='secondary'
+                >
+                  Delete Agenda
+                </Button>
+              </MenuItem>
+
+              <MenuItem>
+                <Button
+                  sx={{ mr: 10 }}
+                  size='small'
+                  variant='text'
+                  startIcon={<Plus fontSize='small' />}
+                  onClick={handleAddEventSidebarToggle}
+                  color='secondary'
+                >
+                  Add Event
+                </Button>
+              </MenuItem>
+            </MenuPopover>
 
             <IconButton
               size='small'
@@ -81,23 +174,39 @@ const AgendaItem = ({ title, agendaId }: AgendaItemProps) => {
               sx={{ color: 'text.secondary' }}
               onClick={() => setCollapsed(!collapsed)}
             >
-              {!collapsed ? <ChevronDown fontSize='small' /> : <ChevronUp fontSize='small' />}
+              {!collapsed ? (
+                <ChevronDown fontSize='small' />
+              ) : (
+                <ChevronUp fontSize='small' />
+              )}
             </IconButton>
           </Box>
         }
       />
       <Collapse in={collapsed}>
-        <CardContent>
+        <CardContent sx={{ maxHeight: '40vh', overflowY: 'auto' }}>
           <Timeline>
-            <AgendaEventItem handleAddEventSidebarToggle={handleAddEventSidebarToggle} />
-            <AgendaEventItem handleAddEventSidebarToggle={handleAddEventSidebarToggle} />
+            {detailList?.map((stage, idx) => {
+              return (
+                <AgendaEventItem
+                  key={idx}
+                  stage={stage}
+                  handleDeleteAgendaDetail={handleDeleteAgendaDetail}
+                  handleSetEditParams={handleSetEditParams}
+                />
+              )
+            })}
           </Timeline>
-          <AddEventSidebar
-            drawerWidth={addEventSidebarWidth}
-            addEventSidebarOpen={addEventSidebarOpen}
-            handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-            agendaId={agendaId}
-          />
+          {isSidebarOpen && (
+            <AddEventSidebar
+              drawerWidth={addEventSidebarWidth}
+              isSidebarOpen={isSidebarOpen}
+              handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+              agendaId={agendaId}
+              editParams={editParams}
+              handleAddAgendaDetail={handleAddAgendaDetail}
+            />
+          )}
         </CardContent>
       </Collapse>
     </Card>
