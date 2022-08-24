@@ -13,47 +13,55 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import TableContainer from '@mui/material/TableContainer'
 
+// ** Custom Components Imports
+import CustomChip from 'src/@core/components/mui/chip'
+
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
 import ChevronDown from 'mdi-material-ui/ChevronDown'
-import { TablePagination, Tooltip } from '@mui/material'
-import { DeleteOutline, FormatListNumbered, Pencil } from 'mdi-material-ui'
-import { PackageTypes } from 'src/types/eventTypes'
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { Chip, TablePagination, Tooltip } from '@mui/material'
+import {
+  BackupRestore,
+  CheckCircle,
+  CloseCircle,
+  DeleteOutline,
+  FormatListNumbered,
+  Pencil,
+  PlusBox
+} from 'mdi-material-ui'
+import {
+  DeletePackageParams,
+  PackageTypes,
+  PackageTypesData,
+  PriceTypes,
+  ResumePackageParams
+} from 'src/types/eventTypes'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 import { formatDate } from 'src/@core/utils/format'
-
-interface PriceTypes {
-  id: number
-  price: number
-  stockLimit: number
-  periodStart: string
-  periodEnd: string
-}
-
-interface PackageTypesData {
-  id: number
-  name: string
-  benefit: string[]
-  listPrice: PriceTypes[]
-  type: string
-}
+import DialogAlertDelete from './DialogAlertDelete'
+import { deletePackage, resumePackage } from 'src/store/event/view/packageStore'
+import DialogShowBenefit from './DialogShowBenefit'
 
 const createData = (data: PackageTypes[]) => {
   const d: PackageTypesData[] = []
+
   data.map(p => {
     if (p.priceType === 'normal') {
       d.push({
         id: p.id,
         name: p.name,
-        benefit: [],
+        benefits: p.benefits,
+        status: p.status,
         listPrice: [
           {
             id: p.id,
+            status: p.status,
             price: p.price,
             stockLimit: p.stockLimit,
             periodStart: p.periodStart,
-            periodEnd: p.periodEnd
+            periodEnd: p.periodEnd,
+            priceType: p.priceType
           }
         ],
         type: p.type
@@ -68,9 +76,11 @@ const createData = (data: PackageTypes[]) => {
         d[index].listPrice.push({
           id: p.id,
           price: p.price,
+          status: p.status,
           stockLimit: p.stockLimit,
           periodStart: p.periodStart,
-          periodEnd: p.periodEnd
+          periodEnd: p.periodEnd,
+          priceType: p.priceType
         })
       }
     }
@@ -79,7 +89,24 @@ const createData = (data: PackageTypes[]) => {
   return d
 }
 
-const TableCollapsible = () => {
+interface TableCollapsibleProps {
+  handleClickOpen: () => void
+  handleClickOpenAddPrice: () => void
+  dataPackageSelect: PackageTypesData | null
+  setDataPackageSelect: (row: PackageTypesData) => void
+  priceSelected: PriceTypes | null
+  setPriceSelected: (price: PriceTypes | null) => void
+}
+
+const TableCollapsible = (props: TableCollapsibleProps) => {
+  const {
+    handleClickOpenAddPrice,
+    handleClickOpen,
+    priceSelected,
+    setPriceSelected,
+    setDataPackageSelect
+  } = props
+
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
@@ -96,8 +123,6 @@ const TableCollapsible = () => {
 
   const data = createData(store.packages)
 
-  console.log(data)
-
   return (
     <Box>
       <TableContainer>
@@ -108,13 +133,22 @@ const TableCollapsible = () => {
               <TableCell>Title Package</TableCell>
               <TableCell align='right'>Type</TableCell>
               <TableCell align='right'>Benefit</TableCell>
+              <TableCell align='center'>Status</TableCell>
               <TableCell align='right'>Action</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {data.map(row => (
-              <Row key={row.id} row={row} />
+              <Row
+                key={row.id}
+                row={row}
+                handleClickOpen={handleClickOpen}
+                handleClickOpenAddPrice={handleClickOpenAddPrice}
+                setDataPackageSelect={setDataPackageSelect}
+                setPriceSelected={setPriceSelected}
+                priceSelected={priceSelected}
+              />
             ))}
           </TableBody>
         </Table>
@@ -137,52 +171,147 @@ const TableCollapsible = () => {
   )
 }
 
-const Row = (props: { row: PackageTypesData }) => {
+const Row = (props: {
+  row: PackageTypesData
+  priceSelected: PriceTypes | null
+  handleClickOpen: () => void
+  handleClickOpenAddPrice: () => void
+  setDataPackageSelect: (row: PackageTypesData) => void
+  setPriceSelected: (price: PriceTypes | null) => void
+}) => {
   // ** Props
-  const { row } = props
+  const {
+    row,
+    priceSelected,
+    handleClickOpen,
+    handleClickOpenAddPrice,
+    setDataPackageSelect,
+    setPriceSelected
+  } = props
 
   // ** State
   const [open, setOpen] = useState<boolean>(false)
+
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const handleClickOpenDelete = () => setOpenDelete(true)
+  const handleCloseOpenDelete = () => setOpenDelete(false)
+
+  const [openBenefit, setOpenBenefit] = useState<boolean>(false)
+  const handleClickOpenBenefit = () => setOpenBenefit(true)
+  const handleCloseOpenBenefit = () => setOpenBenefit(false)
+
+  const dispatch = useDispatch<AppDispatch>()
+  const storeEvent = useSelector((state: RootState) => state.eventDetail)
+
+  const handleClickEdit = () => {
+    setDataPackageSelect(row)
+    handleClickOpen()
+  }
+
+  const handleClickEditPrice = (price: PriceTypes) => {
+    setPriceSelected(price)
+    handleClickOpenAddPrice()
+  }
+
+  const handleClickAddPrice = () => {
+    setDataPackageSelect(row)
+    setPriceSelected(null)
+    handleClickOpenAddPrice()
+  }
+
+  const handleClickDeletePackage = () => {
+    setPriceSelected(null)
+    handleClickOpenDelete()
+  }
+
+  const handleClickDeletePrice = (price: PriceTypes) => {
+    setPriceSelected(price)
+    handleClickOpenDelete()
+  }
+
+  const handleSubmitDeletePackage = (props: DeletePackageParams) => {
+    dispatch(deletePackage(props))
+  }
+
+  const handleSubmitResumePackage = (props: ResumePackageParams) => {
+    dispatch(resumePackage(props))
+  }
 
   return (
     <Fragment>
       <TableRow hover sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton aria-label='expand row' size='small' onClick={() => setOpen(!open)}>
+          <IconButton
+            aria-label='expand row'
+            size='small'
+            onClick={() => setOpen(!open)}
+          >
             {open ? <ChevronUp /> : <ChevronDown />}
           </IconButton>
         </TableCell>
         <TableCell component='th' scope='row'>
           {row.name}
         </TableCell>
-        <TableCell align='right'>{row.type}</TableCell>
+        <TableCell align='right'>
+          {row.type === 'onsite' ? (
+            <Chip label='Onsite' color='primary' variant='outlined' />
+          ) : (
+            <Chip label='Virtual' color='error' variant='outlined' />
+          )}
+        </TableCell>
         <TableCell align='right'>
           <Tooltip title={'View benefit'}>
-            <IconButton size='small'>
+            <IconButton size='small' onClick={handleClickOpenBenefit}>
               <FormatListNumbered />
             </IconButton>
           </Tooltip>
         </TableCell>
 
+        <TableCell align='center'>
+          {row.status ? (
+            <CheckCircle color={'success'} />
+          ) : (
+            <CloseCircle color={'error'} />
+          )}
+        </TableCell>
         <TableCell align='right'>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Tooltip title={'Add Price'}>
+              <IconButton
+                size='small'
+                sx={{ mr: 0.5 }}
+                onClick={handleClickAddPrice}
+              >
+                <PlusBox />
+              </IconButton>
+            </Tooltip>
             <Tooltip title={'Edit Package'}>
-              <IconButton size='small' sx={{ mr: 0.5 }}>
+              <IconButton
+                size='small'
+                sx={{ mr: 0.5 }}
+                onClick={handleClickEdit}
+              >
                 <Pencil />
               </IconButton>
             </Tooltip>
-            <Tooltip title={'Delete Package'}>
-              <IconButton size='small'>
-                <DeleteOutline />
+            <Tooltip title={row.status ? 'Delete Package' : 'Resume Package'}>
+              <IconButton size='small' onClick={handleClickDeletePackage}>
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
               </IconButton>
             </Tooltip>
           </Box>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={7} sx={{ py: '0 !important' }}>
+        <TableCell
+          colSpan={7}
+          sx={{
+            py: '0 !important',
+            backgroundColor: '#F3F3F8'
+          }}
+        >
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Box sx={{ m: 2 }}>
+            <Box sx={{ m: 2, mb: 12 }}>
               <Typography variant='h6' gutterBottom component='div'>
                 List Price
               </Typography>
@@ -193,10 +322,13 @@ const Row = (props: { row: PackageTypesData }) => {
                     <TableCell>End Date</TableCell>
                     <TableCell align='right'>Price</TableCell>
                     <TableCell align='right'>Limit</TableCell>
+                    <TableCell align='right'>Price Type</TableCell>
+                    <TableCell align='center'>Status</TableCell>
+                    <TableCell align='right'>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.listPrice.map(price => (
+                  {row.listPrice.map((price: PriceTypes) => (
                     <TableRow key={price.periodStart}>
                       <TableCell component='th' scope='row'>
                         {formatDate(price.periodStart || '')}
@@ -204,6 +336,59 @@ const Row = (props: { row: PackageTypesData }) => {
                       <TableCell>{formatDate(price.periodEnd || '')}</TableCell>
                       <TableCell align='right'>{price.price}</TableCell>
                       <TableCell align='right'>{price.stockLimit}</TableCell>
+                      <TableCell align='right'>
+                        {price.priceType === 'normal' ? (
+                          <CustomChip
+                            label='Normal'
+                            skin='light'
+                            color='secondary'
+                          />
+                        ) : (
+                          <CustomChip
+                            label='Early Bird'
+                            skin='light'
+                            color='info'
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell align='center'>
+                        {price.status ? (
+                          <Chip label='Active' color='success' />
+                        ) : (
+                          <Chip label='Unactive' color='error' />
+                        )}
+                      </TableCell>
+                      <TableCell align='right'>
+                        <Box
+                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                          <Tooltip title={'Edit Price'}>
+                            <IconButton
+                              size='small'
+                              sx={{ mr: 0.5 }}
+                              onClick={() => handleClickEditPrice(price)}
+                            >
+                              <Pencil />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip
+                            title={
+                              price.status ? 'Delete Price' : 'Resume Price'
+                            }
+                          >
+                            <IconButton
+                              size='small'
+                              onClick={() => handleClickDeletePrice(price)}
+                            >
+                              {price.status ? (
+                                <DeleteOutline />
+                              ) : (
+                                <BackupRestore />
+                              )}
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -212,6 +397,30 @@ const Row = (props: { row: PackageTypesData }) => {
           </Collapse>
         </TableCell>
       </TableRow>
+      <DialogAlertDelete
+        open={openDelete}
+        dataPackage={row}
+        priceSelected={priceSelected}
+        handleCloseAlert={handleCloseOpenDelete}
+        handleSubmit={() => {
+          ;(priceSelected ? priceSelected.status : row.status)
+            ? handleSubmitDeletePackage({
+                eventName: storeEvent.eventData.baseName,
+                packageId: priceSelected ? priceSelected.id : row.id,
+                handleClickCloseModal: handleCloseOpenDelete
+              })
+            : handleSubmitResumePackage({
+                eventName: storeEvent.eventData.baseName,
+                packageId: priceSelected ? priceSelected.id : row.id,
+                handleClickCloseModal: handleCloseOpenDelete
+              })
+        }}
+      />
+      <DialogShowBenefit
+        open={openBenefit}
+        handleDialogClose={handleCloseOpenBenefit}
+        benefits={row.benefits}
+      />
     </Fragment>
   )
 }
