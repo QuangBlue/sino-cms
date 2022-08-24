@@ -47,6 +47,7 @@ export interface AgendaTypes {
   slug: string
   description: string
   date: string
+  stages?: any
 }
 
 export interface AgendaDetailTypes {

@@ -17,9 +17,6 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
-
-// import { getSpeaker } from 'src/store/event/view/website/speakerStore'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -27,22 +24,21 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-between'
 }))
 
-const AgendaActions = () => {
-  const router = useRouter()
-  const { selected } = router.query
-
+const AgendaActions = ({
+  handleChangeLang,
+  handleSave,
+  agendaHeader,
+  handleToggleAgendaHeader
+}: any) => {
   // ** Hook
   const { i18n } = useTranslation()
 
   // const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
 
-  // const dispatch = useDispatch<AppDispatch>()
-
   const handleLangItemClick = (event: ChangeEvent<HTMLInputElement>) => {
     i18n.changeLanguage((event.target as HTMLInputElement).value)
-
-    // dispatch(getSpeaker(storeEvent.eventData.baseName))
+    handleChangeLang()
   }
 
   return (
@@ -50,14 +46,32 @@ const AgendaActions = () => {
       <Card>
         <CardContent>
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Hide / Show
             </InputLabel>
-            <Switch id='go-live' />
+            <Switch
+              id='go-live'
+              checked={agendaHeader.isPublished}
+              onChange={e => handleToggleAgendaHeader(e.target.checked)}
+            />
           </OptionsWrapper>
 
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Languages
             </InputLabel>
             <FormControl sx={{ flexWrap: 'wrap', flexDirection: 'row' }}>
@@ -69,20 +83,41 @@ const AgendaActions = () => {
                 onChange={handleLangItemClick}
                 aria-label='simple-radio'
               >
-                <FormControlLabel value='en-US' control={<Radio />} label='English' />
-                <FormControlLabel value='zh-CN' control={<Radio />} label='Chinese' />
+                <FormControlLabel
+                  value='en-US'
+                  control={<Radio />}
+                  label='English'
+                />
+                <FormControlLabel
+                  value='zh-CN'
+                  control={<Radio />}
+                  label='Chinese'
+                />
               </RadioGroup>
             </FormControl>
           </OptionsWrapper>
 
-          <Button type='submit' form='about-us-form' fullWidth sx={{ mb: 3.5 }} variant='contained'>
+          <Button
+            type='submit'
+            form='about-us-form'
+            fullWidth
+            sx={{ mb: 3.5 }}
+            variant='contained'
+            onClick={handleSave}
+          >
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
+            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}`}
             passHref
           >
-            <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined' target='_blank'>
+            <Button
+              fullWidth
+              component='a'
+              sx={{ mb: 3.5 }}
+              variant='outlined'
+              target='_blank'
+            >
               Preview
             </Button>
           </Link>
