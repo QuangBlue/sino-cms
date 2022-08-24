@@ -84,9 +84,12 @@ const AgendaItem = ({
     async ({ agendaId, params }: any) => {
       const items = [
         {
-          ...params,
+          title: params.title,
           timeStart: formatTime(params.timeStart),
-          timeEnd: formatTime(params.timeEnd)
+          timeEnd: formatTime(params.timeEnd),
+          ...(params.speakerId && { speakerId: params.speakerId }),
+          ...(params.description && { description: params.description }),
+          ...(params.id && { id: params.id })
         }
       ]
       const response = await updateAgendaStage(agendaId, { items })
