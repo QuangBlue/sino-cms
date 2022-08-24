@@ -123,23 +123,6 @@ const AgendaContent = ({}) => {
         <Grid item xl={9} md={8} xs={12}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
             <Card>
-              <CardHeader title='Title' />
-              <CardContent>
-                <TextField
-                  fullWidth
-                  id='title-speaker'
-                  sx={{
-                    '& .MuiInputBase-input': {
-                      color: 'text.secondary',
-                      fontWeight: 600
-                    }
-                  }}
-                  placeholder='Title Header'
-                />
-              </CardContent>
-            </Card>
-
-            <Card>
               <CardHeader
                 title='List Agenda'
                 action={
