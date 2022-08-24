@@ -88,8 +88,8 @@ const AgendaItem = ({
           timeStart: formatTime(params.timeStart),
           timeEnd: formatTime(params.timeEnd),
           ...(params.speakerId && { speakerId: params.speakerId }),
-          ...(params.description && { description: params.description }),
-          ...(params.id && { id: params.id })
+          ...(params.id && { id: params.id }),
+          description: params.description
         }
       ]
       const response = await updateAgendaStage(agendaId, { items })
