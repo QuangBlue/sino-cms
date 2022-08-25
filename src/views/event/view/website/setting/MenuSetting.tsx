@@ -1,8 +1,25 @@
-import { useMemo } from 'react'
-import { Box, Card, CardContent, CardHeader, Switch, Typography } from '@mui/material'
+import { useEffect, useMemo } from 'react'
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Switch,
+  Typography
+} from '@mui/material'
 import React, { useCallback } from 'react'
 import { SettingHeaderTypes } from 'src/types/website'
-import { ABOUT_US, AGENDA, CONTACT_US, GALLERY, ORG_PARTNER, REGISTER, SPEAKER, SPONSOR } from 'src/constants/headers'
+import {
+  ABOUT_US,
+  AGENDA,
+  CONTACT_US,
+  GALLERY,
+  ORG_PARTNER,
+  REGISTER,
+  SPEAKER,
+  SPONSOR,
+  headerKey
+} from 'src/constants/headers'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import { keyBy, merge, toArray } from 'lodash'
@@ -63,12 +80,31 @@ const defaultHeaders = [
   }
 ]
 
-export default function MenuSetting({ headers, handleToggleHeader, isLoading }: Props) {
+export default function MenuSetting({
+  headers,
+  handleToggleHeader,
+  isLoading
+}: Props) {
   const headerList = useMemo(() => {
-    const list = toArray(merge(keyBy(defaultHeaders, 'key'), keyBy(headers, 'header.key')))
+    const list = toArray(
+      merge(keyBy(defaultHeaders, 'key'), keyBy(headers, 'header.key'))
+    ).map(header => {
+      const key = header.key ? header.key : header?.header?.key
+
+      return {
+        ...header,
+
+        // @ts-ignore
+        title: headerKey[key]
+      }
+    })
 
     return list
   }, [headers])
+
+  useEffect(() => {
+    setSettingHeaders(headerList)
+  }, [headerList, headers])
 
   const [settingHeaders, setSettingHeaders] = React.useState(headerList)
 
@@ -130,9 +166,15 @@ export default function MenuSetting({ headers, handleToggleHeader, isLoading }: 
       <CardContent>
         {settingHeaders.map((item, idx) => {
           return (
-            <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Box
+              key={idx}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
               <Typography>{item?.title}</Typography>
-              <Switch checked={item?.isPublished} onChange={e => handleToggleHeaders(item, e.target.checked)} />
+              <Switch
+                checked={item?.isPublished}
+                onChange={e => handleToggleHeaders(item, e.target.checked)}
+              />
             </Box>
           )
         })}

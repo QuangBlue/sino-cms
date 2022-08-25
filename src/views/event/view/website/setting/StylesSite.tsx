@@ -4,10 +4,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
+  // InputAdornment,
+  // MenuItem,
+  // Select,
+  // TextField,
   Typography
 } from '@mui/material'
 import { useState } from 'react'
@@ -35,7 +35,7 @@ export default function StylesSite() {
             <Typography>Primary Color</Typography>
             <HexColorPicker color={color} onChange={setColor} />
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
             <Typography>Base Font Size</Typography>
             <TextField
               type='number'
@@ -43,8 +43,8 @@ export default function StylesSite() {
                 endAdornment: <InputAdornment position='start'>px</InputAdornment>
               }}
             />
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
+          </Box> */}
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
             <Typography>Mobile Base Font Size</Typography>
             <TextField
               type='number'
@@ -52,8 +52,8 @@ export default function StylesSite() {
                 endAdornment: <InputAdornment position='start'>px</InputAdornment>
               }}
             />
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
+          </Box> */}
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }} gap={6}>
             <Typography>Base Font Weight</Typography>
             <Select defaultValue='400'>
               <MenuItem value='100'>100</MenuItem>
@@ -66,7 +66,7 @@ export default function StylesSite() {
               <MenuItem value='800'>800</MenuItem>
               <MenuItem value='900'>900</MenuItem>
             </Select>
-          </Box>
+          </Box> */}
         </Box>
       </CardContent>
     </Card>
