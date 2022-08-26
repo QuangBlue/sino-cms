@@ -4,8 +4,8 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Plus from 'mdi-material-ui/Plus'
 import { useState } from 'react'
-import AlbumItem from './AlbumItem'
-import DialogAddAlbumForm from './DialogAddAlbum'
+import AlbumItem from '../AlbumItem'
+import DialogAddAlbumForm from '../DialogAddAlbum'
 
 // * Redux
 import { useDispatch, useSelector } from 'react-redux'

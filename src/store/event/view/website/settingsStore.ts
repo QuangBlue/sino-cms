@@ -16,16 +16,21 @@ interface EditHeaderProps {
   params: HeaderParams[]
 }
 
-export const getHeaders = createAsyncThunk('settingWebsite/getHeaders', async (eventId: number) => {
-  const response = await axiosClient.get(`header-page/event/${eventId}`)
+export const getHeaders = createAsyncThunk(
+  'settingWebsite/getHeaders',
+  async (eventId: number) => {
+    const response = await axiosClient.get(`header-page/event/${eventId}`)
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 export const editHeader = createAsyncThunk(
   'settingWebsite/editHeader',
   async ({ eventId, params }: EditHeaderProps) => {
-    const response = await axiosClient.post(`header-page/event/${eventId}`, { items: params })
+    const response = await axiosClient.post(`header-page/event/${eventId}`, {
+      items: params
+    })
 
     return response.data
   }
@@ -34,7 +39,9 @@ export const editHeader = createAsyncThunk(
 export const getHeaderByKey = createAsyncThunk(
   'settingWebsite/getHeaderByKey',
   async ({ eventId, key }: { eventId: number; key: HeaderKey }) => {
-    const response = await axiosClient.get(`header-page/event/${eventId}?key=${key}`)
+    const response = await axiosClient.get(
+      `header-page/event/${eventId}?key=${key}`
+    )
 
     return response.data
   }
