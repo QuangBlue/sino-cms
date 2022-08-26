@@ -126,7 +126,7 @@ export default function MenuSetting({
       // * Incase of there are no headers
       setSettingHeaders(prevHeader => {
         return prevHeader.map(header => {
-          if (header.key === item.key) {
+          if (header?.key === item.key) {
             return {
               ...header,
               isPublished: value
