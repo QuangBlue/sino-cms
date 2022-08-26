@@ -42,12 +42,14 @@ const DialogAddRegister = ({
     reset,
     formState: { errors }
   } = useForm({
+    defaultValues: { name: '' },
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
 
   useEffect(() => {
     if (editParams) {
+      // @ts-ignore
       reset({ name: editParams.name, id: editParams.id })
     } else {
       reset({ name: '' })
