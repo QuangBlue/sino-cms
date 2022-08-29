@@ -87,7 +87,7 @@ export default function MenuSetting({
 }: Props) {
   const headerList = useMemo(() => {
     const list = toArray(
-      merge(keyBy(defaultHeaders, 'key'), keyBy(headers, 'header.key'))
+      merge({}, keyBy(defaultHeaders, 'key'), keyBy(headers, 'header.key'))
     ).map(header => {
       const key = header.key ? header.key : header?.header?.key
 
