@@ -10,7 +10,6 @@ import {
 } from 'src/store/event/view/website/settingsStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-
 import { AppDispatch, RootState } from 'src/store'
 
 export default function SettingTabView() {
