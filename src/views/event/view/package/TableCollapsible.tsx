@@ -61,17 +61,19 @@ const createData = (data: PackageTypes[]) => {
             stockLimit: p.stockLimit,
             periodStart: p.periodStart,
             periodEnd: p.periodEnd,
-            priceType: p.priceType
+            priceType: p.priceType,
+            slug: p.slug
           }
         ],
-        type: p.type
+        type: p.type,
+        slug: p.slug
       })
     }
   })
 
   data.map(p => {
     if (p.priceType === 'early-bird') {
-      const index = d.findIndex(item => item.name === p.name)
+      const index = d.findIndex(item => item.slug === p.slug)
       if (index !== -1) {
         d[index].listPrice.push({
           id: p.id,
@@ -80,7 +82,8 @@ const createData = (data: PackageTypes[]) => {
           stockLimit: p.stockLimit,
           periodStart: p.periodStart,
           periodEnd: p.periodEnd,
-          priceType: p.priceType
+          priceType: p.priceType,
+          slug: p.slug
         })
       }
     }

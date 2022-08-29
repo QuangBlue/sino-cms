@@ -48,6 +48,7 @@ export interface PackageTypes {
   status: boolean
   createdAt: string
   updatedAt: string
+  slug: string
 }
 
 export interface CreatePackageParams {
@@ -103,6 +104,7 @@ export interface PriceTypes {
   periodStart: string
   periodEnd: string
   status: boolean
+  slug: string
 }
 
 export interface PackageTypesData {
@@ -112,4 +114,5 @@ export interface PackageTypesData {
   benefits: string[]
   listPrice: PriceTypes[]
   type: string
+  slug: string
 }
