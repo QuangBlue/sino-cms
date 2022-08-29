@@ -110,6 +110,7 @@ const schemaCreate = yup.object().shape({
     .typeError('Price field must a number'),
   stockLimit: yup
     .number()
+    .min(0, 'Stock Limit must be greater than zero')
     .typeError('Limit field must a number')
     .required('Limit field is required')
 })
@@ -189,9 +190,6 @@ export default function FormPackage(props: IFormPackageProps) {
     }
 
     if (isEdit) {
-      console.log('update')
-      console.log(props)
-
       dispatch(updatePackage(props))
     } else {
       dispatch(createPackage(props))

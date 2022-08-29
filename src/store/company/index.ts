@@ -21,7 +21,11 @@ interface CreateCompanyProps {
 export const fetchCompany = createAsyncThunk(
   'company/fetchData',
   async (query: string | undefined, { getState }: Redux) => {
-    const response = await axiosClient.get(`/company?status=${getState().company.status}&keyword=${query ? query : ''}`)
+    const response = await axiosClient.get(
+      `/company?status=${getState().company.status}&keyword=${
+        query ? query : ''
+      }&page=0&pageSize=9999`
+    )
 
     return response.data
   }
@@ -48,30 +52,38 @@ export const createCompany = createAsyncThunk(
 )
 
 // ** Delete Company
-export const deleteCompany = createAsyncThunk('company/deleteCompany', async (id: number, { dispatch }: Redux) => {
-  const promise = axiosClient.delete('/company/' + id).then(() => {
-    dispatch(fetchCompany())
-  })
+export const deleteCompany = createAsyncThunk(
+  'company/deleteCompany',
+  async (id: number, { dispatch }: Redux) => {
+    const promise = axiosClient.delete('/company/' + id).then(() => {
+      dispatch(fetchCompany())
+    })
 
-  toast.promise(promise, {
-    loading: 'Loading',
-    success: 'Delete Company Successfully',
-    error: 'Error when delete Agent'
-  })
-})
+    toast.promise(promise, {
+      loading: 'Loading',
+      success: 'Delete Company Successfully',
+      error: 'Error when delete Agent'
+    })
+  }
+)
 
 // ** Resume Company
-export const resumeCompany = createAsyncThunk('company/resumeCompany', async (id: number, { dispatch }: Redux) => {
-  const promise = axiosClient.put(`/company/${id}`, { status: true }).then(() => {
-    dispatch(fetchCompany())
-  })
+export const resumeCompany = createAsyncThunk(
+  'company/resumeCompany',
+  async (id: number, { dispatch }: Redux) => {
+    const promise = axiosClient
+      .put(`/company/${id}`, { status: true })
+      .then(() => {
+        dispatch(fetchCompany())
+      })
 
-  toast.promise(promise, {
-    loading: 'Request Resume Company',
-    success: 'Resume Company Successfully',
-    error: 'Error when Resume Company'
-  })
-})
+    toast.promise(promise, {
+      loading: 'Request Resume Company',
+      success: 'Resume Company Successfully',
+      error: 'Error when Resume Company'
+    })
+  }
+)
 
 export const companySlice = createSlice({
   name: 'company',

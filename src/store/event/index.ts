@@ -25,11 +25,16 @@ export interface CreateEventPayload {
 }
 
 // ** Fetch Event
-export const fetchEvent = createAsyncThunk('event/fetchData', async (agentId: number, { getState }: Redux) => {
-  const response = await axiosClient.get(`/event?status=${getState().event.status}`)
+export const fetchEvent = createAsyncThunk(
+  'event/fetchData',
+  async (agentId: number, { getState }: Redux) => {
+    const response = await axiosClient.get(
+      `/event?status=${getState().event.status}&page=0&pageSize=9999`
+    )
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 // ** Delete Event
 export const deleteEvent = createAsyncThunk(
@@ -112,7 +117,8 @@ export const eventSlice = createSlice({
       state.status = payload
     },
     handlePageChange: state => {
-      ;(state.listEvent = [] as EventTypes[]), (state.listCompany = [] as CompanyTypes[])
+      ;(state.listEvent = [] as EventTypes[]),
+        (state.listCompany = [] as CompanyTypes[])
     }
   },
   extraReducers: builder => {

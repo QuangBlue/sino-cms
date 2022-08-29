@@ -256,7 +256,7 @@ const Row = (props: {
           {row.type === 'onsite' ? (
             <Chip label='Onsite' color='primary' variant='outlined' />
           ) : (
-            <Chip label='Virtual' color='error' variant='outlined' />
+            <Chip label='Virtual' color='info' variant='outlined' />
           )}
         </TableCell>
         <TableCell align='right'>
