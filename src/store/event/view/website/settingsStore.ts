@@ -59,6 +59,7 @@ export const settingWebsiteSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(getHeaders.pending, state => {
+        state.headers = []
         state.isLoading = true
       })
       .addCase(getHeaders.fulfilled, (state, action) => {
