@@ -33,7 +33,7 @@ const schema = yup.object().shape({
     .typeError('Price field must a number'),
   stockLimit: yup
     .number()
-    .min(0, 'Stock Limit must be greater than zero')
+    .min(0, 'Stock limit must be more than zero')
     .typeError('Limit field must a number')
     .required('Limit field is required')
 })
