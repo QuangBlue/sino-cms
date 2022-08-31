@@ -2,7 +2,6 @@ import { SyntheticEvent, useState } from 'react'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 import { FilmstripBoxMultiple, FolderMultipleImage } from 'mdi-material-ui'
 
-
 import { styled } from '@mui/material/styles'
 import TabContext from '@mui/lab/TabContext'
 import Tab from '@mui/material/Tab'
@@ -52,7 +51,6 @@ const GalleryContent = () => {
       <TabPanel value='photo' sx={{ p: 0, width: '100%' }}>
         <GalleryPhoto />
       </TabPanel>
-      {/* TODO: Integrate api API for gallery videos */}
       <TabPanel value='video' sx={{ p: 0, width: '100%' }}>
         <GalleryVideo />
       </TabPanel>
