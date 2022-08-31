@@ -17,6 +17,7 @@ import settingWebsite from 'src/store/event/view/website/settingsStore'
 import agendaWebsite from 'src/store/event/view/website/agendaStore'
 import galleryWebsite from 'src/store/event/view/website/galleryStore'
 import sponsorWebsite from 'src/store/event/view/website/sponsorStore'
+import organiserPartnerWebsite from 'src/store/event/view/website/organiserPartnerStore'
 
 export const store = configureStore({
   reducer: {
@@ -32,7 +33,8 @@ export const store = configureStore({
     settingWebsite,
     agendaWebsite,
     galleryWebsite,
-    sponsorWebsite
+    sponsorWebsite,
+    organiserPartnerWebsite
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

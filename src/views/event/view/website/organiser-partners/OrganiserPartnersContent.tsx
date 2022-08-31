@@ -1,7 +1,217 @@
-import OrganiserPartners from './OrganiserPartners'
+// ** React Imports
+import { useEffect } from 'react'
 
-const OrganiserPartnersContent = () => {
-  return <OrganiserPartners />
+import Box from '@mui/material/Box'
+
+// ** Icon Imports
+import Plus from 'mdi-material-ui/Plus'
+
+// ** Custom Component Imports
+import { OrganiserPartnersAdd } from './OrganiserPartnersAdd'
+import Button from '@mui/material/Button'
+
+import { AppDispatch, RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm, useFieldArray } from 'react-hook-form'
+
+import { array, object, string } from 'yup'
+
+import TextField from '@mui/material/TextField'
+
+import { Card, CardContent, CardHeader } from '@mui/material'
+import { SettingHeaderTypes } from 'src/types/website'
+import { editHeader } from 'src/store/event/view/website/settingsStore'
+import { useRouter } from 'next/router'
+import groupBy from 'lodash/groupBy'
+import flattenDeep from 'lodash/flattenDeep'
+import { updateOrganiserPartner } from 'src/@core/api/organiser-partner-api'
+import slugify from 'slugify'
+import { getOrganiserPartners } from 'src/store/event/view/website/organiserPartnerStore'
+
+interface OrganiserPartnerContentProps {
+  organiserPartnerHeader: SettingHeaderTypes
+  title: string
+  handleChangeHeaderTitle: (value: any) => void
 }
 
-export default OrganiserPartnersContent
+
+const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHeaderTitle }: OrganiserPartnerContentProps) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.organiserPartnerWebsite)
+  const router = useRouter()
+  
+  const { id } = router.query
+
+  const { listOrganiserPartner } = store
+
+
+  const defaultValues = {
+    createOrganiserPartner: listOrganiserPartner
+  }
+
+  const validationSchema = object().shape({
+    createOrganiserPartner: array()
+      .of(
+        object().shape({
+          logoUrl: string().required('Avatar field is required'),
+          name: string().required('Name field is required'),
+          description: string().required('Description field is required')
+        })
+      )
+      .required()
+  })
+
+  const fieldSlugConvert = (value: string) => {
+    if (value == null) {
+      return ''
+    } 
+    return slugify(value, { lower: true })
+  }
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema)
+  })
+
+  const { fields, prepend, remove } = useFieldArray({
+    control,
+    name: 'createOrganiserPartner'
+  })
+
+  const addOrganiserPartnerFiled = () => {
+    prepend({
+      logoUrl: '',
+      name: '',
+      type: '',
+      description: '',
+      id: null
+    })
+  }
+
+  const onSubmit = (data: any) => {   
+    const dataRepo = Object.values(groupBy(data.createOrganiserPartner, 'type'))
+    dataRepo.forEach(async (item: any) => {
+      const categoryId = item[0].type;
+      const params = item.map((element: any) => {
+        if (element.id === null) {
+          delete element.id
+        }
+        delete element.partnerId
+        delete element.updatedAt
+        delete element.createdAt
+        delete element.partnerId
+        return {...element, slug: fieldSlugConvert(element.name)};
+      });
+      await updateOrganiserPartner(categoryId, Number(id), {deleteIds: [], items: params})
+    })
+    dispatch(getOrganiserPartners())
+    dispatch(editHeader({ eventId: Number(id), params: [organiserPartnerHeader] }))
+  }
+
+
+  const handleDeleteOrganiserPartner = (value: any) => {
+    const categoryId = value?.type;
+    const paramsRepo = {
+      description: value?.description,
+      id: value?.partnerId,
+      logoUrl: value?.logoUrl,
+      name: value?.name,
+      slug: fieldSlugConvert(value.name),
+    }
+    const params = {
+      items: [paramsRepo],
+      deleteIds: [value.partnerId],
+    }
+    if (value.partnerId) { 
+      updateOrganiserPartner(categoryId, Number(id), params)
+      dispatch(getOrganiserPartners())
+    }
+  }
+
+
+  useEffect(() => {
+    const organiserPartners = listOrganiserPartner.map(partner => {
+      return partner.partners.map((item: any) => {
+        return { ...item, type: partner.id, partnerId: item.id }
+      })
+    })
+
+    if (organiserPartners) {
+      reset({ createOrganiserPartner: flattenDeep(organiserPartners) })
+    } else {
+      reset({
+        createOrganiserPartner: {
+          logoUrl: '',
+          name: '',
+          description: '',
+          type: '',
+          id: null
+        }
+      })
+    }
+  }, [reset, listOrganiserPartner])
+
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
+      <Card>
+        <CardHeader title='Title' />
+        <CardContent>
+          <TextField
+            fullWidth
+            sx={{ '& .MuiInputBase-input': { color: 'text.secondary', fontWeight: 600 } }}
+            placeholder='Title Header'
+            value={title}
+            onChange={e => handleChangeHeaderTitle(e.target.value)}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader
+          title='List Organiser & Partners'
+          action={
+            <Box>
+              <TextField
+                size='small'
+                placeholder='Search Organiser & Partners'
+                sx={{ mr: 4, mb: 2, maxWidth: '180px' }}
+              />
+              <Button variant='contained' startIcon={<Plus fontSize='small' />} onClick={addOrganiserPartnerFiled}>
+                Add Partners
+              </Button>
+            </Box>
+          }
+        />
+
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} id='organiser-partner-form'>
+            {fields.map((item, index) => {
+              return (
+                <OrganiserPartnersAdd 
+                  key={item.id} 
+                  index={index} 
+                  control={control} 
+                  errors={errors} 
+                  remove={remove} 
+                  handleDeleteOrganiserPartner={handleDeleteOrganiserPartner}
+                  {...item}
+                />
+              )
+            })}
+          </form>
+        </CardContent>
+      </Card>
+    </Box>
+  )
+}
+
+export default OrganiserPartnerContent

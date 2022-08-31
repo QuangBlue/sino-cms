@@ -114,3 +114,28 @@ export interface SponsorSettings {
   description: string
   contactInfo: string
 }
+
+export interface PartnersGroup {
+  id: number
+  name: string
+  slug: string
+  description: string
+  logoUrl: string
+  updatedAt?: string
+  createdAt?: string
+}
+
+export interface OrganiserPartners {
+  id: number
+  label: string
+  updatedAt?: string
+  createdAt?: string
+  partners: PartnersGroup
+}
+
+export interface PartnersType {
+  id: number
+  label: string
+  updatedAt?: string
+  createdAt?: string
+}

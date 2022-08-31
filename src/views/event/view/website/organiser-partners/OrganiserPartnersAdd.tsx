@@ -10,69 +10,25 @@ import Close from 'mdi-material-ui/Close'
 import { ChangeEvent, ElementType, useState } from 'react'
 
 // ** Third Party Imports
-
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
 import { uploadAvatar } from 'src/store/event/view/website/speakerStore'
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/store'
 
-// import { AppDispatch } from 'src/store'
-// import { useDispatch } from 'react-redux'
 
-const ImgStyled = styled('img')(({ theme }) => ({
-  width: '100%',
-  maxWidth: '240px',
-  marginBottom: theme.spacing(4),
-  borderRadius: theme.shape.borderRadius
-}))
+export const OrganiserPartnersAdd = ({ 
+  index, 
+  control, 
+  errors, 
+  remove, 
+  handleDeleteOrganiserPartner,
+  ...props
+}: any) => {
+  const organiserPartnerstore = useSelector((state: RootState) => state.organiserPartnerWebsite)
 
-const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const SponsorAction = styled(Box)<BoxProps>(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  padding: theme.spacing(2, 1),
-  borderLeft: `1px solid ${theme.palette.divider}`
-}))
-
-const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
-  paddingRight: 0,
-  display: 'flex',
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
-  '& .col-title': {
-    top: '-1.5rem',
-    position: 'absolute'
-  },
-  '& .MuiInputBase-input': {
-    color: theme.palette.text.secondary
-  },
-  [theme.breakpoints.down('lg')]: {
-    '& .col-title': {
-      top: '0',
-      position: 'relative'
-    }
-  }
-}))
-
-export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) => {
-  // const dispatch = useDispatch<AppDispatch>()
-
-  // ** Deletes form
-  const deleteForm = async () => {
-    remove(index)
-
-    // if (id != 0) {
-    //   await dispatch(deleteSpeaker(id))
-    // }
-  }
+  const { listPartnerType } = organiserPartnerstore
 
   const [value, setValue] = useState<string>('')
 
@@ -88,6 +44,11 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
         onChange(urlImg.data)
       }
     }
+  }
+
+  const handleDelete = () => {
+    remove(index)
+    handleDeleteOrganiserPartner(props)
   }
 
   return (
@@ -121,7 +82,7 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
               Image
             </Typography>
             <Controller
-              name={`createSponsors.${index}.avatar`}
+              name={`createOrganiserPartner.${index}.logoUrl`}
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => {
@@ -141,9 +102,9 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
                         e.currentTarget.src = '/images/avatars/1.png'
                       }}
                     />
-                    {errors.createSponsors && errors.createSponsors[index]?.avatar && (
+                    {errors.createOrganiserPartner && errors.createOrganiserPartner[index]?.logoUrl && (
                       <FormHelperText sx={{ color: 'error.main', mb: 2 }}>
-                        {errors.createSponsors[index].avatar.message}
+                        {errors.createOrganiserPartner[index].logoUrl.message}
                       </FormHelperText>
                     )}
                     <Box>
@@ -191,7 +152,7 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
 
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
-                name={`createSponsors.${index}.sponsorName`}
+                name={`createOrganiserPartner.${index}.name`}
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -200,7 +161,7 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
                       autoComplete: 'new-password'
                     }}
                     value={value}
-                    label='Sponsor Name'
+                    label='Full Name'
                     onChange={onChange}
                     placeholder='Full Name'
                     error={Boolean(errors.name)}
@@ -208,32 +169,63 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
                   />
                 )}
               />
-              {errors.createSponsors && errors.createSponsors[index]?.sponsorName && (
+              {errors.createOrganiserPartner && errors.createOrganiserPartner[index]?.name && (
                 <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-full-name'>
-                  {errors.createSponsors[index].sponsorName.message}
+                  {errors.createOrganiserPartner[index].name.message}
                 </FormHelperText>
               )}
             </FormControl>
 
-            <FormControl fullWidth sx={{ mb: 4 }}>
-              <InputLabel id='controlled-select-label'>Type</InputLabel>
-              <Select
+            <FormControl 
+              fullWidth 
+              sx={{ mb: 4 }}
+              error={Boolean(
+                errors?.createOrganiserPartner &&
+                  errors?.createOrganiserPartner?.[index]?.type
+              )}
+            >
+              <Controller
+                name={`createOrganiserPartner.${index}.type`}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <>
+                    <InputLabel id='controlled-select-label'>Type</InputLabel>
+                    <Select
+                      value={value || ''}
+                      label='Type'
+                      id='controlled-select'
+                      onChange={onChange}
+                      labelId='controlled-select-label'
+                    >
+                      {listPartnerType?.length > 0 &&
+                        listPartnerType?.map(item => (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.label}
+                          </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                )}
+              />
+              {/* <Select
                 value={value}
                 label='Type'
                 id='controlled-select'
                 onChange={handleChange}
                 labelId='controlled-select-label'
               >
-                <MenuItem value='diamond'>Organised</MenuItem>
-                <MenuItem value='gold'>Supported</MenuItem>
-                <MenuItem value='silver'>Event Partner</MenuItem>
-                <MenuItem value='bronze'>Media Partners</MenuItem>
-              </Select>
+                {listPartnerType?.length > 0 &&
+                  listPartnerType?.map(item => (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+              </Select> */}
             </FormControl>
 
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
-                name={`createSponsors.${index}.introduction`}
+                name={`createOrganiserPartner.${index}.description`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <TextField
@@ -246,21 +238,21 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
                     label='Introduction'
                     onChange={onChange}
                     placeholder='Introduction'
-                    error={Boolean(errors.introduction)}
-                    aria-describedby='validation-schema-introduction'
+                    error={Boolean(errors.description)}
+                    aria-describedby='validation-schema-description'
                   />
                 )}
               />
-              {errors.introduction && (
-                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-introduction'>
-                  {errors.introduction.message}
+              {errors.description && (
+                <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-description'>
+                  {errors.description.message}
                 </FormHelperText>
               )}
             </FormControl>
           </Grid>
         </Grid>
         <SponsorAction>
-          <IconButton size='small' onClick={deleteForm}>
+          <IconButton size='small' onClick={handleDelete}>
             <Close fontSize='small' />
           </IconButton>
         </SponsorAction>
@@ -268,3 +260,46 @@ export const OrganiserPartnersAdd = ({ index, control, errors, remove }: any) =>
     </Grid>
   )
 }
+
+const ImgStyled = styled('img')(({ theme }) => ({
+  width: '100%',
+  maxWidth: '240px',
+  marginBottom: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius
+}))
+
+const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    textAlign: 'center'
+  }
+}))
+
+const SponsorAction = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  padding: theme.spacing(2, 1),
+  borderLeft: `1px solid ${theme.palette.divider}`
+}))
+
+const RepeatingContent = styled(Grid)<GridProps>(({ theme }) => ({
+  paddingRight: 0,
+  display: 'flex',
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid ${theme.palette.divider}`,
+  '& .col-title': {
+    top: '-1.5rem',
+    position: 'absolute'
+  },
+  '& .MuiInputBase-input': {
+    color: theme.palette.text.secondary
+  },
+  [theme.breakpoints.down('lg')]: {
+    '& .col-title': {
+      top: '0',
+      position: 'relative'
+    }
+  }
+}))

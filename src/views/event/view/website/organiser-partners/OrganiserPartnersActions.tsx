@@ -19,7 +19,7 @@ import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 
-// import { getSpeaker } from 'src/store/event/view/website/speakerStore'
+import { SettingHeaderTypes } from 'src/types/website'
 
 const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -27,13 +27,21 @@ const OptionsWrapper = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-between'
 }))
 
-const OrganiserPartnersActions = () => {
+interface AddActionProps {
+  organiserPartnerHeader: SettingHeaderTypes
+  onToggleOrganiserPartnerHeader: (checked: boolean) => void
+}
+
+const OrganiserPartnersActions = ({
+  organiserPartnerHeader,
+  onToggleOrganiserPartnerHeader
+}: AddActionProps) => {
   // ** Hook
   const { i18n } = useTranslation()
   const router = useRouter()
   const { selected } = router.query
 
-  // const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
+  // const organiserPartnerWebsite = useSelector((state: RootState) => state.organiserPartnerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
 
   // const dispatch = useDispatch<AppDispatch>()
@@ -52,7 +60,11 @@ const OrganiserPartnersActions = () => {
             <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
               Hide / Show
             </InputLabel>
-            <Switch id='go-live' />
+            <Switch 
+              id='go-live' 
+              checked={organiserPartnerHeader.isPublished} 
+              onChange={e => onToggleOrganiserPartnerHeader(e.target.checked)}
+            />
           </OptionsWrapper>
 
           <OptionsWrapper sx={{ mb: 4 }}>
@@ -74,7 +86,12 @@ const OrganiserPartnersActions = () => {
             </FormControl>
           </OptionsWrapper>
 
-          <Button type='submit' form='about-us-form' fullWidth sx={{ mb: 3.5 }} variant='contained'>
+          <Button 
+            type='submit' 
+            form='organiser-partner-form' 
+            fullWidth sx={{ mb: 3.5 }} 
+            variant='contained'
+          >
             Save
           </Button>
           <Link
