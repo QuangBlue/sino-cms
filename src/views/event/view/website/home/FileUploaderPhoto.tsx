@@ -61,16 +61,26 @@ const FileUploaderPhoto = () => {
     },
     onDropRejected: fileRejections => {
       fileRejections.map((file: FileRejection) => {
-        toast.error(`Files ${file.file.name} larger than 2 GB so can not upload.`, {
-          duration: 2000
-        })
+        toast.error(
+          `Files ${file.file.name} larger than 2 GB so can not upload.`,
+          {
+            duration: 2000
+          }
+        )
       })
     }
   })
 
   const renderFilePreview = (file: FileProp) => {
     if (file.type.startsWith('image')) {
-      return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
+      return (
+        <img
+          width={38}
+          height={38}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
     } else {
       return <FileDocumentOutline />
     }
@@ -113,16 +123,30 @@ const FileUploaderPhoto = () => {
     <Fragment>
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: ['column', 'column', 'row'],
+            alignItems: 'center'
+          }}
+        >
           <Img width={300} alt='Upload img' src='/images/misc/upload.png' />
-          <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
-            <HeadingTypography variant='h5'>Drop files here or click to upload.</HeadingTypography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: ['center', 'center', 'inherit']
+            }}
+          >
+            <HeadingTypography variant='h5'>
+              Drop files here or click to upload.
+            </HeadingTypography>
             <Typography color='textSecondary'>
               Drop files here or click{' '}
               <Link href='/' onClick={handleLinkClick}>
                 browse
               </Link>{' '}
-              thorough your machine
+              through your machine
             </Typography>
           </Box>
         </Box>
@@ -131,7 +155,11 @@ const FileUploaderPhoto = () => {
         <Fragment>
           <List>{fileList}</List>
           <div className='buttons'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+            <Button
+              color='error'
+              variant='outlined'
+              onClick={handleRemoveAllFiles}
+            >
               Remove All
             </Button>
             <Button variant='contained'>Upload Files</Button>

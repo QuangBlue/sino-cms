@@ -152,14 +152,14 @@ const FileUploaderVideo = ({
             }}
           >
             <HeadingTypography variant='h5'>
-              Drop files here or click to upload.
+              Drop file here or click to upload.
             </HeadingTypography>
             <Typography color='textSecondary'>
-              Drop files here or click{' '}
+              Drop file here or click{' '}
               <Link href='/' onClick={handleLinkClick}>
                 browse
               </Link>{' '}
-              thorough your machine
+              through your machine
             </Typography>
           </Box>
         </Box>
@@ -173,7 +173,7 @@ const FileUploaderVideo = ({
               variant='outlined'
               onClick={handleRemoveAllFiles}
             >
-              Remove All
+              Remove
             </Button>
             <LoadingButton
               loading={isLoading}
@@ -181,7 +181,7 @@ const FileUploaderVideo = ({
               disabled={files?.length === 0}
               type='submit'
             >
-              Upload Files
+              Upload File
             </LoadingButton>
           </div>
         </Fragment>
