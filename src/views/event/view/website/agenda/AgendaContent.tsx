@@ -32,6 +32,9 @@ import {
   editHeader
 } from 'src/store/event/view/website/settingsStore'
 
+import orderBy from 'lodash/orderBy'
+import { formatDateFromTime } from 'src/@core/utils/dateTime'
+
 const AgendaContent = ({}) => {
   const [open, setOpen] = useState<boolean>(false)
   const [editParams, setEditParams] = useState<any>(null)
@@ -146,12 +149,22 @@ const AgendaContent = ({}) => {
               <CardContent>
                 {agendaList?.length > 0 &&
                   agendaList.map(agenda => {
+                    const sortedStages = orderBy(
+                      agenda.stages,
+                      [
+                        item => {
+                          return formatDateFromTime(item.timeStart)
+                        }
+                      ],
+                      ['asc']
+                    )
+
                     return (
                       <AgendaItem
                         key={agenda.id}
                         title={agenda.name}
                         agendaId={agenda.id}
-                        stages={agenda.stages}
+                        stages={sortedStages}
                         handleDeleteAgenda={handleDeleteAgenda}
                         handleOpenEditModal={handleOpenEditModal}
                         agenda={agenda}

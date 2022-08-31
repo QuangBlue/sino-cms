@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, SyntheticEvent } from 'react'
+import { Fragment, SyntheticEvent } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem'
 import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Typography, { TypographyProps } from '@mui/material/Typography'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // ** Icons Imports
 import Close from 'mdi-material-ui/Close'
@@ -46,12 +47,22 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
   }
 }))
 
-const FileUploaderVideo = () => {
+interface FileUploaderVideoProps {
+  files: File[] | any[]
+  setFiles: (file: any) => void
+  isLoading: boolean
+}
+
+const FileUploaderVideo = ({
+  setFiles,
+  files,
+  isLoading
+}: FileUploaderVideoProps) => {
   // ** State
-  const [files, setFiles] = useState<File[]>([])
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
     maxSize: 2000000000,
     accept: {
       'video/*': ['.mp4', '.mkv']
@@ -61,16 +72,26 @@ const FileUploaderVideo = () => {
     },
     onDropRejected: fileRejections => {
       fileRejections.map((file: FileRejection) => {
-        toast.error(`Files ${file.file.name} larger than 2 MB so can not upload.`, {
-          duration: 2000
-        })
+        toast.error(
+          `Files ${file.file.name} larger than 2 GB so can not upload.`,
+          {
+            duration: 2000
+          }
+        )
       })
     }
   })
 
   const renderFilePreview = (file: FileProp) => {
     if (file.type.startsWith('image')) {
-      return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
+      return (
+        <img
+          width={38}
+          height={38}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
     } else {
       return <FileDocumentOutline />
     }
@@ -95,9 +116,11 @@ const FileUploaderVideo = () => {
           </Typography>
         </div>
       </div>
-      <IconButton onClick={() => handleRemoveFile(file)}>
-        <Close fontSize='small' />
-      </IconButton>
+      {!isLoading && (
+        <IconButton onClick={() => handleRemoveFile(file)}>
+          <Close fontSize='small' />
+        </IconButton>
+      )}
     </ListItem>
   ))
 
@@ -113,10 +136,24 @@ const FileUploaderVideo = () => {
     <Fragment>
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: ['column', 'column', 'row'],
+            alignItems: 'center'
+          }}
+        >
           <Img width={300} alt='Upload img' src='/images/misc/upload.png' />
-          <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
-            <HeadingTypography variant='h5'>Drop files here or click to upload.</HeadingTypography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: ['center', 'center', 'inherit']
+            }}
+          >
+            <HeadingTypography variant='h5'>
+              Drop files here or click to upload.
+            </HeadingTypography>
             <Typography color='textSecondary'>
               Drop files here or click{' '}
               <Link href='/' onClick={handleLinkClick}>
@@ -131,10 +168,21 @@ const FileUploaderVideo = () => {
         <Fragment>
           <List>{fileList}</List>
           <div className='buttons'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+            <Button
+              color='error'
+              variant='outlined'
+              onClick={handleRemoveAllFiles}
+            >
               Remove All
             </Button>
-            <Button variant='contained'>Upload Files</Button>
+            <LoadingButton
+              loading={isLoading}
+              variant='contained'
+              disabled={files?.length === 0}
+              type='submit'
+            >
+              Upload Files
+            </LoadingButton>
           </div>
         </Fragment>
       ) : null}

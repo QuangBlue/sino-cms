@@ -18,7 +18,7 @@ import {
 import { ChevronDown, ChevronUp, Plus } from 'mdi-material-ui'
 import { useState } from 'react'
 import DialogUploadPhoto from './DialogUploadPhoto'
-import DialogUploadVideo from './DialogUploadVideo'
+import DialogUploadVideo from './videos/DialogUploadVideo'
 import CircularProgress from '@mui/material/CircularProgress'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import Tooltip from '@mui/material/Tooltip'
@@ -35,7 +35,6 @@ import { getPhotos, deletePhoto, deleteAlbum } from 'src/@core/api/gallery-api'
 import toast from 'react-hot-toast'
 
 interface AlbumItemProps {
-  isVideo?: boolean
   name: string
   year: number
   albumId: number | undefined
@@ -64,7 +63,7 @@ const AlbumItem = (prop: AlbumItemProps) => {
   const handleClickOpen = () => setOpen(true)
   const handleDialogClose = () => setOpen(false)
 
-  const { isVideo, name, albumId, year, handleOpenEditAlbumModal } = prop
+  const { name, albumId, year, handleOpenEditAlbumModal } = prop
 
   useEffect(() => {
     if (albumId && collapsed) {
@@ -99,7 +98,9 @@ const AlbumItem = (prop: AlbumItemProps) => {
 
   const handleDeletePhoto = useCallback(
     (photoId: number) => {
-      const newPhotos = photos.photos.filter((photo: any) => photo.id !== photoId)
+      const newPhotos = photos.photos.filter(
+        (photo: any) => photo.id !== photoId
+      )
       setPhotos({ ...photos, photos: newPhotos })
       deletePhoto(photoId)
     },
@@ -135,7 +136,7 @@ const AlbumItem = (prop: AlbumItemProps) => {
                   onClick={handleClickOpen}
                   color='secondary'
                 >
-                  {isVideo ? 'Add Video' : 'Add Photo'}
+                  Add Photo
                 </Button>
               </MenuItem>
               <MenuItem>
@@ -147,7 +148,7 @@ const AlbumItem = (prop: AlbumItemProps) => {
                   onClick={() => setOpenDeletedModal(true)}
                   color='secondary'
                 >
-                  {isVideo ? 'Delete Video' : 'Delete Album'}
+                  Delete Album
                 </Button>
               </MenuItem>
               <MenuItem>
@@ -156,7 +157,13 @@ const AlbumItem = (prop: AlbumItemProps) => {
                   size='small'
                   variant='text'
                   startIcon={<EditIcon fontSize='small' />}
-                  onClick={() => handleOpenEditAlbumModal({ id: Number(albumId), name, year })}
+                  onClick={() =>
+                    handleOpenEditAlbumModal({
+                      id: Number(albumId),
+                      name,
+                      year
+                    })
+                  }
                   color='secondary'
                 >
                   Edit Album
@@ -170,16 +177,30 @@ const AlbumItem = (prop: AlbumItemProps) => {
               sx={{ color: 'text.secondary' }}
               onClick={() => setCollapsed(!collapsed)}
             >
-              {!collapsed ? <ChevronDown fontSize='small' /> : <ChevronUp fontSize='small' />}
+              {!collapsed ? (
+                <ChevronDown fontSize='small' />
+              ) : (
+                <ChevronUp fontSize='small' />
+              )}
             </IconButton>
           </Box>
         }
       />
       <Collapse in={collapsed}>
         <CardContent>
-          <Box component='ul' sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', p: 0, m: 0 }}>
+          <Box
+            component='ul'
+            sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', p: 0, m: 0 }}
+          >
             {isLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
+                }}
+              >
                 <CircularProgress disableShrink />
               </Box>
             ) : (
@@ -187,7 +208,12 @@ const AlbumItem = (prop: AlbumItemProps) => {
                 return (
                   <Card sx={{ maxWidth: 345 }} key={photo.id}>
                     <CardActionArea>
-                      <CardMedia component='img' height={220} src={photo.imgUrl} alt='event picture' />
+                      <CardMedia
+                        component='img'
+                        height={220}
+                        src={photo.imgUrl}
+                        alt='event picture'
+                      />
 
                       <Tooltip title='Delete'>
                         <IconButton
@@ -209,11 +235,11 @@ const AlbumItem = (prop: AlbumItemProps) => {
         </CardContent>
       </Collapse>
 
-      {isVideo ? (
-        <DialogUploadVideo handleDialogClose={handleDialogClose} open={open} />
-      ) : (
-        <DialogUploadPhoto handleDialogClose={handleDialogClose} open={open} handleAddPhotos={handleAddPhotos} />
-      )}
+      <DialogUploadPhoto
+        handleDialogClose={handleDialogClose}
+        open={open}
+        handleAddPhotos={handleAddPhotos}
+      />
 
       {openDeletedModal && (
         <DeleteAlbumModal
@@ -229,7 +255,12 @@ const AlbumItem = (prop: AlbumItemProps) => {
 
 export default AlbumItem
 
-const DeleteAlbumModal = ({ open, handleClose, handleDelete, isLoading }: DeleteAlbumModalProps) => {
+const DeleteAlbumModal = ({
+  open,
+  handleClose,
+  handleDelete,
+  isLoading
+}: DeleteAlbumModalProps) => {
   return (
     <Dialog
       open={open}
@@ -237,10 +268,13 @@ const DeleteAlbumModal = ({ open, handleClose, handleDelete, isLoading }: Delete
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title'>{'Confirm Delete Album'}</DialogTitle>
+      <DialogTitle id='alert-dialog-title'>
+        {'Confirm Delete Album'}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
-          Are you sure you want to delete this album? this will delete all photos in this album.
+          Are you sure you want to delete this album? this will delete all
+          photos in this album.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
