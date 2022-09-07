@@ -1,72 +1,47 @@
-import * as React from 'react'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-
-import Typography from '@mui/material/Typography'
-
-import Chip from '@mui/material/Chip'
-import MenuPopover from 'src/layouts/components/menu'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import EditIcon from '@mui/icons-material/Edit'
-import { SUCCESS } from 'src/constants/upload-status'
-
+// ** React Imports
 import ReactPlayer from 'react-player'
 
-export default function VideoCard({
-  video,
-  handleDeleteVideo,
-  handleOpenEditModal
-}: any) {
-  const title =
-    video.process.status !== SUCCESS ? (
-      <Typography>
-        {video.name} <Chip label='Video is being processed' />
-      </Typography>
-    ) : (
-      video.name
-    )
+// ** MUI Imports
+import Dialog from '@mui/material/Dialog'
+import IconButton from '@mui/material/IconButton'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
 
-  const isCompleted = video.process.status === SUCCESS
+// ** Icons Imports
+import Close from 'mdi-material-ui/Close'
+
+const VideoModal = ({ link, open, handleClose }: any) => {
+  // ** State
 
   return (
-    <Card>
-      <CardHeader
-        action={
-          <MenuPopover>
-            <MenuItem>
-              <Button
-                sx={{ mr: 10 }}
-                size='small'
-                variant='text'
-                startIcon={<EditIcon fontSize='small' />}
-                onClick={() => handleOpenEditModal(video)}
-                color='secondary'
-              >
-                Edit Video
-              </Button>
-            </MenuItem>
-            <MenuItem>
-              <Button
-                sx={{ mr: 10 }}
-                size='small'
-                variant='text'
-                startIcon={<HighlightOffIcon fontSize='small' />}
-                onClick={() => handleDeleteVideo(Number(video.id))}
-                color='secondary'
-              >
-                Delete Title
-              </Button>
-            </MenuItem>
-          </MenuPopover>
-        }
-        title={title}
-      />
-      <CardContent>
-        <ReactPlayer url={video.link} controls={isCompleted ? true : false} />
-      </CardContent>
-    </Card>
+    <div>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby='full-screen-dialog-title'
+        open={open}
+        maxWidth={'md'}
+        fullWidth={true}
+      >
+        <DialogTitle id='full-screen-dialog-title'>
+          <IconButton
+            aria-label='close'
+            onClick={handleClose}
+            sx={{
+              top: 8,
+              right: 10,
+              position: 'absolute',
+              color: theme => theme.palette.grey[500]
+            }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <ReactPlayer url={link} controls width='100%' />
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
+
+export default VideoModal
