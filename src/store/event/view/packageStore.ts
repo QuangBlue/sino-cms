@@ -1,17 +1,119 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit'
 import axiosClient from 'src/configs/axiosClient'
-import { PackageTypes } from 'src/types/eventTypes'
+import {
+  CreatePackageParams,
+  DeletePackageParams,
+  PackageTypes,
+  ResumePackageParams,
+  UpdatePackageParams
+} from 'src/types/eventTypes'
 
-// interface Redux {
-//   getState: any
-//   dispatch: Dispatch<any>
-// }
+// ** Third Party Imports
+import toast from 'react-hot-toast'
 
-export const getPackage = createAsyncThunk('fetchPackage', async (eventName: string) => {
-  const response = await axiosClient.get(`/package?eventName=${eventName}`)
+interface Redux {
+  getState: any
+  dispatch: Dispatch<any>
+}
 
-  return response.data
-})
+export const getPackage = createAsyncThunk(
+  'fetchPackage',
+  async (eventName: string) => {
+    const response = await axiosClient.get(`/package?eventName=${eventName}`)
+
+    return response.data
+  }
+)
+
+export const createPackage = createAsyncThunk(
+  'createPackage',
+  async (props: CreatePackageParams, { dispatch }: Redux) => {
+    await axiosClient
+      .post(`/package?eventName=${props.eventName}`, props.params)
+      .then(() => {
+        toast.success('Created Package Successfully')
+        dispatch(getPackage(props.eventName))
+        props.handleClickCloseModal()
+      })
+      .catch(error => {
+        if (error.response) {
+          toast.error(error.response.data.message)
+        }
+      })
+  }
+)
+
+export const updatePackage = createAsyncThunk(
+  'updatePackage',
+  async (props: UpdatePackageParams, { dispatch }: Redux) => {
+    await axiosClient
+      .put(`/package/${props.packageId}`, props.params)
+      .then(() => {
+        toast.success('Update Successfully')
+        dispatch(getPackage(props.eventName))
+        props.handleClickCloseModal()
+      })
+      .catch(error => {
+        if (error.response) {
+          toast.error(error.response.data.message)
+        }
+      })
+  }
+)
+
+export const resumePackage = createAsyncThunk(
+  'updatePackage',
+  async (props: ResumePackageParams, { dispatch }: Redux) => {
+    await axiosClient
+      .put(`/package/${props.packageId}`, { status: true })
+      .then(() => {
+        toast.success('Resume Successfully')
+        dispatch(getPackage(props.eventName))
+        props.handleClickCloseModal()
+      })
+      .catch(error => {
+        if (error.response) {
+          toast.error(error.response.data.message)
+        }
+      })
+  }
+)
+
+export const deletePackage = createAsyncThunk(
+  'deletePackage',
+  async (props: DeletePackageParams, { dispatch }: Redux) => {
+    await axiosClient
+      .delete(`/package/${props.packageId}`)
+      .then(() => {
+        toast.success('Delete Successfully')
+        dispatch(getPackage(props.eventName))
+        props.handleClickCloseModal()
+      })
+      .catch(error => {
+        if (error.response) {
+          toast.error(error.response.data.message)
+        }
+      })
+  }
+)
+
+export const addPricePackage = createAsyncThunk(
+  'addPricePackage',
+  async (props: CreatePackageParams, { dispatch }: Redux) => {
+    await axiosClient
+      .post(`/package?eventName=${props.eventName}`, props.params)
+      .then(() => {
+        toast.success('Add Price Package Successfully')
+        dispatch(getPackage(props.eventName))
+        props.handleClickCloseModal()
+      })
+      .catch(error => {
+        if (error.response) {
+          toast.error(error.response.data.message)
+        }
+      })
+  }
+)
 
 export const packageSlice = createSlice({
   name: 'packageEvent',

@@ -16,4 +16,56 @@ const upload = async (file: File, onUploadProgress: any) => {
     return { success: false }
   }
 }
-export { upload }
+
+const uploadVideo = async (file: File, eventName: string) => {
+  const formData = new FormData()
+  formData.append('files', file)
+  try {
+    const result = await axiosClient.post(
+      `upload/video?eventName=${eventName}`,
+      formData
+    )
+
+    return { success: true, data: result.data.data }
+  } catch (err) {
+    return { success: false }
+  }
+}
+
+const uploadVideoTitle = async (videoId: number, params: any) => {
+  try {
+    const result = await axiosClient.put(`/video/${videoId}`, params)
+
+    return result.data
+  } catch (err) {
+    return { success: false }
+  }
+}
+
+const checkUploadVideoStatus = async (videoId: number) => {
+  try {
+    const result = await axiosClient.get(`/video/${videoId}`)
+
+    return result.data.data
+  } catch (err) {
+    return false
+  }
+}
+
+const deleteVideo = async (videoId: number) => {
+  try {
+    const result = await axiosClient.delete(`/video/${videoId}`)
+
+    return result
+  } catch (err) {
+    return false
+  }
+}
+
+export {
+  upload,
+  uploadVideo,
+  uploadVideoTitle,
+  deleteVideo,
+  checkUploadVideoStatus
+}

@@ -3,16 +3,24 @@ import toast from 'react-hot-toast'
 import axiosClient from 'src/configs/axiosClient'
 import { AlbumTypes, AddPhotoTypes } from 'src/types/website'
 
-export const getAlbum = createAsyncThunk('galleryWebsite/getAlbum', async (eventName: string) => {
-  const response = await axiosClient.get(`gallery/album?eventName=${eventName}`)
+export const getAlbum = createAsyncThunk(
+  'galleryWebsite/getAlbum',
+  async (eventName: string) => {
+    const response = await axiosClient.get(
+      `gallery/album?eventName=${eventName}`
+    )
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 export const addAlbum = createAsyncThunk(
   'galleryWebsite/editHeader',
   async ({ eventName, params }: { eventName: string; params: AlbumTypes }) => {
-    const response = await axiosClient.post(`gallery/album?eventName=${eventName}`, params)
+    const response = await axiosClient.post(
+      `gallery/album?eventName=${eventName}`,
+      params
+    )
 
     return response.data
   }
@@ -30,23 +38,41 @@ export const editAlbum = createAsyncThunk(
 export const addPhotos = createAsyncThunk(
   'galleryWebsite/addPhotos',
   async ({ albumId, params }: { albumId: number; params: AddPhotoTypes }) => {
-    const response = await axiosClient.post(`gallery/album/photo?albumId=${albumId}`, { items: params })
+    const response = await axiosClient.post(
+      `gallery/album/photo?albumId=${albumId}`,
+      { items: params }
+    )
 
     return response.data
   }
 )
 
-export const getPhotosByAlbumId = createAsyncThunk('galleryWebsite/getPhotosByAlbumId', async (albumId: number) => {
-  const response = await axiosClient.get(`gallery/album/photo?albumId=${albumId}`)
+export const getPhotosByAlbumId = createAsyncThunk(
+  'galleryWebsite/getPhotosByAlbumId',
+  async (albumId: number) => {
+    const response = await axiosClient.get(
+      `gallery/album/photo?albumId=${albumId}`
+    )
 
-  return response.data
-})
+    return response.data
+  }
+)
+
+export const getVideos = createAsyncThunk(
+  'galleryWebsite/getVideos',
+  async (eventName: string) => {
+    const response = await axiosClient.get(`video?eventName=${eventName}`)
+
+    return response.data
+  }
+)
 
 export const galleryWebsiteSlice = createSlice({
   name: 'galleryWebsite',
   initialState: {
     albums: [] as AlbumTypes[],
-    isLoading: true
+    isLoading: true,
+    videos: [] as any[]
   },
   reducers: {},
 
@@ -83,6 +109,10 @@ export const galleryWebsiteSlice = createSlice({
       .addCase(editAlbum.rejected, state => {
         state.isLoading = false
         toast.error('Something went wrong!')
+      })
+
+      .addCase(getVideos.fulfilled, (state, action) => {
+        state.videos = action.payload.data
       })
   }
 })

@@ -17,11 +17,14 @@ interface Redux {
 }
 
 // ** Fetch Agent Detail
-export const fetchAgentDetail = createAsyncThunk('agentDetail/fetchData', async (id: number) => {
-  const response = await axiosClient.get(`/agent/${id}`)
+export const fetchAgentDetail = createAsyncThunk(
+  'agentDetail/fetchData',
+  async (id: number) => {
+    const response = await axiosClient.get(`/agent/${id}`)
 
-  return response
-})
+    return response
+  }
+)
 
 // ** Edit Agent Detail
 export const editAgentDetail = createAsyncThunk(
@@ -48,6 +51,73 @@ export const editAgentDetail = createAsyncThunk(
         error: 'Error when edit Agent'
       })
     }
+  }
+)
+
+// ** Delete Company
+export const deleteCompany = createAsyncThunk(
+  'company/deleteCompany',
+  async (id: number, { dispatch, getState }: Redux) => {
+    const promise = axiosClient.delete('/company/' + id).then(() => {
+      dispatch(fetchAgentDetail(getState().agentDetail.agentData.id))
+    })
+
+    toast.promise(promise, {
+      loading: 'Loading',
+      success: 'Delete Company Successfully',
+      error: 'Error when delete Agent'
+    })
+  }
+)
+
+// ** Resume Company
+export const resumeCompany = createAsyncThunk(
+  'company/resumeCompany',
+  async (id: number, { dispatch, getState }: Redux) => {
+    const promise = axiosClient
+      .put(`/company/${id}`, { status: true })
+      .then(() => {
+        dispatch(fetchAgentDetail(getState().agentDetail.agentData.id))
+      })
+
+    toast.promise(promise, {
+      loading: 'Request Resume Company',
+      success: 'Resume Company Successfully',
+      error: 'Error when Resume Company'
+    })
+  }
+)
+
+// ** Delete Event
+export const deleteEvent = createAsyncThunk(
+  'companyDetail/deleteEvent',
+  async (eventID: number, { dispatch, getState }: Redux) => {
+    const promise = axiosClient.delete(`/event/${eventID}`).then(() => {
+      dispatch(fetchAgentDetail(getState().agentDetail.agentData.id))
+    })
+
+    toast.promise(promise, {
+      loading: 'Request Delete Event',
+      success: 'Delete Event Successfully',
+      error: 'Error when Delete Event'
+    })
+  }
+)
+
+// ** Resume Event
+export const resumeEvent = createAsyncThunk(
+  'companyDetail/resumeEvent',
+  async (eventID: number, { dispatch, getState }: Redux) => {
+    const params = { status: true }
+    const promise = axiosClient.put(`/event/${eventID}`, params).then(() => {
+      dispatch(fetchAgentDetail(getState().agentDetail.agentData.id))
+    })
+
+    toast.promise(promise, {
+      loading: 'Request Resume Event',
+      success: 'Resume Event Successfully',
+      error: 'Error when Resume Event'
+    })
   }
 )
 

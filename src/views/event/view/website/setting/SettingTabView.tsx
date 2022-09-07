@@ -3,10 +3,13 @@ import MenuSetting from './MenuSetting'
 import StylesSite from './StylesSite'
 
 import { Box, Grid } from '@mui/material'
-import { getHeaders, editHeader, HeaderParams } from 'src/store/event/view/website/settingsStore'
+import {
+  getHeaders,
+  editHeader,
+  HeaderParams
+} from 'src/store/event/view/website/settingsStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-
 import { AppDispatch, RootState } from 'src/store'
 
 export default function SettingTabView() {
@@ -41,7 +44,11 @@ export default function SettingTabView() {
     <Box sx={{ my: 4, mx: 4 }}>
       <Grid container spacing={6}>
         <Grid item xs={12} sm={6} md={6}>
-          <MenuSetting headers={headers} handleToggleHeader={handleToggleHeader} isLoading={isLoading} />
+          <MenuSetting
+            headers={headers}
+            handleToggleHeader={handleToggleHeader}
+            isLoading={isLoading}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <StylesSite />

@@ -1,13 +1,14 @@
 import { SyntheticEvent, useState } from 'react'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
+import { FilmstripBoxMultiple, FolderMultipleImage } from 'mdi-material-ui'
+
 import { styled } from '@mui/material/styles'
 import TabContext from '@mui/lab/TabContext'
 import Tab from '@mui/material/Tab'
 import TabPanel from '@mui/lab/TabPanel'
-import { FilmstripBoxMultiple, FolderMultipleImage } from 'mdi-material-ui'
-import GalleryPhoto from './GalleryPhoto'
 
-// import GalleryVideo from './GalleryVideo'
+import GalleryPhoto from './photos/GalleryPhoto'
+import GalleryVideo from './videos/GalleryVideo'
 
 const GalleryContent = () => {
   const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
@@ -36,16 +37,23 @@ const GalleryContent = () => {
   return (
     <TabContext value={value}>
       <TabList onChange={handleChange} aria-label='customized tabs example'>
-        <Tab value='photo' label='Photo' icon={<FolderMultipleImage sx={{ fontSize: '18px' }} />} />
-        <Tab value='video' label='Video' icon={<FilmstripBoxMultiple sx={{ fontSize: '18px' }} />} />
+        <Tab
+          value='photo'
+          label='Photo'
+          icon={<FolderMultipleImage sx={{ fontSize: '18px' }} />}
+        />
+        <Tab
+          value='video'
+          label='Video'
+          icon={<FilmstripBoxMultiple sx={{ fontSize: '18px' }} />}
+        />
       </TabList>
       <TabPanel value='photo' sx={{ p: 0, width: '100%' }}>
         <GalleryPhoto />
       </TabPanel>
-      {/* TODO: Integrate api API for gallery videos */}
-      {/* <TabPanel value='video' sx={{ p: 0, width: '100%' }}>
+      <TabPanel value='video' sx={{ p: 0, width: '100%' }}>
         <GalleryVideo />
-      </TabPanel> */}
+      </TabPanel>
     </TabContext>
   )
 }

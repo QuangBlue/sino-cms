@@ -15,17 +15,18 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 
-import FormPackage from './FormPackage'
-import { PackageTypesData } from 'src/types/eventTypes'
+import { PackageTypesData, PriceTypes } from 'src/types/eventTypes'
+import FormAddPrice from './FormAddPrice'
 
 interface DialogAddAlbumProps {
   handleDialogClose: () => void
   open: boolean
   dataPackageSelect: PackageTypesData | null
+  priceSelected: PriceTypes | null
 }
 
 const DialogAddPackage = (props: DialogAddAlbumProps) => {
-  const { handleDialogClose, open, dataPackageSelect } = props
+  const { handleDialogClose, open, dataPackageSelect, priceSelected } = props
 
   return (
     <DatePickerWrapper>
@@ -46,13 +47,16 @@ const DialogAddPackage = (props: DialogAddAlbumProps) => {
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant='h5' sx={{ mb: 3, lineHeight: '2rem' }}>
-              {dataPackageSelect ? ' Edit Package' : ' Add Package'}
+              {priceSelected
+                ? 'Edit Price'
+                : `Add Price to Package ${dataPackageSelect?.name}`}
             </Typography>
           </Box>
 
-          <FormPackage
+          <FormAddPrice
             handleDialogClose={handleDialogClose}
             dataPackageSelect={dataPackageSelect}
+            priceSelected={priceSelected}
           />
         </DialogContent>
       </Dialog>

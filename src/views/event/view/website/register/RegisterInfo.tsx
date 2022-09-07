@@ -1,17 +1,23 @@
-import { Box, Button, CardHeader, IconButton, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  CardHeader,
+  IconButton,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { Plus, Pencil, DeleteOutline } from 'mdi-material-ui'
 import * as React from 'react'
 import { useState } from 'react'
 import DialogAddContactInfo from './DialogAddRegister'
-
-interface ContactInfoTypes {
-  companyName: string
-}
-
-interface CellType {
-  row: ContactInfoTypes
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
+import { updateRegister } from 'src/@core/api/register-api'
+import { getRegisters } from 'src/store/event/view/website/registerStore'
+import toast from 'react-hot-toast'
+import { GridRowParams, GridActionsCellItem } from '@mui/x-data-grid'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 
 const defaultColumns = [
   {
@@ -19,62 +25,92 @@ const defaultColumns = [
     field: 'companyName',
     minWidth: 150,
     headerName: 'Company Name',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.companyName || ''}`}</Typography>
-  }
-]
-
-const ContactUs = [
-  {
-    id: 1,
-    companyName: 'CMP Services Asia Limited Ltd'
-  },
-  {
-    id: 2,
-    companyName: 'CONTANGO SHIPPING PTE LTD'
-  },
-  {
-    id: 3,
-    companyName: '住友商事（中国）有限公司'
-  },
-  {
-    id: 4,
-    companyName: 'Macarthur Minerals'
+    renderCell: ({ row }: any) => (
+      <Typography variant='body2'>{`${row?.name || ''}`}</Typography>
+    )
   }
 ]
 
 export default function RegisterInfo() {
   const [open, setOpen] = useState<boolean>(false)
+  const [editParams, setEditParams] = useState<any>(null)
+
   const handleClickOpen = () => setOpen(true)
-  const handleDialogClose = () => setOpen(false)
+  const handleDialogClose = () => {
+    setOpen(false)
+    setEditParams(null)
+  }
+  const registerStore = useSelector((state: RootState) => state.registerWebsite)
+  const eventStore = useSelector((state: RootState) => state.eventDetail)
+  const dispatch = useDispatch<AppDispatch>()
+
+  const { id } = eventStore?.eventData
+  const { isLoading, registerList } = registerStore
 
   const [pageSize, setPageSize] = useState<number>(10)
 
   const columns = [
     ...defaultColumns,
     {
-      flex: 0.1,
-      minWidth: 50,
-      sortable: false,
       field: 'actions',
-      headerName: 'Actions',
-      renderCell: () => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title={'Edit Sponsorship'}>
-              <IconButton size='small' sx={{ mr: 0.5 }} onClick={handleClickOpen}>
-                <Pencil />
-              </IconButton>
+      type: 'actions',
+      getActions: ({ row }: GridRowParams) => [
+        <GridActionsCellItem
+          showInMenu
+          color='secondary'
+          key='edit'
+          icon={<Pencil />}
+          onClick={() => {
+            setEditParams(row)
+            handleClickOpen()
+          }}
+          label='Edit Contact'
+        />,
+
+        <GridActionsCellItem
+          color='secondary'
+          icon={
+            <Tooltip title={'Delete Contact'}>
+              <HighlightOffIcon />
             </Tooltip>
-            <Tooltip title={'Delete Package'}>
-              <IconButton size='small'>
-                <DeleteOutline />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )
-      }
+          }
+          onClick={() => handleDeleteContact(row.id)}
+          label='Delete Contact'
+          showInMenu
+          key='delete'
+        />
+      ]
     }
   ]
+
+  const handleAddContact = async (name: string) => {
+    const response = await updateRegister(id, { items: [name] })
+    if (response?.[0]?.id) {
+      handleDialogClose()
+      dispatch(getRegisters(id))
+    } else {
+      toast.error('Something went wrong!')
+    }
+  }
+
+  const handleEditContact = async (name: string) => {
+    const response = await updateRegister(id, { items: [name] })
+    if (response?.[0]?.id) {
+      handleDialogClose()
+      dispatch(getRegisters(id))
+    } else {
+      toast.error('Something went wrong!')
+    }
+  }
+
+  const handleDeleteContact = async (contactId: number) => {
+    const response = await updateRegister(id, { deleteIds: [contactId] })
+    if (response) {
+      dispatch(getRegisters(id))
+    } else {
+      toast.error('Something went wrong!')
+    }
+  }
 
   return (
     <Box sx={{ boxShadow: 0, mb: 4 }}>
@@ -82,7 +118,12 @@ export default function RegisterInfo() {
         title='REGISTERED ORGANISATIONS'
         action={
           <Box>
-            <Button size='small' variant='contained' startIcon={<Plus fontSize='small' />} onClick={handleClickOpen}>
+            <Button
+              size='small'
+              variant='contained'
+              startIcon={<Plus fontSize='small' />}
+              onClick={handleClickOpen}
+            >
               Add Registered Organisations
             </Button>
           </Box>
@@ -92,7 +133,8 @@ export default function RegisterInfo() {
       <DataGrid
         autoHeight
         pagination
-        rows={ContactUs}
+        rows={registerList}
+        loading={isLoading}
         columns={columns}
         disableSelectionOnClick
         pageSize={Number(pageSize)}
@@ -101,7 +143,15 @@ export default function RegisterInfo() {
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
       />
 
-      <DialogAddContactInfo handleDialogClose={handleDialogClose} open={open} />
+      {open && (
+        <DialogAddContactInfo
+          handleDialogClose={handleDialogClose}
+          handleEditContact={handleEditContact}
+          open={open}
+          handleAddContact={handleAddContact}
+          editParams={editParams}
+        />
+      )}
     </Box>
   )
 }

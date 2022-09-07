@@ -28,7 +28,6 @@ import groupBy from 'lodash/groupBy'
 import flattenDeep from 'lodash/flattenDeep'
 import { updateOrganiserPartner } from 'src/@core/api/organiser-partner-api'
 import slugify from 'slugify'
-import { getOrganiserPartners } from 'src/store/event/view/website/organiserPartnerStore'
 
 interface OrganiserPartnerContentProps {
   organiserPartnerHeader: SettingHeaderTypes
@@ -112,36 +111,32 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
       });
       await updateOrganiserPartner(categoryId, Number(id), {deleteIds: [], items: params})
     })
-    dispatch(getOrganiserPartners())
     dispatch(editHeader({ eventId: Number(id), params: [organiserPartnerHeader] }))
   }
 
 
-  const handleDeleteOrganiserPartner = (value: any) => {
+  const handleDeleteOrganiserPartner = async (value: any) => {
     const categoryId = value?.type;
-    const paramsRepo = {
-      description: value?.description,
-      id: value?.partnerId,
-      logoUrl: value?.logoUrl,
-      name: value?.name,
-      slug: fieldSlugConvert(value.name),
-    }
+  
     const params = {
-      items: [paramsRepo],
       deleteIds: [value.partnerId],
     }
     if (value.partnerId) { 
-      updateOrganiserPartner(categoryId, Number(id), params)
-      dispatch(getOrganiserPartners())
+      await updateOrganiserPartner(categoryId, Number(id), params)
     }
   }
 
 
   useEffect(() => {
-    const organiserPartners = listOrganiserPartner.map(partner => {
-      return partner.partners.map((item: any) => {
-        return { ...item, type: partner.id, partnerId: item.id }
-      })
+    const organiserPartners = listOrganiserPartner.map(item => {
+      return {
+        name: item?.name,
+        id: item?.id,
+        description: item?.description,
+        logoUrl: item?.logoUrl,
+        partnerId: item?.id, 
+        type: item?.category?.id
+      }
     })
 
     if (organiserPartners) {

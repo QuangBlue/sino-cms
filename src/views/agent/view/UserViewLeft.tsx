@@ -154,9 +154,11 @@ const UserViewLeft = ({ data }: Props) => {
   }
 
   const handleSubmitResumeAgent = () => {
-    dispatch(editAgentDetail({ params: { status: true }, id: data.id })).then(() => {
-      dispatch(fetchAgentDetail(data.id))
-    })
+    dispatch(editAgentDetail({ params: { status: true }, id: data.id })).then(
+      () => {
+        dispatch(fetchAgentDetail(data.id))
+      }
+    )
   }
 
   const renderUserAvatar = () => {
@@ -166,7 +168,13 @@ const UserViewLeft = ({ data }: Props) => {
           skin='light'
           variant='rounded'
           color={data.role === 'admin' ? 'primary' : 'error'}
-          sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+          sx={{
+            width: 120,
+            height: 120,
+            fontWeight: 600,
+            mb: 4,
+            fontSize: '3rem'
+          }}
         >
           {getInitials(data.firstName + ' ' + data.lastName)}
         </CustomAvatar>
@@ -181,7 +189,14 @@ const UserViewLeft = ({ data }: Props) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <CardContent
+              sx={{
+                pt: 15,
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column'
+              }}
+            >
               {renderUserAvatar()}
               <Typography variant='h6' sx={{ mb: 4 }}>
                 {data.firstName + ' ' + data.lastName}
@@ -201,9 +216,19 @@ const UserViewLeft = ({ data }: Props) => {
             </CardContent>
 
             <CardContent sx={{ my: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
                 <Box sx={{ mr: 6, display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 4, width: 44, height: 44 }}>
+                  <CustomAvatar
+                    skin='light'
+                    variant='rounded'
+                    sx={{ mr: 4, width: 44, height: 44 }}
+                  >
                     <Domain />
                   </CustomAvatar>
                   <Box>
@@ -214,7 +239,11 @@ const UserViewLeft = ({ data }: Props) => {
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 4, width: 44, height: 44 }}>
+                  <CustomAvatar
+                    skin='light'
+                    variant='rounded'
+                    sx={{ mr: 4, width: 44, height: 44 }}
+                  >
                     <StarOutline />
                   </CustomAvatar>
                   <Box>
@@ -225,11 +254,24 @@ const UserViewLeft = ({ data }: Props) => {
                   </Box>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', mb: 1.5, mt: 6, justifyContent: 'space-between' }}>
-                <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  mb: 1.5,
+                  mt: 6,
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Typography
+                  variant='body2'
+                  sx={{ fontWeight: 600, color: 'text.secondary' }}
+                >
                   Events
                 </Typography>
-                <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                <Typography
+                  variant='body2'
+                  sx={{ fontWeight: 600, color: 'text.secondary' }}
+                >
                   {`${data.totalEvent} of ${data.eventLimit} Events`}
                 </Typography>
               </Box>
@@ -245,27 +287,42 @@ const UserViewLeft = ({ data }: Props) => {
               <Divider sx={{ mt: 4 }} />
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ mr: 2, color: 'text.primary' }}
+                  >
                     Username:
                   </Typography>
                   <Typography variant='body2'>
-                    @{(data.firstName + ' ' + data.lastName).toLowerCase().replace(/\s/g, '')}
+                    @
+                    {(data.firstName + ' ' + data.lastName)
+                      .toLowerCase()
+                      .replace(/\s/g, '')}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ mr: 2, color: 'text.primary' }}
+                  >
                     Email:
                   </Typography>
                   <Typography variant='body2'>{data.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ mr: 2, color: 'text.primary' }}
+                  >
                     ID:
                   </Typography>
                   <Typography variant='body2'>{data.id}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ mr: 2, color: 'text.primary' }}
+                  >
                     Status:
                   </Typography>
                   <CustomChip
@@ -283,44 +340,78 @@ const UserViewLeft = ({ data }: Props) => {
                   />
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Role:</Typography>
-                  <Typography variant='body2' sx={{ textTransform: 'capitalize' }}>
+                  <Typography
+                    sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}
+                  >
+                    Role:
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    sx={{ textTransform: 'capitalize' }}
+                  >
                     {data.role}
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
+                  <Typography
+                    sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}
+                  >
+                    Phone:
+                  </Typography>
                   <Typography variant='body2'>{data.phone}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Language:</Typography>
+                  <Typography
+                    sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}
+                  >
+                    Language:
+                  </Typography>
                   <Typography variant='body2'>English</Typography>
                 </Box>
               </Box>
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
+              <Button
+                variant='contained'
+                sx={{ mr: 2 }}
+                onClick={handleEditClickOpen}
+              >
                 Edit
               </Button>
-              <Button color='error' variant='outlined' onClick={handleClickOpenAlert}>
-                {data.status ? 'Suspend' : 'Resume'}
-              </Button>
+              {!(data.role === 'admin') && (
+                <Button
+                  color='error'
+                  variant='outlined'
+                  onClick={handleClickOpenAlert}
+                >
+                  {data.status ? 'Suspend' : 'Resume'}
+                </Button>
+              )}
             </CardActions>
 
             <Dialog
               open={openEdit}
               onClose={handleEditClose}
               aria-labelledby='user-view-edit'
-              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
+              sx={{
+                '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] }
+              }}
               aria-describedby='user-view-edit-description'
             >
-              <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+              <DialogTitle
+                id='user-view-edit'
+                sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}
+              >
                 Edit Agent Information
               </DialogTitle>
               <DialogContent>
-                <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
+                <DialogContentText
+                  variant='body2'
+                  id='user-view-edit-description'
+                  sx={{ textAlign: 'center', mb: 7 }}
+                >
                   Updating agent details will receive a privacy audit.
                 </DialogContentText>
                 <form id='edit-agent-form' onSubmit={handleSubmit(onSubmit)}>
@@ -346,7 +437,10 @@ const UserViewLeft = ({ data }: Props) => {
                           )}
                         />
                         {errors.firstName && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-first-name'>
+                          <FormHelperText
+                            sx={{ color: 'error.main' }}
+                            id='validation-schema-first-name'
+                          >
                             {errors.firstName.message}
                           </FormHelperText>
                         )}
@@ -373,7 +467,10 @@ const UserViewLeft = ({ data }: Props) => {
                           )}
                         />
                         {errors.lastName && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-last-name'>
+                          <FormHelperText
+                            sx={{ color: 'error.main' }}
+                            id='validation-schema-last-name'
+                          >
                             {errors.lastName.message}
                           </FormHelperText>
                         )}
@@ -402,7 +499,10 @@ const UserViewLeft = ({ data }: Props) => {
                           )}
                         />
                         {errors.eventLimit && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-eventLimit'>
+                          <FormHelperText
+                            sx={{ color: 'error.main' }}
+                            id='validation-schema-eventLimit'
+                          >
                             {errors.eventLimit.message}
                           </FormHelperText>
                         )}
@@ -430,7 +530,10 @@ const UserViewLeft = ({ data }: Props) => {
                           )}
                         />
                         {errors.phone && (
-                          <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-email'>
+                          <FormHelperText
+                            sx={{ color: 'error.main' }}
+                            id='validation-schema-email'
+                          >
                             {errors.phone.message}
                           </FormHelperText>
                         )}
@@ -440,10 +543,19 @@ const UserViewLeft = ({ data }: Props) => {
                 </form>
               </DialogContent>
               <DialogActions sx={{ justifyContent: 'center' }}>
-                <Button variant='contained' sx={{ mr: 1 }} type='submit' form='edit-agent-form'>
+                <Button
+                  variant='contained'
+                  sx={{ mr: 1 }}
+                  type='submit'
+                  form='edit-agent-form'
+                >
                   Submit
                 </Button>
-                <Button variant='outlined' color='secondary' onClick={handleEditClose}>
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={handleEditClose}
+                >
                   Cancel
                 </Button>
               </DialogActions>
@@ -454,7 +566,9 @@ const UserViewLeft = ({ data }: Props) => {
           open={open}
           dataAgent={data}
           handleCloseAlert={handleCloseAlert}
-          handleSubmit={data.status ? handleSubmitDeleteAgent : handleSubmitResumeAgent}
+          handleSubmit={
+            data.status ? handleSubmitDeleteAgent : handleSubmitResumeAgent
+          }
         />
       </Grid>
     )

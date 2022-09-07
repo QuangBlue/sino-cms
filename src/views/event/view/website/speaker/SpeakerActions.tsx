@@ -121,7 +121,6 @@ const SpeakerActions = ({
             passHref
           >
             <Button
-              disabled={storeSpeaker.isChange}
               fullWidth
               component='a'
               sx={{ mb: 3.5 }}

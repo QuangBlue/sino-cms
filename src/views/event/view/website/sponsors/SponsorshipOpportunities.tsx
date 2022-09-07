@@ -62,7 +62,6 @@ function SponsorshipOpportunities({
 
       if (result?.payload?.id) {
         dispatch(getSponsorGroup(id))
-
         handleDialogCloseGroup()
       }
     },

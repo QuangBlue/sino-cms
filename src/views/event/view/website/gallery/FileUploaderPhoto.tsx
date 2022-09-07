@@ -10,7 +10,9 @@ import ListItem from '@mui/material/ListItem'
 import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
+import LinearProgress, {
+  LinearProgressProps
+} from '@mui/material/LinearProgress'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 // ** Icons Imports
@@ -23,14 +25,18 @@ import toast from 'react-hot-toast'
 
 import { upload as UploadImage } from 'src/@core/api/upload-api'
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number }
+) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress variant='determinate' {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>
-        <Typography variant='body2' color='text.secondary'>{`${Math.round(props.value)}%`}</Typography>
+        <Typography variant='body2' color='text.secondary'>{`${Math.round(
+          props.value
+        )}%`}</Typography>
       </Box>
     </Box>
   )
@@ -85,16 +91,26 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
     },
     onDropRejected: fileRejections => {
       fileRejections.map((file: FileRejection) => {
-        toast.error(`Files ${file.file.name} larger than 2 GB so can not upload.`, {
-          duration: 2000
-        })
+        toast.error(
+          `Files ${file.file.name} larger than 2 GB so can not upload.`,
+          {
+            duration: 2000
+          }
+        )
       })
     }
   })
 
   const renderFilePreview = (file: FileProp) => {
     if (file.type.startsWith('image')) {
-      return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
+      return (
+        <img
+          width={38}
+          height={38}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
     } else {
       return <FileDocumentOutline />
     }
@@ -113,7 +129,9 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
     const _progressInfos = [...progressInfosRef.current.val]
 
     return UploadImage(file, (event: { loaded: number; total: number }) => {
-      _progressInfos[idx].percentage = Math.round((100 * event.loaded) / event.total)
+      _progressInfos[idx].percentage = Math.round(
+        (100 * event.loaded) / event.total
+      )
       _progressInfos[idx].file = file
     })
       .then(result => {
@@ -134,7 +152,10 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
     setIsLoading(true)
     const files = Array.from(selectedFiles)
 
-    const _progressInfos = files.map(file => ({ percentage: 0, fileName: file.name }))
+    const _progressInfos = files.map(file => ({
+      percentage: 0,
+      fileName: file.name
+    }))
 
     // @ts-ignore
     progressInfosRef.current = {
@@ -176,15 +197,30 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
         progressInfos.val.length > 0 &&
         progressInfos.val.map((progressInfo: any, index: number) => (
           <ListItem key={index}>
-            <div className='' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div
+              className=''
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
               <div style={{ display: 'flex' }}>
-                <div className='file-preview'>{renderFilePreview(progressInfo.file)}</div>
+                <div className='file-preview'>
+                  {renderFilePreview(progressInfo.file)}
+                </div>
                 <div>
-                  <Typography className='file-name'>{progressInfo.fileName}</Typography>
+                  <Typography className='file-name'>
+                    {progressInfo.fileName}
+                  </Typography>
                   <Typography className='file-size' variant='body2'>
                     {Math.round(progressInfo.file.size / 100) / 10 > 1000
-                      ? `${(Math.round(progressInfo.file.size / 100) / 10000).toFixed(1)} mb`
-                      : `${(Math.round(progressInfo.file.size / 100) / 10).toFixed(1)} kb`}
+                      ? `${(
+                          Math.round(progressInfo.file.size / 100) / 10000
+                        ).toFixed(1)} mb`
+                      : `${(
+                          Math.round(progressInfo.file.size / 100) / 10
+                        ).toFixed(1)} kb`}
                   </Typography>
                 </div>
               </div>
@@ -207,16 +243,30 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
     <Fragment>
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: ['column', 'column', 'row'],
+            alignItems: 'center'
+          }}
+        >
           <Img width={300} alt='Upload img' src='/images/misc/upload.png' />
-          <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
-            <HeadingTypography variant='h5'>Drop files here or click to upload.</HeadingTypography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: ['center', 'center', 'inherit']
+            }}
+          >
+            <HeadingTypography variant='h5'>
+              Drop files here or click to upload.
+            </HeadingTypography>
             <Typography color='textSecondary'>
               Drop selectedFiles here or click{' '}
               <Link href='/' onClick={handleLinkClick}>
                 browse
               </Link>{' '}
-              thorough your machine
+              through your machine
             </Typography>
           </Box>
         </Box>
@@ -225,7 +275,12 @@ const FileUploaderPhoto = ({ handleAddPhotos }: FileUploaderPhotoProps) => {
       <Fragment>
         <List sx={{ width: '100%' }}>{fileList}</List>
         <div className='buttons'>
-          <Button color='error' variant='outlined' onClick={handleRemoveAllFiles} disabled={selectedFiles.length === 0}>
+          <Button
+            color='error'
+            variant='outlined'
+            onClick={handleRemoveAllFiles}
+            disabled={selectedFiles.length === 0}
+          >
             Remove All
           </Button>
           <LoadingButton

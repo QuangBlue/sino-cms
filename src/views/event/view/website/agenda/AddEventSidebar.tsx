@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
+import ClearIcon from '@mui/icons-material/Clear'
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker'
@@ -34,6 +35,7 @@ import { AppDispatch, RootState } from 'src/store'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { formatDateFromTime } from 'src/@core/utils/dateTime'
+import IconButton from '@mui/material/IconButton'
 
 interface DefaultStateType {
   url: string
@@ -72,11 +74,10 @@ const schema = yup.object().shape({
   title: yup.string().required('Title field is required'),
 
   // description: yup.string().required('Description field is required'),
-
-  speakerId: yup
-    .number()
-    .required('Speaker field is required')
-    .typeError('Speaker field is required'),
+  // speakerId: yup
+  //   .number()
+  //   .required('Speaker field is required')
+  //   .typeError('Speaker field is required'),
   timeStart: yup.date().required('Start time is required'),
   timeEnd: yup
     .date()
@@ -136,7 +137,7 @@ const AddEventSidebar = ({
         ...editParams,
         timeStart: formatDateFromTime(editParams.timeStart),
         timeEnd: formatDateFromTime(editParams.timeEnd),
-        speakerId: editParams.speaker.id
+        speakerId: editParams?.speaker ? editParams?.speaker.id : ''
       })
     }
   }, [editParams, reset])
@@ -150,10 +151,6 @@ const AddEventSidebar = ({
 
   const onSubmit = (params: any) => {
     handleAddAgendaDetail({ agendaId, params })
-  }
-
-  const handleDeleteEvent = () => {
-    handleSidebarClose()
   }
 
   const RenderSidebarFooter = () => (
@@ -193,12 +190,6 @@ const AddEventSidebar = ({
           {editParams ? 'Update Event' : 'Add Event'}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <DeleteOutline
-            fontSize='small'
-            sx={{ cursor: 'pointer', mr: 2 }}
-            onClick={handleDeleteEvent}
-          />
-
           <Close
             fontSize='small'
             onClick={handleSidebarClose}
@@ -320,6 +311,14 @@ const AddEventSidebar = ({
                       id='multiple-speaker'
                       onChange={e => onChange(e.target.value)}
                       labelId='multiple-speaker-label'
+                      endAdornment={
+                        <IconButton
+                          sx={{ visibility: value ? 'visible' : 'hidden' }}
+                          onClick={() => onChange('')}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      }
                     >
                       {speakerStore?.listSpeaker?.map(speaker => (
                         <MenuItem key={speaker.id} value={speaker.id}>

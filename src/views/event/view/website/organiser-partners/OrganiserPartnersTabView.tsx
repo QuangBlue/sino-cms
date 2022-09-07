@@ -52,7 +52,7 @@ const OrganiserPartnersTabView = () => {
   useEffect(() => {
     dispatch(getPartnersType())
     dispatch(getHeaderByKey({ eventId: store.eventData.id, key: ORG_PARTNER }))
-    dispatch(getOrganiserPartners())
+    dispatch(getOrganiserPartners(store.eventData.id))
 
   }, [dispatch, store.eventData.baseName, store.eventData.id])
   

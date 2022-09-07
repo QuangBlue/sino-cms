@@ -19,9 +19,12 @@ import EyeOutline from 'mdi-material-ui/EyeOutline'
 import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 
 // ** Custom Component Imports
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 import { CompanyTypes } from 'src/types/companyTypes'
+import DialogAlertDeleteCompany from './DialogAlertDeleteCompany'
+import { BackupRestore } from 'mdi-material-ui'
+import { deleteCompany, resumeCompany } from 'src/store/agent/view'
 
 interface CellType {
   row: CompanyTypes
@@ -32,7 +35,7 @@ const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const columns = [
+const defaultColums = [
   {
     flex: 0.2,
     field: 'id',
@@ -49,38 +52,17 @@ const columns = [
     minWidth: 90,
     field: 'name',
     headerName: 'Name',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.name || ''}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{row.name || ''}</Typography>
+    )
   },
   {
     flex: 0.25,
     minWidth: 90,
     field: 'totalEvent',
     headerName: 'Total Event',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.totalEvent || 0}</Typography>
-  },
-  {
-    flex: 0.1,
-    minWidth: 130,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
     renderCell: ({ row }: CellType) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Tooltip title='Delete Company'>
-          <IconButton size='small'>
-            <DeleteOutline />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title='View'>
-          <Box>
-            <Link href={`/company/view/${row.id}`} passHref>
-              <IconButton size='small' component='a' sx={{ textDecoration: 'none' }}>
-                <EyeOutline />
-              </IconButton>
-            </Link>
-          </Box>
-        </Tooltip>
-      </Box>
+      <Typography variant='body2'>{row.totalEvent || 0}</Typography>
     )
   }
 ]
@@ -92,6 +74,77 @@ const CompanyListTable = () => {
   // ** Redux
   const store = useSelector((state: RootState) => state.agentDetail)
 
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
+
+  const handleSubmitDeleteCompany = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
+    dispatch(deleteCompany(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const handleSubmitResumeCompany = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
+    dispatch(resumeCompany(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const columns = [
+    ...defaultColums,
+    {
+      flex: 0.1,
+      minWidth: 130,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: CellType) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [open, setOpen] = useState<boolean>(false)
+        const handleClickOpenAlert = () => setOpen(true)
+        const handleCloseAlert = () => setOpen(false)
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title='Delete Company'>
+              <IconButton size='small' onClick={handleClickOpenAlert}>
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='View'>
+              <Box>
+                <Link href={`/company/view/${row.id}`} passHref>
+                  <IconButton
+                    size='small'
+                    component='a'
+                    sx={{ textDecoration: 'none' }}
+                  >
+                    <EyeOutline />
+                  </IconButton>
+                </Link>
+              </Box>
+            </Tooltip>
+            <DialogAlertDeleteCompany
+              open={open}
+              dataCompany={row}
+              handleCloseAlert={handleCloseAlert}
+              handleSubmit={() =>
+                row.status
+                  ? handleSubmitDeleteCompany(row.id, handleCloseAlert)
+                  : handleSubmitResumeCompany(row.id, handleCloseAlert)
+              }
+            />
+          </Box>
+        )
+      }
+    }
+  ]
+
   if (store.agentData.companies) {
     return (
       <Card>
@@ -100,7 +153,10 @@ const CompanyListTable = () => {
           sx={{ '& .MuiCardHeader-action': { m: 0 } }}
           titleTypographyProps={{
             variant: 'h6',
-            sx: { lineHeight: '32px !important', letterSpacing: '0.15px !important' }
+            sx: {
+              lineHeight: '32px !important',
+              letterSpacing: '0.15px !important'
+            }
           }}
         />
         <DataGrid

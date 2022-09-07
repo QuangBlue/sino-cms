@@ -32,8 +32,6 @@ const AgendaActions = ({
 }: any) => {
   // ** Hook
   const { i18n } = useTranslation()
-
-  // const storeSpeaker = useSelector((state: RootState) => state.speakerWebsite)
   const storeEvent = useSelector((state: RootState) => state.eventDetail)
 
   const handleLangItemClick = (event: ChangeEvent<HTMLInputElement>) => {

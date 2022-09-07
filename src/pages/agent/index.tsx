@@ -40,7 +40,12 @@ import TableHeaderAgent from 'src/views/agent/TableHeaderAgent'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // ** Redux Imports
-import { agentSlice, deleteAgent, fetchAgent, resumeAgent } from 'src/store/agent'
+import {
+  agentSlice,
+  deleteAgent,
+  fetchAgent,
+  resumeAgent
+} from 'src/store/agent'
 import DialogAlertDelete from 'src/views/agent/DialogAlertDeleteAgent'
 import BackupRestore from 'mdi-material-ui/BackupRestore'
 import { formatDate } from 'src/@core/utils/format'
@@ -92,7 +97,13 @@ const defaultColumns = [
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              flexDirection: 'column'
+            }}
+          >
             <Link href={`/agent/view/${id}`} passHref>
               <Typography
                 noWrap
@@ -104,7 +115,12 @@ const defaultColumns = [
               </Typography>
             </Link>
             <Link href={`/agent/view/${id}`} passHref>
-              <Typography noWrap component='a' variant='caption' sx={{ textDecoration: 'none' }}>
+              <Typography
+                noWrap
+                component='a'
+                variant='caption'
+                sx={{ textDecoration: 'none' }}
+              >
                 @{(firstName + ' ' + lastName).toLowerCase().replace(/\s/g, '')}
               </Typography>
             </Link>
@@ -118,7 +134,9 @@ const defaultColumns = [
     field: 'email',
     minWidth: 150,
     headerName: 'Email',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.email || ''}`}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{`${row.email || ''}`}</Typography>
+    )
   },
 
   {
@@ -126,14 +144,18 @@ const defaultColumns = [
     field: 'phone',
     minWidth: 90,
     headerName: 'Phone',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.phone || ''}`}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{`${row.phone || ''}`}</Typography>
+    )
   },
   {
     flex: 1,
     minWidth: 90,
     field: 'totalEvent',
     headerName: 'Total Created Event',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{`${row.totalEvent || 0}`}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{`${row.totalEvent || 0}`}</Typography>
+    )
   },
 
   {
@@ -141,7 +163,9 @@ const defaultColumns = [
     minWidth: 90,
     field: 'eventLimit',
     headerName: 'Event Limit',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.eventLimit}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{row.eventLimit}</Typography>
+    )
   },
 
   {
@@ -149,21 +173,37 @@ const defaultColumns = [
     minWidth: 120,
     field: 'createdAt',
     headerName: 'Created On',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{formatDate(row.createdAt.toString())}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>
+        {formatDate(row.createdAt.toString())}
+      </Typography>
+    )
   }
 ]
 
 /* eslint-disable */
 const CustomInput = forwardRef((props: CustomInputProps, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-  const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
+  const startDate =
+    props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
+  const endDate =
+    props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
 
   const value = `${startDate}${endDate !== null ? endDate : ''}`
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null
+  props.start === null && props.dates.length && props.setDates
+    ? props.setDates([])
+    : null
   const updatedProps = { ...props }
   delete updatedProps.setDates
 
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />
+  return (
+    <TextField
+      fullWidth
+      inputRef={ref}
+      {...updatedProps}
+      label={props.label || ''}
+      value={value}
+    />
+  )
 })
 /* eslint-enable */
 
@@ -192,13 +232,19 @@ const AgentList = () => {
   }
 
   // Handle Detele Agent
-  const handleSubmitDeleteAgent = (rowId: number, handleCloseAlert: () => void) => {
+  const handleSubmitDeleteAgent = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
     dispatch(deleteAgent(rowId)).then(() => {
       handleCloseAlert()
     })
   }
 
-  const handleSubmitResumeAgent = (rowId: number, handleCloseAlert: () => void) => {
+  const handleSubmitResumeAgent = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
     dispatch(resumeAgent(rowId)).then(() => {
       handleCloseAlert()
     })
@@ -221,16 +267,30 @@ const AgentList = () => {
         const handleCloseAlert = () => setOpen(false)
 
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
             <Tooltip title={row.status ? 'Delete Agent' : 'Resume Agent'}>
-              <IconButton size='small' sx={{ mr: 0.5 }} onClick={handleClickOpenAlert}>
-                {row.status ? <DeleteOutline /> : <BackupRestore />}
+              <IconButton
+                size='small'
+                sx={{ mr: 0.5 }}
+                onClick={handleClickOpenAlert}
+              >
+                {!(row.role === 'admin') &&
+                  (row.status ? <DeleteOutline /> : <BackupRestore />)}
               </IconButton>
             </Tooltip>
             <Tooltip title='View'>
               <Box>
                 <Link href={`/agent/view/${row.id}`} passHref>
-                  <IconButton size='small' component='a' sx={{ textDecoration: 'none', mr: 0.5 }}>
+                  <IconButton
+                    size='small'
+                    component='a'
+                    sx={{ textDecoration: 'none', mr: 0.5 }}
+                  >
                     <EyeOutline />
                   </IconButton>
                 </Link>
@@ -257,7 +317,10 @@ const AgentList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <TableHeaderAgent value={value} /* selectedRows={selectedRows} */ handleFilter={handleFilter} />
+          <TableHeaderAgent
+            value={value}
+            /* selectedRows={selectedRows} */ handleFilter={handleFilter}
+          />
           <DataGrid
             autoHeight
             pagination

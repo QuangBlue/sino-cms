@@ -19,10 +19,13 @@ import EyeOutline from 'mdi-material-ui/EyeOutline'
 import DeleteOutline from 'mdi-material-ui/DeleteOutline'
 
 // ** Custom Component Imports
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 import { CompanyTypes } from 'src/types/companyTypes'
 import { EventTypes } from 'src/types/eventTypes'
+import DialogAlertDeleteEvent from 'src/views/company/view/DialogAlertDeleteEvent'
+import { BackupRestore } from 'mdi-material-ui'
+import { deleteEvent, resumeEvent } from 'src/store/agent/view'
 
 interface CellType {
   row: EventTypes
@@ -33,7 +36,7 @@ const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const columns = [
+const defaultColumns = [
   {
     flex: 0.2,
     field: 'id',
@@ -51,38 +54,17 @@ const columns = [
     minWidth: 90,
     field: 'name',
     headerName: 'Name',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.name || ''}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography variant='body2'>{row.name || ''}</Typography>
+    )
   },
   {
     flex: 0.25,
     minWidth: 90,
     field: 'slug',
     headerName: 'Slug',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.baseName || ''}</Typography>
-  },
-  {
-    flex: 0.1,
-    minWidth: 130,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
     renderCell: ({ row }: CellType) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Tooltip title='Delete Event'>
-          <IconButton size='small'>
-            <DeleteOutline />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title='View'>
-          <Box>
-            <Link href={`/event/view/${row.id}`} passHref>
-              <IconButton size='small' component='a' sx={{ textDecoration: 'none' }}>
-                <EyeOutline />
-              </IconButton>
-            </Link>
-          </Box>
-        </Tooltip>
-      </Box>
+      <Typography variant='body2'>{row.baseName || ''}</Typography>
     )
   }
 ]
@@ -92,6 +74,7 @@ const EventListTable = () => {
   const [pageSize, setPageSize] = useState<number>(7)
 
   // ** Redux
+  const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.agentDetail)
 
   const getEventList = (companies: CompanyTypes[]) => {
@@ -103,6 +86,75 @@ const EventListTable = () => {
 
     return eventList
   }
+
+  const handleSubmitDeleteEvent = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
+    dispatch(deleteEvent(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const handleSubmitResumeEvent = (
+    rowId: number,
+    handleCloseAlert: () => void
+  ) => {
+    dispatch(resumeEvent(rowId)).then(() => {
+      handleCloseAlert()
+    })
+  }
+
+  const columns = [
+    ...defaultColumns,
+    {
+      flex: 0.1,
+      minWidth: 130,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: CellType) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [open, setOpen] = useState<boolean>(false)
+        const handleClickOpenAlert = () => setOpen(true)
+        const handleCloseAlert = () => setOpen(false)
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title='Delete Event'>
+              <IconButton size='small' onClick={handleClickOpenAlert}>
+                {row.status ? <DeleteOutline /> : <BackupRestore />}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='View'>
+              <Box>
+                <Link href={`/event/view/${row.id}`} passHref>
+                  <IconButton
+                    size='small'
+                    component='a'
+                    sx={{ textDecoration: 'none' }}
+                  >
+                    <EyeOutline />
+                  </IconButton>
+                </Link>
+              </Box>
+            </Tooltip>
+            <DialogAlertDeleteEvent
+              open={open}
+              eventData={row}
+              handleCloseAlert={handleCloseAlert}
+              handleSubmit={() =>
+                row.status
+                  ? handleSubmitDeleteEvent(row.id, handleCloseAlert)
+                  : handleSubmitResumeEvent(row.id, handleCloseAlert)
+              }
+            />
+          </Box>
+        )
+      }
+    }
+  ]
+
   if (store.agentData.companies) {
     return (
       <Card>
@@ -111,7 +163,10 @@ const EventListTable = () => {
           sx={{ '& .MuiCardHeader-action': { m: 0 } }}
           titleTypographyProps={{
             variant: 'h6',
-            sx: { lineHeight: '32px !important', letterSpacing: '0.15px !important' }
+            sx: {
+              lineHeight: '32px !important',
+              letterSpacing: '0.15px !important'
+            }
           }}
         />
         <DataGrid

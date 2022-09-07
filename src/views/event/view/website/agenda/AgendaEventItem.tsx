@@ -80,23 +80,28 @@ export default function AgendaEventItem({
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {stage.description}
         </Typography>
-        <Divider sx={{ my: 3 }} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex' }}>
-            <Avatar
-              src={stage?.speaker?.avatar}
-              sx={{ width: '2rem', height: '2rem', mr: 2 }}
-            />
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                {stage?.speaker?.name}
-              </Typography>
-              <Typography variant='caption'>
-                {stage?.speaker?.jobTitle}
-              </Typography>
+
+        {stage?.speaker && (
+          <>
+            <Divider sx={{ my: 3 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex' }}>
+                <Avatar
+                  src={stage?.speaker?.avatar}
+                  sx={{ width: '2rem', height: '2rem', mr: 2 }}
+                />
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    {stage?.speaker?.name}
+                  </Typography>
+                  <Typography variant='caption'>
+                    {stage?.speaker?.jobTitle}
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-        </Box>
+          </>
+        )}
       </TimelineContent>
     </TimelineItem>
   )

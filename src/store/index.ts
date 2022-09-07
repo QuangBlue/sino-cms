@@ -17,6 +17,7 @@ import settingWebsite from 'src/store/event/view/website/settingsStore'
 import agendaWebsite from 'src/store/event/view/website/agendaStore'
 import galleryWebsite from 'src/store/event/view/website/galleryStore'
 import sponsorWebsite from 'src/store/event/view/website/sponsorStore'
+import registerWebsite from 'src/store/event/view/website/registerStore'
 import organiserPartnerWebsite from 'src/store/event/view/website/organiserPartnerStore'
 
 export const store = configureStore({
@@ -34,7 +35,8 @@ export const store = configureStore({
     agendaWebsite,
     galleryWebsite,
     sponsorWebsite,
-    organiserPartnerWebsite
+    organiserPartnerWebsite,
+    registerWebsite
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

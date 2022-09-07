@@ -32,6 +32,9 @@ import {
   editHeader
 } from 'src/store/event/view/website/settingsStore'
 
+import orderBy from 'lodash/orderBy'
+import { formatDateFromTime } from 'src/@core/utils/dateTime'
+
 const AgendaContent = ({}) => {
   const [open, setOpen] = useState<boolean>(false)
   const [editParams, setEditParams] = useState<any>(null)
@@ -123,23 +126,6 @@ const AgendaContent = ({}) => {
         <Grid item xl={9} md={8} xs={12}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }} gap={6}>
             <Card>
-              <CardHeader title='Title' />
-              <CardContent>
-                <TextField
-                  fullWidth
-                  id='title-speaker'
-                  sx={{
-                    '& .MuiInputBase-input': {
-                      color: 'text.secondary',
-                      fontWeight: 600
-                    }
-                  }}
-                  placeholder='Title Header'
-                />
-              </CardContent>
-            </Card>
-
-            <Card>
               <CardHeader
                 title='List Agenda'
                 action={
@@ -163,12 +149,22 @@ const AgendaContent = ({}) => {
               <CardContent>
                 {agendaList?.length > 0 &&
                   agendaList.map(agenda => {
+                    const sortedStages = orderBy(
+                      agenda.stages,
+                      [
+                        item => {
+                          return formatDateFromTime(item.timeStart)
+                        }
+                      ],
+                      ['asc']
+                    )
+
                     return (
                       <AgendaItem
                         key={agenda.id}
                         title={agenda.name}
                         agendaId={agenda.id}
-                        stages={agenda.stages}
+                        stages={sortedStages}
                         handleDeleteAgenda={handleDeleteAgenda}
                         handleOpenEditModal={handleOpenEditModal}
                         agenda={agenda}

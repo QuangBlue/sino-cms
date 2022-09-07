@@ -19,8 +19,8 @@ export const getPartnersType = createAsyncThunk(
 
 export const getOrganiserPartners = createAsyncThunk(
   'organiserPartnerWebsite/getOrganiserPartners',
-  async () => {
-    const response = await axiosClient.get(`/partner-category/with-partners`)
+  async (eventId: number) => {
+    const response = await axiosClient.get(`/partner/event/${eventId}`)
 
     return response.data
   }

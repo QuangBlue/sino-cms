@@ -7,13 +7,13 @@ import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Close from 'mdi-material-ui/Close'
-import { ChangeEvent, ElementType, useState } from 'react'
+import { ChangeEvent, ElementType } from 'react'
 
 // ** Third Party Imports
 import { Controller } from 'react-hook-form'
 import FormHelperText from '@mui/material/FormHelperText'
 import { uploadAvatar } from 'src/store/event/view/website/speakerStore'
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { InputLabel, MenuItem, Select } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { RootState } from 'src/store'
 
@@ -29,12 +29,6 @@ export const OrganiserPartnersAdd = ({
   const organiserPartnerstore = useSelector((state: RootState) => state.organiserPartnerWebsite)
 
   const { listPartnerType } = organiserPartnerstore
-
-  const [value, setValue] = useState<string>('')
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string)
-  }
 
   const handleChangeLogo = async (file: ChangeEvent, onChange: any) => {
     const { files } = file.target as HTMLInputElement
