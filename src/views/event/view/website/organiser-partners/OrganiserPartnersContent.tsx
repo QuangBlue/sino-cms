@@ -82,7 +82,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
 
   const { fields, prepend, remove } = useFieldArray({
     control,
-    name: 'createOrganiserPartner'
+    name: 'createOrganiserPartner' as never
   })
 
   const addOrganiserPartnerFiled = () => {
@@ -128,7 +128,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
 
 
   useEffect(() => {
-    const organiserPartners = listOrganiserPartner.map(item => {
+    const organiserPartners = listOrganiserPartner.map((item: any) => {
       return {
         name: item?.name,
         id: item?.id,
@@ -140,7 +140,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
     })
 
     if (organiserPartners) {
-      reset({ createOrganiserPartner: flattenDeep(organiserPartners) })
+      reset({ createOrganiserPartner: flattenDeep(organiserPartners) as never })
     } else {
       reset({
         createOrganiserPartner: {
@@ -149,7 +149,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
           description: '',
           type: '',
           id: null
-        }
+        } as never
       })
     }
   }, [reset, listOrganiserPartner])
