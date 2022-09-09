@@ -2,10 +2,11 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 
 import { useDispatch, useSelector } from 'react-redux'
+import { useDebounce } from 'src/@core/utils/hooks'
 import { ORG_PARTNER } from 'src/constants/headers'
 import { AppDispatch, RootState } from 'src/store'
 import { getOrganiserPartners, getPartnersType, organiserPartnerSlice } from 'src/store/event/view/website/organiserPartnerStore'
@@ -25,6 +26,11 @@ const OrganiserPartnersTabView = () => {
     title: settingStore.header?.[0]?.title,
     isPublished: settingStore.header?.[0]?.isPublished || false
   })
+  
+  // States
+  const [keyword, setKeyword] = useState<string>("");
+
+  const debouncedValue = useDebounce<string>(keyword, 600);
 
   const onToggleOrganiserPartnerHeader = useCallback(
     (checked: boolean) => {
@@ -51,12 +57,18 @@ const OrganiserPartnersTabView = () => {
 
   useEffect(() => {
     dispatch(getPartnersType())
-    dispatch(getHeaderByKey({ eventId: store.eventData.id, key: ORG_PARTNER }))
-    dispatch(getOrganiserPartners(store.eventData.id))
+    if (store.eventData.id) {
+      dispatch(getHeaderByKey({ eventId: store.eventData.id, key: ORG_PARTNER })) 
+    }
+  }, [dispatch, store.eventData.baseName, store.eventData.id ])
 
-  }, [dispatch, store.eventData.baseName, store.eventData.id])
+
+  useEffect(() => {
+    if (store.eventData.id) { 
+      dispatch(getOrganiserPartners({eventId: store.eventData.id, query: debouncedValue as string}))
+    }
+  }, [debouncedValue, dispatch, store.eventData.id])
   
-
 
   return (
     <Box sx={{ my: 4, mx: 4 }}>
@@ -66,6 +78,7 @@ const OrganiserPartnersTabView = () => {
             title={header.title} 
             organiserPartnerHeader={header} 
             handleChangeHeaderTitle={handleChangeHeaderTitle} 
+            setKeyword={setKeyword}
           />
         </Grid>
         <Grid item xl={3} md={4} xs={12}>
@@ -79,4 +92,4 @@ const OrganiserPartnersTabView = () => {
   )
 }
 
-export default OrganiserPartnersTabView
+export default React.memo(OrganiserPartnersTabView)
