@@ -20,7 +20,7 @@ import { array, object, string } from 'yup'
 
 import TextField from '@mui/material/TextField'
 
-import { Card, CardContent, CardHeader } from '@mui/material'
+import { Card, CardContent, CardHeader, CircularProgress } from '@mui/material'
 import { SettingHeaderTypes } from 'src/types/website'
 import { editHeader } from 'src/store/event/view/website/settingsStore'
 import { useRouter } from 'next/router'
@@ -28,23 +28,23 @@ import groupBy from 'lodash/groupBy'
 import flattenDeep from 'lodash/flattenDeep'
 import { updateOrganiserPartner } from 'src/@core/api/organiser-partner-api'
 import slugify from 'slugify'
-
 interface OrganiserPartnerContentProps {
   organiserPartnerHeader: SettingHeaderTypes
   title: string
   handleChangeHeaderTitle: (value: any) => void
+  setKeyword: (value: any) => void
 }
 
 
-const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHeaderTitle }: OrganiserPartnerContentProps) => {
+const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHeaderTitle, setKeyword }: OrganiserPartnerContentProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.organiserPartnerWebsite)
+
   const router = useRouter()
   
   const { id } = router.query
 
   const { listOrganiserPartner } = store
-
 
   const defaultValues = {
     createOrganiserPartner: listOrganiserPartner
@@ -179,6 +179,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
                 size='small'
                 placeholder='Search Organiser & Partners'
                 sx={{ mr: 4, mb: 2, maxWidth: '180px' }}
+                onChange={(e) => {setKeyword(e.target.value)}}
               />
               <Button variant='contained' startIcon={<Plus fontSize='small' />} onClick={addOrganiserPartnerFiled}>
                 Add Partners
@@ -187,22 +188,28 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
           }
         />
 
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} id='organiser-partner-form'>
-            {fields.map((item, index) => {
-              return (
-                <OrganiserPartnersAdd 
-                  key={item.id} 
-                  index={index} 
-                  control={control} 
-                  errors={errors} 
-                  remove={remove} 
-                  handleDeleteOrganiserPartner={handleDeleteOrganiserPartner}
-                  {...item}
-                />
-              )
-            })}
-          </form>
+        <CardContent sx={{ display: 'flex', justifyContent: "center" }}>
+          {!store.isLoading ? 
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box> 
+          : (
+            <form onSubmit={handleSubmit(onSubmit)} id='organiser-partner-form'>
+              {fields.map((item, index) => {
+                return (
+                  <OrganiserPartnersAdd 
+                    key={item.id} 
+                    index={index} 
+                    control={control} 
+                    errors={errors} 
+                    remove={remove} 
+                    handleDeleteOrganiserPartner={handleDeleteOrganiserPartner}
+                    {...item}
+                  />
+                )
+              })}
+            </form>
+          )}
         </CardContent>
       </Card>
     </Box>

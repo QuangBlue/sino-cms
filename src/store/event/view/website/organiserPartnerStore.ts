@@ -3,11 +3,6 @@ import toast from 'react-hot-toast'
 import axiosClient from 'src/configs/axiosClient'
 import { PartnersType } from 'src/types/website'
 
-// interface Redux {
-//   getState: any
-//   dispatch: Dispatch<any>
-// }
-
 export const getPartnersType = createAsyncThunk(
   'organiserPartnerWebsite/getPartnersType',
   async () => {
@@ -19,8 +14,16 @@ export const getPartnersType = createAsyncThunk(
 
 export const getOrganiserPartners = createAsyncThunk(
   'organiserPartnerWebsite/getOrganiserPartners',
-  async (eventId: number) => {
-    const response = await axiosClient.get(`/partner/event/${eventId}`)
+  async ({
+    eventId,
+    query
+  }: {
+    eventId: number
+    query: string | undefined
+  }) => {
+    const response = await axiosClient.get(
+      `/partner/event/${eventId}?keyword=${query}`
+    )
 
     return response.data
   }
