@@ -81,7 +81,10 @@ const TableHeaderEvent = (props: TableHeaderProps) => {
       />
       {ability?.can('read', 'agent-view') ? (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-          <FormControl size='small' sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}>
+          <FormControl
+            size='small'
+            sx={{ mr: 4, mb: 2, maxWidth: '180px', minWidth: '140px' }}
+          >
             <InputLabel id='status-select'>Status</InputLabel>
             <Select
               fullWidth
@@ -109,10 +112,19 @@ const TableHeaderEvent = (props: TableHeaderProps) => {
           </Button>
         </Box>
       ) : null}
-      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog
+        open={open}
+        fullWidth
+        onClose={handleClose}
+        scroll='body'
+        sx={{ overflow: 'hidden' }}
+        aria-labelledby='form-dialog-title'
+      >
         <DialogTitle id='form-dialog-title'>Create Event</DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ mb: 3 }}>Please fill in the information to create an Event.</DialogContentText>
+        <DialogContent sx={{ position: 'relative' }}>
+          <DialogContentText sx={{ mb: 3 }}>
+            Please fill in the information to create an Event.
+          </DialogContentText>
           <Grid item xs={12}>
             <FormCreateEventSchema handleClickCloseModal={handleClose} />
           </Grid>

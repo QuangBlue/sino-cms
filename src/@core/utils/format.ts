@@ -28,6 +28,15 @@ export const formatDate = (value: Date | string) => {
   }).format(new Date(value))
 }
 
+export const formatDate1 = (value: Date | string) => {
+  if (!value) return value
+
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  }).format(new Date(value))
+}
+
 // ** Returns short month of passed date
 export const formatDateToMonthShort = (
   value: Date | string,

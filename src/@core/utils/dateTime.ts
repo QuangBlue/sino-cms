@@ -17,3 +17,7 @@ export const formatDisplayTime = (time: string) => {
 export const formatDateFromTime = (time: any) => {
   return moment(time, 'h:mm A').toDate()
 }
+
+export const formatDateToEventTime = (time: Date) => {
+  return moment(time).format('DD/MM/yyyy h:mm ')
+}
