@@ -30,11 +30,37 @@ interface FormValidationSchemaProps {
 }
 
 const defaultValues = {
-  name: ''
+  name: '',
+  contactPerson: '',
+  email: '',
+  phone: ''
 }
 
+const showErrors = (field: string, valueLen: number, min: number) => {
+  if (valueLen === 0) {
+    return `${field} field is required`
+  } else if (valueLen > 0 && valueLen < min) {
+    return `${field} must be at least ${min} characters`
+  } else if (valueLen > 0 && valueLen > min) {
+    return `${field} must be smaller ${min} characters`
+  } else {
+    return ''
+  }
+}
+
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 const schema = yup.object().shape({
-  name: yup.string().required('Company Name field is required')
+  name: yup.string().required('Company Name field is required'),
+  contactPerson: yup.string().required('Contact Person field is required'),
+  email: yup.string().email().required('Email field is required'),
+  phone: yup
+    .string()
+    .min(8, obj => showErrors('Phone', obj.value.length, obj.min))
+    .max(15, obj => showErrors('Phone', obj.value.length, obj.max))
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .required()
 })
 
 const FormValidationSchema = (props: FormValidationSchemaProps) => {
@@ -54,13 +80,16 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = async (payload: { name: string }) => {
-    const { name } = payload
+  const onSubmit = async (payload: any) => {
+    const { name, phone, email, contractPerson } = payload
     const baseName = convertToSlug(name)
 
     const params: CreateCompanyParams = {
       name,
-      baseName
+      baseName,
+      phone,
+      email,
+      contractPerson
     }
 
     dispatch(createCompany({ params, handleClickCloseModal }))
@@ -92,19 +121,134 @@ const FormValidationSchema = (props: FormValidationSchemaProps) => {
                   )}
                 />
                 {errors.name && (
-                  <FormHelperText sx={{ color: 'error.main' }} id='validation-schema-company-name'>
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-name'
+                  >
                     {errors.name.message}
                   </FormHelperText>
                 )}
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button size='large' variant='text' style={{ minWidth: 120 }} onClick={handleClickCloseModal}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Controller
+                  name='email'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      inputProps={{
+                        autoComplete: 'new-password'
+                      }}
+                      value={value}
+                      label='Company Email'
+                      onChange={onChange}
+                      placeholder='Company Email'
+                      error={Boolean(errors.email)}
+                      aria-describedby='validation-schema-company-email'
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-email'
+                  >
+                    {errors.email.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Controller
+                  name='phone'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      type='phone'
+                      inputProps={{
+                        autoComplete: 'new-password'
+                      }}
+                      value={value}
+                      label='Phone'
+                      onChange={onChange}
+                      error={Boolean(errors.phone)}
+                      placeholder='+65 0000 0000'
+                      aria-describedby='validation-schema-email'
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-email'
+                  >
+                    {errors.phone.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Controller
+                  name='contactPerson'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      inputProps={{
+                        autoComplete: 'new-password'
+                      }}
+                      value={value}
+                      label='Contact Person'
+                      onChange={onChange}
+                      placeholder='Contact Person'
+                      error={Boolean(errors.contactPerson)}
+                      aria-describedby='validation-schema-company-contactPerson'
+                    />
+                  )}
+                />
+                {errors.contactPerson && (
+                  <FormHelperText
+                    sx={{ color: 'error.main' }}
+                    id='validation-schema-company-contactPerson'
+                  >
+                    {errors.contactPerson.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <Button
+                size='large'
+                variant='text'
+                style={{ minWidth: 120 }}
+                onClick={handleClickCloseModal}
+              >
                 Cancel
               </Button>
-              <Button size='large' type='submit' variant='contained' style={{ minWidth: 120 }}>
-                {store.isCreating ? <CircularProgress size='1.6rem' color='inherit' /> : 'Create'}
+              <Button
+                size='large'
+                type='submit'
+                variant='contained'
+                style={{ minWidth: 120 }}
+              >
+                {store.isCreating ? (
+                  <CircularProgress size='1.6rem' color='inherit' />
+                ) : (
+                  'Create'
+                )}
               </Button>
             </Grid>
           </Grid>

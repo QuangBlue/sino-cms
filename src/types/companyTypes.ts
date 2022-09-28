@@ -4,6 +4,9 @@ import { EventTypes } from './eventTypes'
 export interface CreateCompanyParams {
   name: string
   baseName: string
+  phone: string
+  email: string
+  contractPerson: string
 }
 
 export interface CompanyTypes {
