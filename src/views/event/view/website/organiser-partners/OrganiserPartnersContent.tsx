@@ -179,7 +179,7 @@ const OrganiserPartnerContent = ({ organiserPartnerHeader, title, handleChangeHe
                 size='small'
                 placeholder='Search Organiser & Partners'
                 sx={{ mr: 4, mb: 2, maxWidth: '180px' }}
-                onChange={(e) => {setKeyword(e.target.value)}}
+                onChange={(e) => setKeyword(e.target.value)}
               />
               <Button variant='contained' startIcon={<Plus fontSize='small' />} onClick={addOrganiserPartnerFiled}>
                 Add Partners
