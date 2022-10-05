@@ -117,7 +117,7 @@ const SpeakerActions = ({
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
+            href={`http://sino-elite-webapp.mlpert.com/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
             passHref
           >
             <Button

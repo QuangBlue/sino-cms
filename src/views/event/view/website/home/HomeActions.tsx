@@ -50,14 +50,28 @@ const HomeActions = () => {
       <Card>
         <CardContent>
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Hide / Show
             </InputLabel>
             <Switch id='go-live' />
           </OptionsWrapper>
 
           <OptionsWrapper sx={{ mb: 4 }}>
-            <InputLabel htmlFor='go-live' sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}>
+            <InputLabel
+              htmlFor='go-live'
+              sx={{
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                color: 'text.secondary'
+              }}
+            >
               Languages
             </InputLabel>
             <FormControl sx={{ flexWrap: 'wrap', flexDirection: 'row' }}>
@@ -69,20 +83,40 @@ const HomeActions = () => {
                 onChange={handleLangItemClick}
                 aria-label='simple-radio'
               >
-                <FormControlLabel value='en-US' control={<Radio />} label='English' />
-                <FormControlLabel value='zh-CN' control={<Radio />} label='Chinese' />
+                <FormControlLabel
+                  value='en-US'
+                  control={<Radio />}
+                  label='English'
+                />
+                <FormControlLabel
+                  value='zh-CN'
+                  control={<Radio />}
+                  label='Chinese'
+                />
               </RadioGroup>
             </FormControl>
           </OptionsWrapper>
 
-          <Button type='submit' form='about-us-form' fullWidth sx={{ mb: 3.5 }} variant='contained'>
+          <Button
+            type='submit'
+            form='about-us-form'
+            fullWidth
+            sx={{ mb: 3.5 }}
+            variant='contained'
+          >
             Save
           </Button>
           <Link
-            href={`https://sino-elite-webapp.vercel.app/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
+            href={`http://sino-elite-webapp.mlpert.com/${storeEvent.eventData.company.baseName}/${storeEvent.eventData.baseName}/${selected}`}
             passHref
           >
-            <Button fullWidth component='a' sx={{ mb: 3.5 }} variant='outlined' target='_blank'>
+            <Button
+              fullWidth
+              component='a'
+              sx={{ mb: 3.5 }}
+              variant='outlined'
+              target='_blank'
+            >
               Preview
             </Button>
           </Link>
